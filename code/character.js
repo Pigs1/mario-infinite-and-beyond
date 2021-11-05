@@ -190,34 +190,6 @@ Mario.Character.prototype.Move = function () {
         this.Facing = -1;
     }
 
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D)) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-                this.Xa = this.Xa * 1.2
-                this.Ya = this.YJumpSpeed * 1.5
-                this.OnGround = false
-            } else {
-                this.Xa = this.Xa * 1.2
-                this.Sliding = true
-            }
-        }
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-                this.Xa = this.Xa * 1.2
-                this.Ya = this.YJumpSpeed * 1.5
-                this.OnGround = false
-            } else {
-                this.Xa = this.Xa * 1.2
-                this.Sliding = true
-            }
-        }
-    }
-
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.F)) {
-        this.Image = Enjine.Resources.Images["enemies"]
-    }
-
-
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
