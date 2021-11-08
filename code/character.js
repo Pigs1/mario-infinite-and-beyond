@@ -189,7 +189,7 @@ Mario.Character.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
-
+    //flying
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D)) {
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
