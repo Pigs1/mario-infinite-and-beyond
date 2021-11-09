@@ -13,7 +13,6 @@ Mario.MapTile = {
 
 Mario.MapState = function () {
     this.camera = new Enjine.Camera();
-    this.character_select = 1;
 
     this.Level = [];
     this.Data = [];

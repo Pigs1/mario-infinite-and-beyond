@@ -10,7 +10,6 @@ Mario.LoadingState = function () {
     this.ColorDirection = 1;
     this.ImageIndex = 0;
     this.SoundIndex = 0;
-    this.character_select = 1;
 };
 
 Mario.LoadingState.prototype = new Enjine.GameState();
@@ -143,9 +142,5 @@ Mario.LoadingState.prototype.CheckForChange = function (context) {
         Mario.GlobalMapState = new Mario.MapState();
 
         context.ChangeState(new Mario.TitleState());
-
-        if (this.character_select == 2) {
-            Mario.MarioCharacter.Large = true
-        }
     }
 };
