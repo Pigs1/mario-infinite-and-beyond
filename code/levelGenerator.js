@@ -15,12 +15,6 @@ Mario.LevelGenerator = function (width, height,) {
 Mario.LevelGenerator.prototype = {
     CreateLevel: function (type, difficulty,) {
         var i = 0, length = 0, floor = 0, x = 0, y = 0, ceiling = 0, run = 0, level = null;
-        //Character Swap
-        if (Mario.MarioCharacter.character_select == 2) {
-            Mario.MarioCharacter.Large = true
-        } else {
-            Mario.MarioCharacter.Large = false
-        }
 
         this.Type = type;
         this.Difficulty = difficulty;

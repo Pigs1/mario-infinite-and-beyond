@@ -57,6 +57,11 @@ Mario.Character.prototype.Initialize = function (world) {
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
 
+    if (this.character_select == 2) {
+        this.GroundInertia = 0.92
+        this.AirInertia = 0.92
+    }
+
     //non static variables in Notch's code
     this.RunTime = 0;
     this.WasOnGround = false;
@@ -126,7 +131,12 @@ Mario.Character.prototype.Blink = function (on) {
         this.YPicO = 31;
         this.PicWidth = this.PicHeight = 32;
     } else {
-        this.Image = Enjine.Resources.Images["smallMario"];
+        if (this.character_select == 2) {
+            this.Image = Enjine.Resources.Images["smallLuigi"];
+        }
+        else {
+            this.Image = Enjine.Resources.Images["smallMario"];
+        }
         this.XPicO = 8;
         this.YPicO = 15;
         this.PicWidth = this.PicHeight = 16;
