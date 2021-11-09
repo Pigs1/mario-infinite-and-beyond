@@ -873,29 +873,7 @@ Wario.Character.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
-    //flying
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D)) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-                this.Xa = this.Xa * 1.2
-                this.Ya = this.YJumpSpeed * 1.5
-                this.OnGround = false
-            } else {
-                this.Xa = this.Xa * 1.2
-                this.Sliding = true
-            }
-        }
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-                this.Xa = this.Xa * 1.2
-                this.Ya = this.YJumpSpeed * 1.5
-                this.OnGround = false
-            } else {
-                this.Xa = this.Xa * 1.2
-                this.Sliding = true
-            }
-        }
-    }
+
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.F)) {
         this.Image = Enjine.Resources.Images["enemies"]
@@ -1029,7 +1007,7 @@ Wario.Character.prototype.CalcPic = function () {
     if (this.Large) {
         runFrame = ((this.RunTime / 20) | 0) % 4;
         if (runFrame === 3) {
-            runFrame = 2;
+            runFrame = 1;
         }
         if (this.Carried === null && Math.abs(this.Xa) > 10) {
             runFrame += 3;
