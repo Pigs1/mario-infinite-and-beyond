@@ -5,6 +5,7 @@
 
 Mario.Character = function () {
     //these are static in Notch's code... here it doesn't seem necessary
+
     this.Large = false;
     this.Fire = false;
     this.Coins = 0;
@@ -54,6 +55,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.X = 32;
     this.Y = 0;
     this.PowerUpTime = 0;
+    this.character_select = 1;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -664,7 +666,7 @@ Mario.Character.prototype.GetCoin = function () {
 
 Wario.Character = function () {
     //these are static in Notch's code... here it doesn't seem necessary
-    this.Large = false;
+    this.Large = true;
     this.Fire = false;
     this.Coins = 0;
     this.Lives = 3;

@@ -1,9 +1,9 @@
 /**
-	State for actually playing a randomly generated level.
-	Code by Rob Kleffner, 2011
+    State for actually playing a randomly generated level.
+    Code by Rob Kleffner, 2011
 */
 
-Mario.LevelState = function(difficulty, type) {
+Mario.LevelState = function (difficulty, type) {
     this.LevelDifficulty = difficulty;
     this.LevelType = type;
     this.Level = null;
@@ -28,23 +28,24 @@ Mario.LevelState = function(difficulty, type) {
 
     this.Delta = 0;
 
-	this.GotoMapState = false;
-	this.GotoLoseState = false;
+    this.GotoMapState = false;
+    this.GotoLoseState = false;
+
 };
 
 Mario.LevelState.prototype = new Enjine.GameState();
 
-Mario.LevelState.prototype.Enter = function() {
+Mario.LevelState.prototype.Enter = function () {
     var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
     this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
 
     //play music here
     if (this.LevelType === Mario.LevelType.Overground) {
-    	Mario.PlayOvergroundMusic();
+        Mario.PlayOvergroundMusic();
     } else if (this.LevelType === Mario.LevelType.Underground) {
-    	Mario.PlayUndergroundMusic();
+        Mario.PlayUndergroundMusic();
     } else if (this.LevelType === Mario.LevelType.Castle) {
-    	Mario.PlayCastleMusic();
+        Mario.PlayCastleMusic();
     }
 
     this.Paused = false;
@@ -75,11 +76,17 @@ Mario.LevelState.prototype.Enter = function() {
     this.StartTime = 1;
     this.TimeLeft = 200;
 
-	this.GotoMapState = false;
-	this.GotoLoseState = false;
+    this.GotoMapState = false;
+    this.GotoLoseState = false;
+
+    this.StartTime = 1;
+    this.TimeLeft = 200;
+
+    this.GotoMapState = false;
+    this.GotoLoseState = false;
 };
 
-Mario.LevelState.prototype.Exit = function() {
+Mario.LevelState.prototype.Exit = function () {
 
     delete this.Level;
     delete this.Layer;
@@ -92,15 +99,15 @@ Mario.LevelState.prototype.Exit = function() {
     delete this.Font;
 };
 
-Mario.LevelState.prototype.CheckShellCollide = function(shell) {
+Mario.LevelState.prototype.CheckShellCollide = function (shell) {
     this.ShellsToCheck.push(shell);
 };
 
-Mario.LevelState.prototype.CheckFireballCollide = function(fireball) {
+Mario.LevelState.prototype.CheckFireballCollide = function (fireball) {
     this.FireballsToCheck.push(fireball);
 };
 
-Mario.LevelState.prototype.Update = function(delta) {
+Mario.LevelState.prototype.Update = function (delta) {
     var i = 0, j = 0, xd = 0, yd = 0, sprite = null, hasShotCannon = false, xCannon = 0, x = 0, y = 0,
         dir = 0, st = null, b = 0;
 
@@ -154,7 +161,7 @@ Mario.LevelState.prototype.Update = function(delta) {
 
         hasShotCannon = false;
         xCannon = 0;
-		this.Tick++;
+        this.Tick++;
 
         for (x = ((this.Camera.X / 16) | 0) - 1; x <= (((this.Camera.X + this.Layer.Width) / 16) | 0) + 1; x++) {
             for (y = ((this.Camera.Y / 16) | 0) - 1; y <= (((this.Camera.Y + this.Layer.Height) / 16) | 0) + 1; y++) {
@@ -245,7 +252,7 @@ Mario.LevelState.prototype.Update = function(delta) {
     this.Camera.Y = (Mario.MarioCharacter.YOld + (Mario.MarioCharacter.Y - Mario.MarioCharacter.YOld) * delta) - 120;
 };
 
-Mario.LevelState.prototype.Draw = function(context) {
+Mario.LevelState.prototype.Draw = function (context) {
     var i = 0, time = 0, t = 0;
 
     if (this.Camera.X < 0) {
@@ -308,45 +315,45 @@ Mario.LevelState.prototype.Draw = function(context) {
     }
 
     if (Mario.MarioCharacter.WinTime > 0) {
-    	Mario.StopMusic();
+        Mario.StopMusic();
         t = Mario.MarioCharacter.WinTime + this.Delta;
         t = t * t * 0.2;
 
         if (t > 900) {
             //TODO: goto map state with level won
-			Mario.GlobalMapState.LevelWon();
-			this.GotoMapState = true;
+            Mario.GlobalMapState.LevelWon();
+            this.GotoMapState = true;
         }
 
         this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
     }
 
     if (Mario.MarioCharacter.DeathTime > 0) {
-    	Mario.StopMusic();
+        Mario.StopMusic();
         t = Mario.MarioCharacter.DeathTime + this.Delta;
         t = t * t * 0.1;
 
         if (t > 900) {
             //TODO: goto map with level lost
-			Mario.MarioCharacter.Lives--;
-			this.GotoMapState = true;
-			if (Mario.MarioCharacter.Lives <= 0) {
-				this.GotoLoseState = true;
-			}
+            Mario.MarioCharacter.Lives--;
+            this.GotoMapState = true;
+            if (Mario.MarioCharacter.Lives <= 0) {
+                this.GotoLoseState = true;
+            }
         }
 
         this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
     }
 };
 
-Mario.LevelState.prototype.DrawStringShadow = function(context, string, x, y) {
+Mario.LevelState.prototype.DrawStringShadow = function (context, string, x, y) {
     this.Font.Strings[0] = { String: string, X: x * 8 + 4, Y: y * 8 + 4 };
     this.FontShadow.Strings[0] = { String: string, X: x * 8 + 5, Y: y * 8 + 5 };
     this.FontShadow.Draw(context, this.Camera);
     this.Font.Draw(context, this.Camera);
 };
 
-Mario.LevelState.prototype.RenderBlackout = function(context, x, y, radius) {
+Mario.LevelState.prototype.RenderBlackout = function (context, x, y, radius) {
     if (radius > 320) {
         return;
     }
@@ -400,15 +407,15 @@ Mario.LevelState.prototype.RenderBlackout = function(context, x, y, radius) {
     context.fill();
 };
 
-Mario.LevelState.prototype.AddSprite = function(sprite) {
+Mario.LevelState.prototype.AddSprite = function (sprite) {
     this.Sprites.Add(sprite);
 };
 
-Mario.LevelState.prototype.RemoveSprite = function(sprite) {
+Mario.LevelState.prototype.RemoveSprite = function (sprite) {
     this.Sprites.Remove(sprite);
 };
 
-Mario.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
+Mario.LevelState.prototype.Bump = function (x, y, canBreakBricks) {
     var block = this.Level.GetBlock(x, y), xx = 0, yy = 0;
 
     if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Bumpable) > 0) {
@@ -444,7 +451,7 @@ Mario.LevelState.prototype.Bump = function(x, y, canBreakBricks) {
     }
 };
 
-Mario.LevelState.prototype.BumpInto = function(x, y) {
+Mario.LevelState.prototype.BumpInto = function (x, y) {
     var block = this.Level.GetBlock(x, y), i = 0;
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         Mario.MarioCharacter.GetCoin();
@@ -458,13 +465,13 @@ Mario.LevelState.prototype.BumpInto = function(x, y) {
     }
 };
 
-Mario.LevelState.prototype.CheckForChange = function(context) {
-	if (this.GotoLoseState) {
-		context.ChangeState(new Mario.LoseState());
-	}
-	else {
-		if (this.GotoMapState) {
-			context.ChangeState(Mario.GlobalMapState);
-		}
-	}
+Mario.LevelState.prototype.CheckForChange = function (context) {
+    if (this.GotoLoseState) {
+        context.ChangeState(new Mario.LoseState());
+    }
+    else {
+        if (this.GotoMapState) {
+            context.ChangeState(Mario.GlobalMapState);
+        }
+    }
 };
