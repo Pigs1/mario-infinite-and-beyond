@@ -55,7 +55,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.X = 32;
     this.Y = 0;
     this.PowerUpTime = 0;
-    this.character_select = 1;
+    this.character_select = Mario.MarioCharacter.character_select;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -114,7 +114,12 @@ Mario.Character.prototype.Blink = function (on) {
         if (this.Fire) {
             this.Image = Enjine.Resources.Images["fireMario"];
         } else {
-            this.Image = Enjine.Resources.Images["mario"];
+            if (this.character_select == 2) {
+                this.Image = Enjine.Resources.Images["luigi"];
+            }
+            else {
+                this.Image = Enjine.Resources.Images["mario"];
+            }
         }
 
         this.XPicO = 16;
@@ -200,7 +205,11 @@ Mario.Character.prototype.Move = function () {
         } else if (this.OnGround && this.MayJump) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = 0;
-            this.YJumpSpeed = -1.9;
+            if (this.character_select == 2) {
+                this.YJumpSpeed = -3;
+            } else {
+                this.YJumpSpeed = -1.9;
+            }
             this.JumpTime = 7;
             this.Ya = this.JumpTime * this.YJumpSpeed;
             this.OnGround = false;
@@ -208,7 +217,11 @@ Mario.Character.prototype.Move = function () {
         } else if (this.Sliding && this.MayJump) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = -this.Facing * 6;
-            this.YJumpSpeed = -2;
+            if (this.character_select == 1) {
+                this.YJumpSpeed = -5;
+            } else {
+                this.YJumpSpeed = -2;
+            }
             this.JumpTime = -6;
             this.Xa = this.XJumpSpeed;
             this.Ya = -this.JumpTime * this.YJumpSpeed;
@@ -1006,7 +1019,7 @@ Wario.Character.prototype.CalcPic = function () {
     if (this.Large) {
         runFrame = ((this.RunTime / 20) | 0) % 4;
         if (runFrame === 3) {
-            runFrame = 1;
+            runFrame = 2;
         }
         if (this.Carried === null && Math.abs(this.Xa) > 10) {
             runFrame += 3;
