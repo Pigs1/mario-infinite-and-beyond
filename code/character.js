@@ -13,6 +13,7 @@ Mario.Character = function () {
     this.LevelString = "none";
     this.GroundInertia = 0.89;
     this.AirInertia = 0.89;
+    this.FloatTimer = 10;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -208,6 +209,12 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
+        // peach float
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == 3) {
+            this.Ya = 0
+            this.Xa *= 0.9
+            this.FloatTimer -= 1
+        }
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
             this.Ya = -this.JumpTime * this.YJumpSpeed;
@@ -245,6 +252,7 @@ Mario.Character.prototype.Move = function () {
         }
     } else {
         this.JumpTime = 0;
+        this.FloatTimer = 30;
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !this.Ducking) {
@@ -872,11 +880,6 @@ Wario.Character.prototype.Move = function () {
     }
     if (this.Xa < -2) {
         this.Facing = -1;
-    }
-
-
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.F)) {
-        this.Image = Enjine.Resources.Images["enemies"]
     }
 
 

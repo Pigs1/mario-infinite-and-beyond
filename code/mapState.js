@@ -31,6 +31,8 @@ Mario.MapState = function () {
     this.EnterLevel = false;
     this.LevelDifficulty = 0;
     this.LevelType = 0;
+    this.character_select = 1;
+    this.IsKeyDownLast = 0;
 
     this.WorldNumber = -1;
     this.NextWorld();
@@ -468,9 +470,10 @@ Mario.MapState.prototype.IsWater = function (x, y) {
 Mario.MapState.prototype.Update = function (delta) {
     var x = 0, y = 0, difficulty = 0, type = 0;
 
-    if (this.WorldNumber === 8) {
-        return;
-    }
+    if (this.character_select)
+        if (this.WorldNumber === 8) {
+            return;
+        }
 
     this.XMario += this.XMarioA;
     this.YMario += this.YMarioA;
@@ -487,10 +490,31 @@ Mario.MapState.prototype.Update = function (delta) {
     } else {
         this.XMarioA = 0;
         this.YMarioA = 0;
-        // Swap Character Image
+        // Swap Character
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E)) {
-            this.SmallMario.Image = Enjine.Resources.Images["worldMap2"];
-            Mario.MarioCharacter.character_select = 2;
+            if (this.character_select == 1 && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = 2
+                this.character_select = 2
+                this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
+                this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
+                this.IsKeyDownLast = 1
+            } else if (this.character_select == 2 && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = 3
+                this.character_select = 3
+                this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+                this.IsKeyDownLast = 1
+            } else if (this.character_select == 3 && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = 1
+                this.character_select = 1
+                this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+                this.IsKeyDownLast = 1
+            }
+        }
+
+        if (!(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E))) {
+            this.IsKeyDownLast = 0
         }
 
         if (this.CanEnterLevel && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
