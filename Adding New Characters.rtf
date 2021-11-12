@@ -24,41 +24,41 @@ In character.js:\
 \pard\pardeftab720\sl360\partightenfactor0
 
 \f1 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec4 this\cb3 \strokec5 .\cb3 \strokec6 character_select\cb3 \strokec5  = \cb3 \strokec7 1\cb3 \strokec5 ;\cf8 \cb1 \strokec8 \
+this.character_select = 1;\cf8 \cb1 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 Put this inside the Mario.Character.prototype.Initialize function, this will be used to check characters and change properties\
+\f0 \cf0 \kerning1\expnd0\expndtw0 Put this inside the Mario.Character.prototype.Initialize function, this will be used to check characters and change properties\
 \
 \
 Including New Images:\
 In Mario.min.js:\
 In the 
 \f1\fs24 \cf2 \cb9 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec6 Mario\strokec5 .\strokec6 LoadingState\strokec5 .\strokec6 prototype\strokec5 .\strokec10 Enter function, add new images to the array. You need to make their name in code and their source in the file directory, both with the same index. Don\'92t forget to add a slot in the for loop \'93\cb11 \strokec12 for\cb11 \strokec5  (\cb11 \strokec6 a\cb11 \strokec5  = \cb11 \strokec7 0\cb11 \strokec5 ; \cb11 \strokec6 a\cb11 \strokec5  < \cf13 \cb14 \strokec15 16\cf2 \cb11 \strokec5 ; \cb11 \strokec6 a\cb11 \strokec5 ++)\cb1 \strokec16 \'94\cb9 \strokec10 \
+Mario.LoadingState.prototype.Enter function, add new images to the array. You need to make their name in code and their source in the file directory, both with the same index. Don\'92t forget to add a slot in the for loop \'93\cb11 for (a = 0; a < \cf13 \cb14 16\cf2 \cb11 ; a++)\cb1 \'94\cb9 \
 Then in loadingState.js:\
 Add images and src in the \'93Enter\'94 array\
-\cf8 \cb1 \strokec8 \
+\cf8 \cb1 \
 
-\f0\fs30 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\f0\fs30 \cf0 \kerning1\expnd0\expndtw0 \
 \
 World Map:\
 In mapState.js:\
 \pard\pardeftab720\sl360\partightenfactor0
 
 \f1 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec17 if\cb3 \strokec18  (\cb3 \strokec19 Enjine\cb3 \strokec18 .\cb3 \strokec19 KeyboardInput\cb3 \strokec18 .\cb3 \strokec20 IsKeyDown\cb3 \strokec18 (\cb3 \strokec19 Enjine\cb3 \strokec18 .\cb3 \strokec19 Keys\cb3 \strokec18 .\cb3 \strokec21 E\cb3 \strokec18 )) \{\
-            \cb3 \strokec22 this\cb3 \strokec18 .\cb3 \strokec19 SmallMario\cb3 \strokec18 .\cb3 \strokec19 Image\cb3 \strokec18  = \cb3 \strokec19 Enjine\cb3 \strokec18 .\cb3 \strokec19 Resources\cb3 \strokec18 .\cb3 \strokec19 Images\cb3 \strokec18 [\cb3 \strokec23 "worldMap2"\cb3 \strokec18 ];\
-            \cb3 \strokec19 Mario\cb3 \strokec18 .\cb3 \strokec19 MarioCharacter\cb3 \strokec18 .\cb3 \strokec19 character_select\cb3 \strokec18  = \cb3 \strokec24 2\cb3 \strokec18 ;\
-        \}\cf16 \cb13 \strokec16 \
+if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E)) \{\
+            this.SmallMario.Image = Enjine.Resources.Images["worldMap2"];\
+            Mario.MarioCharacter.character_select = 2;\
+        \}\cf16 \cb13 \
 \pard\pardeftab720\sl360\partightenfactor0
-\cf2 \cb9 \strokec25 Runs when user inputs E and then changes the variable \'93character_select\'94 which we will use to check the character and change properties. (Will be modified to check character_select first and then change characters in order)\
+\cf2 \cb9 Runs when user inputs E and then changes the variable \'93character_select\'94 which we will use to check the character and change properties. (Will be modified to check character_select first and then change characters in order)\
 \
 Checking Character when loading level:\
-In levelGenerator.js:\
+In character.js:\
 \pard\pardeftab720\sl360\partightenfactor0
-\cf2 \cb26 \strokec27 if\cb26 \strokec25  (\cb26 \strokec28 Mario\cb26 \strokec25 .\cb26 \strokec28 MarioCharacter\cb26 \strokec25 .\cb26 \strokec28 character_select\cb26 \strokec25  == \cb26 \strokec29 2\cb26 \strokec25 )\{\
+\cf2 \cb26 if (Mario.MarioCharacter.character_select == 2)\{\
 \pard\pardeftab720\sl360\partightenfactor0
-\cf30 \cb1 \strokec16 Put character\'92s properties in here\
+\cf30 \cb1 Put character\'92s properties in here\
 In character.js
-\fs24 \cf8 \strokec8 \
+\fs24 \cf8 \
 }

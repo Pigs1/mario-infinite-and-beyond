@@ -119,13 +119,15 @@ Mario.Character.prototype.Blink = function (on) {
     if (this.Large) {
         if (this.Fire) {
             this.Image = Enjine.Resources.Images["fireMario"];
-        } else {
-            if (this.character_select == 2) {
-                this.Image = Enjine.Resources.Images["luigi"];
-            }
-            else {
-                this.Image = Enjine.Resources.Images["mario"];
-            }
+        }
+        if (this.character_select == 2) {
+            this.Image = Enjine.Resources.Images["luigi"];
+        }
+        else if (this.character_select == 3) {
+            this.Image = Enjine.Resources.Images["peach"];
+        }
+        else if (this.character_select == 1) {
+            this.Image = Enjine.Resources.Images["mario"];
         }
 
         this.XPicO = 16;
@@ -135,12 +137,15 @@ Mario.Character.prototype.Blink = function (on) {
         if (this.character_select == 2) {
             this.Image = Enjine.Resources.Images["smallLuigi"];
         }
-        else {
+        else if (this.character_select == 1) {
             this.Image = Enjine.Resources.Images["smallMario"];
         }
+
+
         this.XPicO = 8;
         this.YPicO = 15;
         this.PicWidth = this.PicHeight = 16;
+
     }
 };
 
@@ -234,7 +239,7 @@ Mario.Character.prototype.Move = function () {
         } else if (this.Sliding && this.MayJump) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = -this.Facing * 6;
-            if (this.character_select == 1) {
+            if (this.character_select != 2) {
                 this.YJumpSpeed = -5;
             } else {
                 this.YJumpSpeed = -2;
