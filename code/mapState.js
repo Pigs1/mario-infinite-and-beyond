@@ -95,6 +95,23 @@ Mario.MapState.prototype.Enter = function () {
     this.LargeMario.X = 0;
     this.LargeMario.Y = 0;
 
+    if (this.character_select == 1) {
+        Mario.MarioCharacter.character_select = 1
+        this.character_select = 1
+        this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+    } else if (this.character_select == 2) {
+        Mario.MarioCharacter.character_select = 2
+        this.character_select = 2
+        this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
+        this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
+    } else if (this.character_select == 3) {
+        Mario.MarioCharacter.character_select = 3
+        this.character_select = 3
+        this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+    }
+
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
 
