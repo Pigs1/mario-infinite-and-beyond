@@ -57,10 +57,14 @@ Mario.Character.prototype.Initialize = function (world) {
     this.Y = 0;
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
-
+    // Character Specific Speed Values
     if (this.character_select == 2) {
         this.GroundInertia = 0.9
         this.AirInertia = 0.9
+    }
+    else if (this.character_select == 3) {
+        this.GroundInertia = 0.83
+        this.AirInertia = 0.83
     }
 
     //non static variables in Notch's code
@@ -115,12 +119,20 @@ Mario.Character.prototype.SetLarge = function (large, fire) {
 Mario.Character.prototype.Blink = function (on) {
     this.Large = on ? this.NewLarge : this.LastLarge;
     this.Fire = on ? this.NewFire : this.LastFire;
-
+    // set character images
     if (this.Large) {
         if (this.Fire) {
-            this.Image = Enjine.Resources.Images["fireMario"];
+            if (this.character_select == 2) {
+                this.Image = Enjine.Resources.Images["fireLuigi"];
+            }
+            else if (this.character_select == 3) {
+                this.Image = Enjine.Resources.Images["firePeach"];
+            }
+            else if (this.character_select == 1) {
+                this.Image = Enjine.Resources.Images["fireMario"];
+            }
         }
-        if (this.character_select == 2) {
+        else if (this.character_select == 2) {
             this.Image = Enjine.Resources.Images["luigi"];
         }
         else if (this.character_select == 3) {
@@ -136,6 +148,9 @@ Mario.Character.prototype.Blink = function (on) {
     } else {
         if (this.character_select == 2) {
             this.Image = Enjine.Resources.Images["smallLuigi"];
+        }
+        else if (this.character_select == 3) {
+            this.Image = Enjine.Resources.Images["smallPeach"];
         }
         else if (this.character_select == 1) {
             this.Image = Enjine.Resources.Images["smallMario"];
@@ -227,6 +242,7 @@ Mario.Character.prototype.Move = function () {
         } else if (this.OnGround && this.MayJump) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = 0;
+            //character specific jump height
             if (this.character_select == 2) {
                 this.YJumpSpeed = -3;
             } else {
@@ -236,13 +252,14 @@ Mario.Character.prototype.Move = function () {
             this.Ya = this.JumpTime * this.YJumpSpeed;
             this.OnGround = false;
             this.Sliding = false;
+            // walljump
         } else if (this.Sliding && this.MayJump) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = -this.Facing * 6;
-            if (this.character_select != 2) {
-                this.YJumpSpeed = -5;
-            } else {
+            if (this.character_select = 1) {
                 this.YJumpSpeed = -2;
+            } else if (this.character_select = 2) {
+                this.YJumpSpeed = -5;
             }
             this.JumpTime = -6;
             this.Xa = this.XJumpSpeed;
