@@ -14,6 +14,9 @@ Mario.Character = function () {
     this.GroundInertia = 0.89;
     this.AirInertia = 0.89;
     this.FloatTimer = 10;
+    this.GroundPoundTimer = 0;
+    this.defaultairinertia = 0.89;
+    this.defaultgroundinertia = 0.89;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -156,7 +159,6 @@ Mario.Character.prototype.Blink = function (on) {
             this.Image = Enjine.Resources.Images["smallMario"];
         }
 
-
         this.XPicO = 8;
         this.YPicO = 15;
         this.PicWidth = this.PicHeight = 16;
@@ -235,6 +237,23 @@ Mario.Character.prototype.Move = function () {
             this.Xa *= 0.9
             this.FloatTimer -= 1
         }
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
+            this.Xa = 0;
+            this.Ya = 15;
+            this.GroundPoundTimer = 10;
+            this.defaultairinertia = this.AirInertia
+            this.defaultgroundinertia = this.GroundInertia
+        }
+        if (this.OnGround && this.GroundPoundTimer > 0) {
+            this.Xa *= 0
+            this.Ducking = true
+            this.GroundPoundTimer -= 1;
+        }
+        else {
+            this.AirInertia = this.defaultairinertia
+            this.GroundInertia = this.defaultgroundinertia
+        }
+
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
             this.Ya = -this.JumpTime * this.YJumpSpeed;
@@ -275,6 +294,24 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         this.FloatTimer = 30;
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
+            this.Xa = 0;
+            this.Ya = 15;
+            this.GroundPoundTimer = 10;
+            this.defaultairinertia = this.AirInertia
+            this.defaultgroundinertia = this.GroundInertia
+        }
+        if (this.OnGround && this.GroundPoundTimer > 0) {
+            this.Xa *= 0
+            this.Ducking = true
+            this.GroundPoundTimer -= 1;
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
+                ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+        }
+        else {
+            this.AirInertia = this.defaultairinertia
+            this.GroundInertia = this.defaultgroundinertia
+        }
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !this.Ducking) {
@@ -408,6 +445,16 @@ Mario.Character.prototype.CalcPic = function () {
         }
     }
 
+    if (this.GroundPoundTimer > 0) {
+        if (this.Large) {
+            runFrame = 8;
+        }
+        else {
+            runFrame = 4;
+        }
+
+    }
+
     if (this.OnGround && ((this.Facing === -1 && this.Xa > 0) || (this.Facing === 1 && this.Xa < 0))) {
         if (this.Xa > 1 || this.Xa < -1) {
             runFrame = this.Large ? 9 : 7;
@@ -421,7 +468,7 @@ Mario.Character.prototype.CalcPic = function () {
     }
 
     if (this.Large) {
-        if (this.Ducking) {
+        if (this.Ducking && this.GroundPoundTimer == 0) {
             runFrame = 14;
         }
         this.Height = this.Ducking ? 12 : 24;
@@ -588,7 +635,7 @@ Mario.Character.prototype.Stomp = function (object) {
     targetY = object.Y - object.Height / 2;
     this.SubMove(0, targetY - this.Y);
 
-    if (object instanceof Mario.Enemy || object instanceof Mario.BulletBill) {
+    if (object instanceof Mario.Enemy || object instanceof Mario.BulletBill && this.GroundPoundTimer == 0) {
 
         Enjine.Resources.PlaySound("kick");
         this.XJumpSpeed = 0;
