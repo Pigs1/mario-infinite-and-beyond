@@ -43,6 +43,7 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[20].name = "fireLuigi";
     this.Images[21].name = "firePeach";
     this.Images[22].name = "smallPeach";
+    this.Images[23].name = "mapsheetinverted";
 
 
     this.Images[0].src = "images/bgsheet.png";
@@ -68,6 +69,7 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[20].src = "images/fireluigisheet.png";
     this.Images[21].src = "images/firepeachsheet.png";
     this.Images[22].src = "images/smallpeachsheet.png";
+    this.Images[23].src = "images/mapsheetinverted.png";
 
     Enjine.Resources.AddImages(this.Images);
 
