@@ -13,10 +13,12 @@ Mario.Character = function () {
     this.LevelString = "none";
     this.GroundInertia = 0.89;
     this.AirInertia = 0.89;
-    this.FloatTimer = 10;
     this.GroundPoundTimer = 0;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
+
+    // Char specific vars
+    this.FloatTimer = 10;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -248,6 +250,8 @@ Mario.Character.prototype.Move = function () {
             this.Xa *= 0
             this.Ducking = true
             this.GroundPoundTimer -= 1;
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
+                ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
         }
         else {
             this.AirInertia = this.defaultairinertia
@@ -635,7 +639,7 @@ Mario.Character.prototype.Stomp = function (object) {
     targetY = object.Y - object.Height / 2;
     this.SubMove(0, targetY - this.Y);
 
-    if (object instanceof Mario.Enemy || object instanceof Mario.BulletBill && this.GroundPoundTimer == 0) {
+    if (object instanceof Mario.Enemy && this.GroundPoundTimer == 0 || object instanceof Mario.BulletBill && this.GroundPoundTimer == 0) {
 
         Enjine.Resources.PlaySound("kick");
         this.XJumpSpeed = 0;
@@ -645,7 +649,7 @@ Mario.Character.prototype.Stomp = function (object) {
         this.OnGround = false;
         this.Sliding = false;
         this.InvulnerableTime = 1;
-    } else if (object instanceof Mario.Shell) {
+    } else if (object instanceof Mario.Shell && this.GroundPoundTimer == 0) {
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && object.Facing === 0) {
             this.Carried = object;
             object.Carried = true;

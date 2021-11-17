@@ -72,7 +72,7 @@ Mario.Shell.prototype.CollideCheck = function () {
                 Mario.MarioCharacter.Stomp(this);
                 if (Mario.MarioCharacter.GroundPoundTimer > 0) {
                     this.Die()
-                    this.RemoveSprite()
+                    this.World.RemoveSprite(this);
                 }
                 if (this.Facing !== 0) {
                     this.Xa = 0;
