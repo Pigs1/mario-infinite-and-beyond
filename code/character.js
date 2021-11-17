@@ -631,7 +631,8 @@ Mario.Character.prototype.IsBlocking = function (x, y, xa, ya) {
     }
 
     blocking = this.World.Level.IsBlocking(x, y, xa, ya);
-    if (blocking && ya < 0) {
+    // & this.Large
+    if (blocking && ya < 0 || this.GroundPoundTimer > 0) {
         this.World.Bump(x, y, this.Large);
     }
     return blocking;

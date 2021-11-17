@@ -426,14 +426,43 @@ Mario.LevelState.prototype.Bump = function (x, y, canBreakBricks) {
         if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Special) > 0) {
             Enjine.Resources.PlaySound("sprout");
             if (!Mario.MarioCharacter.Large) {
-                this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 8));
+                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                    this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 20));
+                }
+                else {
+                    this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 8));
+                }
             } else {
-                this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 8));
+                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                    this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 20));
+                }
+                else {
+                    this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 8));
+                }
+
             }
         } else {
             Mario.MarioCharacter.GetCoin();
             Enjine.Resources.PlaySound("coin");
             this.AddSprite(new Mario.CoinAnim(this, x, y));
+        }
+    }
+    //Mario.MarioCharacter.GroundPoundTimer > 0
+
+    if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Breakable) > 0 & Mario.MarioCharacter.Large) {
+        this.BumpInto(x, y - 1);
+        if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+            if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+                Mario.MarioCharacter.Ya = 0
+                Mario.MarioCharacter.GroundPoundTimer = 0
+            }
+            Enjine.Resources.PlaySound("breakblock");
+            this.Level.SetBlock(x, y, 0);
+            for (xx = 0; xx < 2; xx++) {
+                for (yy = 0; yy < 2; yy++) {
+                    this.AddSprite(new Mario.Particle(this, x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4, (yy * 2 - 1) * 4 - 8));
+                }
+            }
         }
     }
 
