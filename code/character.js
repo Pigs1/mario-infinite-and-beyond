@@ -252,6 +252,10 @@ Mario.Character.prototype.Move = function () {
             this.GroundPoundTimer -= 1;
             this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
                 ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
+                this.GroundPoundTimer = 0
+                this.Ducking = false
+            }
         }
         else {
             this.AirInertia = this.defaultairinertia
@@ -311,6 +315,10 @@ Mario.Character.prototype.Move = function () {
             this.GroundPoundTimer -= 1;
             this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
                 ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
+                this.GroundPoundTimer = 0
+                this.Ducking = false
+            }
         }
         else {
             this.AirInertia = this.defaultairinertia
