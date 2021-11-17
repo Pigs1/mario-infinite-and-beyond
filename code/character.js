@@ -232,7 +232,7 @@ Mario.Character.prototype.Move = function () {
         this.Facing = -1;
     }
 
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         // peach float
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == 3) {
             this.Ya = 0
@@ -252,7 +252,7 @@ Mario.Character.prototype.Move = function () {
             this.GroundPoundTimer -= 1;
             this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
                 ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime <= 0) {
                 this.GroundPoundTimer = 0
                 this.Ducking = false
             }
@@ -313,9 +313,9 @@ Mario.Character.prototype.Move = function () {
             this.Xa *= 0
             this.Ducking = true
             this.GroundPoundTimer -= 1;
-            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
                 ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
                 this.GroundPoundTimer = 0
                 this.Ducking = false
             }
