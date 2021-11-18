@@ -10,7 +10,6 @@ Mario.LevelGenerator = function (width, height,) {
     this.TotalOdds = 0;
     this.Difficulty = 0;
     this.Type = 0;
-    this.levelpersist = 0;
 };
 
 Mario.LevelGenerator.prototype = {

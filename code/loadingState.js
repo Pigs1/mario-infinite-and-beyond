@@ -16,7 +16,7 @@ Mario.LoadingState.prototype = new Enjine.GameState();
 
 Mario.LoadingState.prototype.Enter = function () {
     var i = 0;
-    for (i = 0; i < 23; i++) {
+    for (i = 0; i < 24; i++) {
         this.Images[i] = {};
     }
 

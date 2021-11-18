@@ -19,6 +19,7 @@ Mario.Character = function () {
 
     // Char specific vars
     this.FloatTimer = 10;
+    this.WasKeyDown = 0;
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -231,6 +232,19 @@ Mario.Character.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
+    // Time Freeze
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 0) {
+        if (this.World.Paused == false) {
+            this.World.Paused = true;
+        }
+        else {
+            this.World.Paused = false;
+        }
+        this.WasKeyDown = 1;
+    }
+    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 1) {
+        this.WasKeyDown = 0;
+    }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         // peach float
@@ -406,8 +420,8 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (this.Carried !== null) {
-        this.Carried.X *= this.X + this.Facing * 8;
-        this.Carried.Y *= this.Y - 2;
+        this.Carried.X = this.X + 7 * this.Facing
+        this.Carried.Y = this.Y
         if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
             this.Carried.Release(this);
             this.Carried = null;
