@@ -9,13 +9,14 @@ Mario.Character = function () {
     this.Large = false;
     this.Fire = false;
     this.Coins = 0;
-    this.Lives = 3;
+    this.Lives = 99;
     this.LevelString = "none";
     this.GroundInertia = 0.89;
     this.AirInertia = 0.89;
     this.GroundPoundTimer = 0;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
+    this.levelpersist = 0;
 
     // Char specific vars
     this.FloatTimer = 10;
@@ -236,11 +237,13 @@ Mario.Character.prototype.Move = function () {
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 0) {
         if (this.World.Paused == false) {
             this.World.Paused = true;
+            Mario.LevelRenderer.Background = Enjine.Resources.Images["mapsheetinverted"]
         }
         else {
             this.World.Paused = false;
         }
         this.WasKeyDown = 1;
+        Mario.LevelRenderer.Background.Image = Enjine.Resources.Images["mapsheetinverted"]
     }
     else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 1) {
         this.WasKeyDown = 0;
@@ -727,6 +730,7 @@ Mario.Character.prototype.Die = function () {
     this.DeathTime = 1;
     Enjine.Resources.PlaySound("death");
     this.SetLarge(false, false);
+    this.levelpersist = 1;
 
 };
 

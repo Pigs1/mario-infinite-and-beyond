@@ -31,14 +31,22 @@ Mario.LevelState = function (difficulty, type) {
     this.GotoMapState = false;
     this.GotoLoseState = false;
 
+    this.levelpersist = Mario.MarioCharacter.levelpersist;
+    this.lastlevel = null;
+    this.lastlevel2 = null;
 };
 
 Mario.LevelState.prototype = new Enjine.GameState();
 
 Mario.LevelState.prototype.Enter = function () {
     var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
-    this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
-
+    if (this.levelpersist == 1) {
+        this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
+    }
+    else {
+        this.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
+        this.lastlevel = this.Level
+    }
     //play music here
     if (this.LevelType === Mario.LevelType.Overground) {
         Mario.PlayOvergroundMusic();
@@ -87,8 +95,7 @@ Mario.LevelState.prototype.Enter = function () {
 };
 
 Mario.LevelState.prototype.Exit = function () {
-
-    delete this.Level;
+    this.levelpersist = 1;
     delete this.Layer;
     delete this.BgLayer;
     delete this.Sprites;

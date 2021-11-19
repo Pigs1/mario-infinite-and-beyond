@@ -10,14 +10,26 @@ Mario.LevelGenerator = function (width, height,) {
     this.TotalOdds = 0;
     this.Difficulty = 0;
     this.Type = 0;
+    // Level Continuity Vars
+    this.lastjs = null;
+    this.last_t = null;
+    this.lastfloor = null;
+    this.lastfloor2 = null;
+    this.lastfloor3 = null;
+    this.lastfloor4 = null;
+    this.lastceiling = null;
+    this.lastrun = null;
+    this.lastlength = null;
+    this.lastlength2 = null;
+    this.lastlevel = null;
+    this.lasthasStairs = null;
+    this.lastjl = null;
 };
 
 Mario.LevelGenerator.prototype = {
     CreateLevel: function (type, difficulty,) {
         var i = 0, length = 0, floor = 0, x = 0, y = 0, ceiling = 0, run = 0, level = null;
-        if (this.levelpersist == 1) {
-            level = level
-        }
+
         this.Type = type;
         this.Difficulty = difficulty;
         this.Odds[Mario.Odds.Straight] = 20;
@@ -37,14 +49,21 @@ Mario.LevelGenerator.prototype = {
             this.TotalOdds += this.Odds[i];
             this.Odds[i] = this.TotalOdds - this.Odds[i];
         }
-
-        level = new Mario.Level(this.Width, this.Height);
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            this.floor = this.lastfloor
+            level = new Mario.Level(this.Width, this.Height);
+        }
+        else {
+            level = new Mario.Level(this.Width, this.Height);
+            this.lastlevel = level
+            floor = this.Height - 1 - (Math.random() * 4) | 0;
+            this.lastfloor = floor
+        }
         length += this.BuildStraight(level, 0, level.Width, true);
         while (length < level.Width - 64) {
             length += this.BuildZone(level, length, level.Width - length);
         }
 
-        floor = this.Height - 1 - (Math.random() * 4) | 0;
         level.ExitX = length + 8;
         level.ExitY = floor;
 
@@ -59,8 +78,16 @@ Mario.LevelGenerator.prototype = {
         if (type === Mario.LevelType.Castle || type === Mario.LevelType.Underground) {
             for (x = 0; x < level.Width; x++) {
                 if (run-- <= 0 && x > 4) {
-                    ceiling = (Math.random() * 4) | 0;
-                    run = ((Math.random() * 4) | 0) + 4;
+                    if (Mario.MarioCharacter.levelpersist == 1) {
+                        ceiling = this.lastceiling
+                        run = this.lastrun
+                    }
+                    else {
+                        ceiling = (Math.random() * 4) | 0;
+                        run = ((Math.random() * 4) | 0) + 4;
+                        this.lastceiling = ceiling
+                        this.lastrun = run
+                    }
                 }
                 for (y = 0; y < level.Height; y++) {
                     if ((x > 4 && y <= ceiling) || x < 1) {
@@ -82,6 +109,12 @@ Mario.LevelGenerator.prototype = {
                 type = i;
             }
         }
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            var t = this.last_t
+        }
+        else {
+            this.last_t = t
+        }
 
         switch (type) {
             case Mario.Odds.Straight:
@@ -101,7 +134,18 @@ Mario.LevelGenerator.prototype = {
     BuildJump: function (level, xo, maxLength) {
         var js = ((Math.random() * 4) | 0) + 2, jl = ((Math.random() * 2) | 0) + 2, length = js * 2 + jl, x = 0, y = 0,
             hasStairs = ((Math.random() * 3) | 0) === 0, floor = this.Height - 1 - ((Math.random() * 4) | 0);
-
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            js = this.lastjs
+            floor = this.lastfloor2
+            hasStairs = this.lasthasStairs
+            jl = this.lastjl
+        }
+        else {
+            this.lastjs = js
+            this.lastjl = jl
+            this.lasthasStairs = hasStairs
+            this.lastfloor2 = floor
+        }
         for (x = xo; x < xo + length; x++) {
             if (x < xo + js || x > xo + length - js - 1) {
                 for (y = 0; y < this.Height; y++) {
@@ -166,7 +210,14 @@ Mario.LevelGenerator.prototype = {
     BuildHillStraight: function (level, xo, maxLength) {
         var length = ((Math.random() * 10) | 0) + 10, floor = this.Height - 1 - (Math.random() * 4) | 0,
             x = 0, y = 0, h = floor, keepGoing = true, l = 0, xxo = 0, occupied = [], xx = 0, yy = 0;
-
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            length = this.lastlength
+            floor = this.lastfloor3
+        }
+        else {
+            this.lastlength = length
+            this.lastfloor3 = floor
+        }
         if (length > maxLength) {
             length = maxLength;
         }
@@ -291,7 +342,14 @@ Mario.LevelGenerator.prototype = {
 
     BuildStraight: function (level, xo, maxLength, safe) {
         var length = ((Math.random() * 10) | 0) + 2, floor = this.Height - 1 - ((Math.random() * 4) | 0), x = 0, y = 0;
-
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            length = this.lastlength2
+            floor = this.lastfloor4
+        }
+        else {
+            this.lastfloor4 = floor
+            this.lastlength2 = length
+        }
         if (safe) {
             length = 10 + ((Math.random() * 5) | 0);
         }

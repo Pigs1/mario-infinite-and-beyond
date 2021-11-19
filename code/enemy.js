@@ -79,7 +79,13 @@ Mario.Enemy.prototype.CollideCheck = function () {
                     }
                 }
             } else {
-                Mario.MarioCharacter.GetHurt();
+                if (this.World.Paused == true) {
+                    Mario.MarioCharacter.Die
+                    Mario.MarioCharacter.Carried = this
+                }
+                else {
+                    Mario.MarioCharacter.GetHurt();
+                }
             }
         }
     }

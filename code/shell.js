@@ -62,6 +62,7 @@ Mario.Shell.prototype.FireballCollideCheck = function (fireball) {
 
 Mario.Shell.prototype.CollideCheck = function () {
     if (this.Carried || this.Dead || this.DeadTime > 0) {
+        this.Facing = Mario.MarioCharacter.Facing
         return;
     }
 
@@ -95,6 +96,7 @@ Mario.Shell.prototype.CollideCheck = function () {
 Mario.Shell.prototype.Move = function () {
     var sideWaysSpeed = 11, i = 0;
     if (this.Carried) {
+        this.Facing = Mario.MarioCharacter.Facing
         this.World.CheckShellCollide(this);
         return;
     }

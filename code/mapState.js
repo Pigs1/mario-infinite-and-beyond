@@ -165,11 +165,21 @@ Mario.MapState.prototype.NextWorld = function () {
 };
 
 Mario.MapState.prototype.GenerateLevel = function () {
-    var x = 0, y = 0, t0 = 0, t1 = 0, td = 0, t = 0;
+    var x = 0, y = 0, t0 = 0, t1 = 0, td = 0, t = 0, lastn0 = null, lastn1 = null, lastdec = null, lastxo0 = null, lastyo0 = null, lastxo1 = null, lastyo1 = null, lastt0 = t0, lastt1 = null, lasttd = null, lastt = null, lastx = null, lasty = null;
 
     var n0 = new Mario.ImprovedNoise((Math.random() * 9223372036854775807) | 0);
     var n1 = new Mario.ImprovedNoise((Math.random() * 9223372036854775807) | 0);
     var dec = new Mario.ImprovedNoise((Math.random() * 9223372036854775807) | 0);
+    if (Mario.MarioCharacter.levelpersist == 1) {
+        n0 = lastn0
+        n1 = lastn1
+        dec = lastdec
+    }
+    else {
+        lastn0 = n0
+        lastn1 = n1
+        lastdec = dec
+    }
 
     var width = 320 / 16 + 1;
     var height = 240 / 16 + 1;
@@ -180,18 +190,40 @@ Mario.MapState.prototype.GenerateLevel = function () {
     var yo0 = Math.random() * 512;
     var xo1 = Math.random() * 512;
     var yo1 = Math.random() * 512;
+    if (Mario.MarioCharacter.levelpersist == 1) {
+        xo0 = lastxo0
+        yo0 = lastyo0
+        xo1 = lastxo1
+        yo1 = lasty0
+    }
+    else {
+        lastxo0 = xo0
+        lastyo0 = yo0
+        lastxo1 = xo1
+        lastyo1 = yo1
+    }
 
     for (x = 0; x < width; x++) {
         this.Level[x] = [];
         this.Data[x] = [];
 
         for (y = 0; y < height; y++) {
-
-            t0 = n0.PerlinNoise(x * 10 + xo0, y * 10 + yo0);
-            t1 = n1.PerlinNoise(x * 10 + xo1, y * 10 + yo1);
-            td = t0 - t1;
-            t = td * 2;
-
+            if (Mario.MarioCharacter.levelpersist == 1) {
+                t0 = lastt0
+                t1 = lastt1
+                td = lasttd
+                t = lastt
+            }
+            else {
+                t0 = n0.PerlinNoise(x * 10 + xo0, y * 10 + yo0);
+                t1 = n1.PerlinNoise(x * 10 + xo1, y * 10 + yo1);
+                td = t0 - t1;
+                t = td * 2;
+                lastt0 = t0
+                lastt1 = t1
+                lasttd = td
+                lastt = t
+            }
             this.Level[x][y] = t > 0 ? Mario.MapTile.Water : Mario.MapTile.Grass;
         }
     }
@@ -200,8 +232,16 @@ Mario.MapState.prototype.GenerateLevel = function () {
     t = 0;
 
     for (i = 0; i < 100 && t < 12; i++) {
-        x = ((Math.random() * (((width - 1) / 3) | 0)) | 0) * 3 + 2;
-        y = ((Math.random() * (((height - 1) / 3) | 0)) | 0) * 3 + 1;
+        if (Mario.MarioCharacter.levelpersist == 1) {
+            x = lastx
+            y = lasty
+        }
+        else {
+            x = ((Math.random() * (((width - 1) / 3) | 0)) | 0) * 3 + 2;
+            y = ((Math.random() * (((height - 1) / 3) | 0)) | 0) * 3 + 1;
+            lastx = x
+            lasty = y
+        }
         if (this.Level[x][y] === Mario.MapTile.Grass) {
             if (x < lowestX) {
                 lowestX = x;
