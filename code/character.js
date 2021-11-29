@@ -177,6 +177,17 @@ Mario.Character.prototype.Move = function () {
         return;
     }
 
+    if (this.Carried !== null) {
+        this.Carried.X = this.X + 10 * this.Facing
+        this.Carried.Y = this.Y
+        this.Carried.Ya = this.Ya
+        this.Carried.Xa = this.Xa
+        if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
+            this.Carried.Release(this);
+            this.Carried = null;
+        }
+    }
+
     if (this.DeathTime > 0) {
         this.DeathTime++;
         if (this.DeathTime < 11) {
@@ -233,18 +244,18 @@ Mario.Character.prototype.Move = function () {
         this.Facing = -1;
     }
     // Time Freeze
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 0) {
-        if (this.World.Paused == false) {
-            this.World.Paused = true;
-        }
-        else {
-            this.World.Paused = false;
-        }
-        this.WasKeyDown = 1;
-    }
-    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 1) {
-        this.WasKeyDown = 0;
-    }
+    // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 0) {
+    //     if (this.World.Paused == false) {
+    //         this.World.Paused = true;
+    //     }
+    //     else {
+    //         this.World.Paused = false;
+    //     }
+    //     this.WasKeyDown = 1;
+    // }
+    // else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 1) {
+    //     this.WasKeyDown = 0;
+    // }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         // peach float
@@ -417,15 +428,6 @@ Mario.Character.prototype.Move = function () {
 
     if (!this.OnGround) {
         this.Ya += 3;
-    }
-
-    if (this.Carried !== null) {
-        this.Carried.X = this.X + 7 * this.Facing
-        this.Carried.Y = this.Y
-        if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
-            this.Carried.Release(this);
-            this.Carried = null;
-        }
     }
 };
 
