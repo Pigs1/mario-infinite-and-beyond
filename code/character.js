@@ -125,6 +125,7 @@ Mario.Character.prototype.SetLarge = function (large, fire) {
 Mario.Character.prototype.Blink = function (on) {
     this.Large = on ? this.NewLarge : this.LastLarge;
     this.Fire = on ? this.NewFire : this.LastFire;
+
     // set character images
     if (this.Large) {
         if (this.Fire) {
@@ -176,7 +177,7 @@ Mario.Character.prototype.Move = function () {
         this.Ya = 0;
         return;
     }
-
+    // Moved to the front of the function because it was happening after mario moved, and thus shell's movement was delayed
     if (this.Carried !== null) {
         this.Carried.X = this.X + 10 * this.Facing
         this.Carried.Y = this.Y
@@ -536,75 +537,169 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
     }
 
     if (ya > 0) {
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + 1, xa, ya)) {
-            collide = true;
-        } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
-            collide = true;
+        if (this.Carried !== null) {
+            if (Mario.Tile.BlockLower) {
+                if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + 1, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
+                    collide = true;
+                }
+            }
+            else {
+                if (this.IsBlocking(this.X + xa - 16, this.Y + ya, xa, 0)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + 16, this.Y + ya, xa, 0)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa - 16, this.Y + ya + 1, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + 16, this.Y + ya + 1, xa, ya)) {
+                    collide = true;
+                }
+            }
+        }
+        else {
+            if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, 0)) {
+                collide = true;
+            } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, 0)) {
+                collide = true;
+            } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya + 1, xa, ya)) {
+                collide = true;
+            } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
+                collide = true;
+            }
         }
     }
+
     if (ya < 0) {
-        if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
+        if (this.Carried !== null) {
+            if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else if (collide || this.IsBlocking(this.X + xa - 16, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else if (collide || this.IsBlocking(this.X + xa + 16, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            }
+        }
+        else {
+            if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else if (collide || this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else if (collide || this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            }
         }
     }
 
     if (xa > 0) {
         this.Sliding = true;
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
+        if (this.Carried !== null) {
+            if (this.IsBlocking(this.X + xa + 16, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            }
+            else {
+                this.Sliding = false;
+            }
 
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
+            if (this.IsBlocking(this.X + xa + 16, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
 
-        if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
+            if (this.IsBlocking(this.X + xa + 16, this.Y + ya, xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
+        }
+        else {
+            if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
+
+            if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
+
+            if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya, xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
         }
     }
     if (xa < 0) {
         this.Sliding = true;
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
-        }
+        if (this.Carried !== null) {
+            if (this.IsBlocking(this.X + xa - 16, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
+            if (this.IsBlocking(this.X + xa - 16, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
 
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
+            if (this.IsBlocking(this.X + xa - 16, this.Y + ya, xa, ya)) {
+                collide = true;
+            }
+            else {
+                this.Sliding = false;
+            }
         }
+        else {
+            if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
 
-        if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
-            collide = true;
-        } else {
-            this.Sliding = false;
+            if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - ((this.Height / 2) | 0), xa, ya)) {
+                collide = true;
+            } else {
+                this.Sliding = false;
+            }
+
+            if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya, xa, ya)) {
+                collide = true;
+            }
+            else {
+                this.Sliding = false;
+            }
         }
     }
 
     if (collide) {
         if (xa < 0) {
-            this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
-            this.Xa = 0;
+            if (this.Carried !== null) {
+                this.X = (((this.X - 16) / 16) | 0) * 16 + 16;
+                this.Xa = 0;
+            }
+            else {
+                this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
+                this.Xa = 0;
+            }
         }
         if (xa > 0) {
-            this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
-            this.Xa = 0;
+            if (this.Carried !== null) {
+                this.X = (((this.X + 16) / 16 + 1) | 0) * 16 - 16 - 1;
+                this.Xa = 0;
+            }
+            else {
+                this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
+                this.Xa = 0;
+            }
         }
         if (ya < 0) {
             this.Y = (((this.Y - this.Height) / 16) | 0) * 16 + this.Height;
@@ -651,6 +746,7 @@ Mario.Character.prototype.IsBlocking = function (x, y, xa, ya) {
     if (blocking && ya < 0 || this.GroundPoundTimer > 0) {
         this.World.Bump(x, y, this.Large);
     }
+
     return blocking;
 };
 
