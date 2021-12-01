@@ -402,3 +402,4 @@ Mario.Enemy.GreenKoopa = 1;
 Mario.Enemy.Goomba = 2;
 Mario.Enemy.Spiky = 3;
 Mario.Enemy.Flower = 4;
+Mario.Enemy.Thwomp = 5;

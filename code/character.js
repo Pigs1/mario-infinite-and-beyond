@@ -576,13 +576,25 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
 
     if (ya < 0) {
         if (this.Carried !== null) {
-            if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
-                collide = true;
-            } else if (collide || this.IsBlocking(this.X + xa - 16, this.Y + ya - this.Height, xa, ya)) {
-                collide = true;
-            } else if (collide || this.IsBlocking(this.X + xa + 16, this.Y + ya - this.Height, xa, ya)) {
-                collide = true;
+            if (this.Facing < 0) {
+                if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa - 16, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                }
             }
+            else {
+                if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa - this.Width, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                } else if (this.IsBlocking(this.X + xa + 16, this.Y + ya - this.Height, xa, ya)) {
+                    collide = true;
+                }
+            }
+
         }
         else {
             if (this.IsBlocking(this.X + xa, this.Y + ya - this.Height, xa, ya)) {
