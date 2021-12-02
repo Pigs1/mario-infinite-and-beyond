@@ -246,6 +246,12 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
         }
+        if (xa == 0) {
+            if (this.Carried) {
+                Mario.MarioCharacter.X -= 8
+                Mario.MarioCharacter.Xa = 0
+            }
+        }
 
         return false;
     } else {
