@@ -28,6 +28,9 @@ Mario.Shell = function (world, x, y, type) {
     this.AirInertia = 0.89;
     this.OnGround = false;
     this.Anim = 0;
+
+    this.stompable = true;
+    this.stompabletimer = 5;
 };
 
 Mario.Shell.prototype = new Mario.NotchSprite();
@@ -69,7 +72,9 @@ Mario.Shell.prototype.CollideCheck = function () {
     if (xMarioD > -16 && xMarioD < 16) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             if (Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
+                if (this.stompable) {
+                    Mario.MarioCharacter.Stomp(this);
+                }
                 if (Mario.MarioCharacter.GroundPoundTimer > 0) {
                     this.Die()
                     this.World.RemoveSprite(this);
@@ -93,11 +98,21 @@ Mario.Shell.prototype.CollideCheck = function () {
 };
 
 Mario.Shell.prototype.Move = function () {
-    var sideWaysSpeed = 11, i = 0;
+    var sideWaysSpeed = 13, i = 0;
     if (this.Carried) {
         this.World.CheckShellCollide(this);
         return;
     }
+    if (!this.stompable) {
+        this.stompabletimer -= 1
+        if (this.stompabletimer == 0) {
+            this.stompable = true
+        }
+    }
+    else {
+        this.stompabletimer = 5
+    }
+
 
     if (this.DeadTime > 0) {
         this.DeadTime--;
@@ -246,12 +261,6 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
         }
-        if (xa == 0) {
-            if (this.Carried) {
-                Mario.MarioCharacter.X -= 8
-                Mario.MarioCharacter.Xa = 0
-            }
-        }
 
         return false;
     } else {
@@ -315,5 +324,6 @@ Mario.Shell.prototype.ShellCollideCheck = function (shell) {
 Mario.Shell.prototype.Release = function (mario) {
     this.Carried = false;
     this.Facing = Mario.MarioCharacter.Facing;
-    this.X += this.Facing * 8;
+    this.X += 2 * this.Facing;
+    this.stompable = false;
 };
