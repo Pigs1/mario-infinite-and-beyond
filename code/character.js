@@ -21,7 +21,7 @@ Mario.Character = function () {
     this.FloatTimer = 10;
     this.WasKeyDown = 0;
 
-    //non static variables in Notch's code
+    //non static variables
     this.RunTime = 0;
     this.WasOnGround = false;
     this.OnGround = false;
@@ -32,6 +32,7 @@ Mario.Character = function () {
     this.XJumpSpeed = 0;
     this.YJumpSpeed = 0;
     this.CanShoot = false;
+
 
     this.Width = 4;
     this.Height = 24;

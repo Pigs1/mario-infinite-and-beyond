@@ -83,10 +83,12 @@ Mario.Shell.prototype.CollideCheck = function () {
                     this.Xa = 0;
                     this.Facing = 0;
                 } else {
-                    this.Facing = Mario.MarioCharacter.Facing;
+                    if (!(this.DeadTime > 0)) {
+                        this.Facing = Mario.MarioCharacter.Facing;
+                    }
                 }
             } else {
-                if (this.Facing !== 0) {
+                if (this.Facing !== 0 && !(this.DeadTime > 0)) {
                     Mario.MarioCharacter.GetHurt();
                 } else {
                     Mario.MarioCharacter.Kick(this);
@@ -103,15 +105,7 @@ Mario.Shell.prototype.Move = function () {
         this.World.CheckShellCollide(this);
         return;
     }
-    if (!this.stompable) {
-        this.stompabletimer -= 1
-        if (this.stompabletimer == 0) {
-            this.stompable = true
-        }
-    }
-    else {
-        this.stompabletimer = 5
-    }
+
 
 
     if (this.DeadTime > 0) {

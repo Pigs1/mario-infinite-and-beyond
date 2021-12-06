@@ -48,7 +48,7 @@ Mario.Enemy = function (world, x, y, dir, type, winged) {
 Mario.Enemy.prototype = new Mario.NotchSprite();
 
 Mario.Enemy.prototype.CollideCheck = function () {
-    if (this.DeadTime !== 0) {
+    if (this.DeadTime > 0 || this.Dead || this.DeadTime !== 0) {
         return;
     }
 
@@ -79,7 +79,9 @@ Mario.Enemy.prototype.CollideCheck = function () {
                     }
                 }
             } else {
-                Mario.MarioCharacter.GetHurt();
+                if (!(this.Deadtime > 1)) {
+                    Mario.MarioCharacter.GetHurt();
+                }
             }
         }
     }
@@ -293,6 +295,10 @@ Mario.Enemy.prototype.ShellCollideCheck = function (shell) {
             this.FlyDeath = true;
             if (this.SpriteTemplate !== null) {
                 this.SpriteTemplate.IsDead = true;
+            }
+            if (Mario.MarioCharacter.Carried === shell || Mario.MarioCharacter.Carried === shell) {
+                Mario.MarioCharacter.Carried = null;
+                shell.Die()
             }
             this.DeadTime = 100;
             this.Winged = false;
