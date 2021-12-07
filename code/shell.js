@@ -29,8 +29,9 @@ Mario.Shell = function (world, x, y, type) {
     this.OnGround = false;
     this.Anim = 0;
 
-    this.stompable = true;
-    this.stompabletimer = 5;
+    this.Drop = false;
+    this.collide = true;
+
 };
 
 Mario.Shell.prototype = new Mario.NotchSprite();
@@ -89,7 +90,14 @@ Mario.Shell.prototype.CollideCheck = function () {
                 }
             } else {
                 if (this.Facing !== 0 && !(this.DeadTime > 0)) {
-                    Mario.MarioCharacter.GetHurt();
+                    if (this.Drop) {
+                        Mario.MarioCharacter.Kick(this);
+                        this.Facing = Mario.MarioCharacter.Facing;
+                        this.Drop = false;
+                    }
+                    else {
+                        Mario.MarioCharacter.GetHurt();
+                    }
                 } else {
                     Mario.MarioCharacter.Kick(this);
                     this.Facing = Mario.MarioCharacter.Facing;
@@ -101,12 +109,19 @@ Mario.Shell.prototype.CollideCheck = function () {
 
 Mario.Shell.prototype.Move = function () {
     var sideWaysSpeed = 13, i = 0;
+    if (this.Drop) {
+        this.CollideCheck()
+        if (!Mario.MarioCharacter.OnGroundShellCheck) {
+            this.SubMove(0, -(this.Ya * 8));
+        }
+
+        return;
+    }
+
     if (this.Carried) {
         this.World.CheckShellCollide(this);
         return;
     }
-
-
 
     if (this.DeadTime > 0) {
         this.DeadTime--;
@@ -255,11 +270,12 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
         }
-
+        Mario.MarioCharacter.OnGroundShellCheck = true;
         return false;
     } else {
         this.X += xa;
         this.Y += ya;
+
         return true;
     }
 };
@@ -318,6 +334,14 @@ Mario.Shell.prototype.ShellCollideCheck = function (shell) {
 Mario.Shell.prototype.Release = function (mario) {
     this.Carried = false;
     this.Facing = Mario.MarioCharacter.Facing;
-    this.X += 2 * this.Facing;
-    this.stompable = false;
+    if (this.Drop) {
+        this.X += (3 + (Mario.MarioCharacter.Xa)) * this.Facing;
+        if (!Mario.MarioCharacter.OnGround) {
+            this.Xa = 2 * this.Facing;
+            this.Ya = -1;
+        }
+    }
+    else {
+        this.X += 2 * this.Facing;
+    }
 };
