@@ -185,7 +185,6 @@ Mario.Character.prototype.Move = function () {
         this.Carried.Y = this.Y;
         this.Carried.Ya = this.Ya;
         this.Carried.Xa = this.Xa;
-        this.GroundPoundTimer = 0;
 
         if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) || Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
@@ -283,9 +282,6 @@ Mario.Character.prototype.Move = function () {
     // }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
-        if (this.OnGroundShellCheck == true) {
-            this.OnGroundShellCheck = false;
-        }
         // peach float
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == 3) {
             this.Ya = 0
@@ -300,7 +296,7 @@ Mario.Character.prototype.Move = function () {
                 this.defaultairinertia = this.AirInertia
                 this.defaultgroundinertia = this.GroundInertia
             }
-            if (this.OnGround && this.GroundPoundTimer > 0 && this.Carried == null) {
+            if (this.OnGround && this.GroundPoundTimer > 0) {
                 this.Xa *= 0
                 this.Ducking = true
                 this.GroundPoundTimer -= 1;
@@ -311,11 +307,8 @@ Mario.Character.prototype.Move = function () {
                     this.Ducking = false
                 }
             }
-            else {
-                this.AirInertia = this.defaultairinertia
-                this.GroundInertia = this.defaultgroundinertia
-            }
         }
+
 
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
@@ -357,27 +350,25 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         this.FloatTimer = 30;
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.Carried == null) {
-            this.Xa = 0;
-            this.Ya = 15;
-            this.GroundPoundTimer = 10;
-            this.defaultairinertia = this.AirInertia
-            this.defaultgroundinertia = this.GroundInertia
-        }
-        if (this.OnGround && this.GroundPoundTimer > 0 && this.Carried == null) {
-            this.Xa *= 0
-            this.Ducking = true
-            this.GroundPoundTimer -= 1;
-            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
-                ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
-                this.GroundPoundTimer = 0
-                this.Ducking = false
+        if (this.Carried == null) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
+                this.Xa = 0;
+                this.Ya = 15;
+                this.GroundPoundTimer = 10;
+                this.defaultairinertia = this.AirInertia
+                this.defaultgroundinertia = this.GroundInertia
             }
-        }
-        else {
-            this.AirInertia = this.defaultairinertia
-            this.GroundInertia = this.defaultgroundinertia
+            if (this.OnGround && this.GroundPoundTimer > 0) {
+                this.Xa *= 0
+                this.Ducking = true
+                this.GroundPoundTimer -= 1;
+                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
+                    ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+                if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
+                    this.GroundPoundTimer = 0
+                    this.Ducking = false
+                }
+            }
         }
     }
 
@@ -888,7 +879,9 @@ Mario.Character.prototype.Stomp = function (object) {
         this.XJumpSpeed = 0;
         this.YJumpSpeed = -1.9;
         this.JumpTime = 8;
-        this.Ya = this.JumpTime * this.YJumpSpeed;
+        if (this.GroundPoundTimer == 0) {
+            this.Ya = this.JumpTime * this.YJumpSpeed;
+        }
         this.OnGround = false;
         this.Sliding = false;
         this.InvulnerableTime = 1;
