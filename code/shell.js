@@ -113,10 +113,11 @@ Mario.Shell.prototype.Move = function () {
         if (this.OnGround) {
             this.fallingtime = -1;
             this.fallingtime2 = 5;
+
         }
         else {
             this.fallingtime += 1;
-            this.X += (this.fallingtime2 * 0.95) * this.Facing
+            this.X += (this.fallingtime2 * 0.95 + (Mario.MarioCharacter.Xa * this.Facing)) * this.Facing
             this.SubMove(0, (this.fallingtime * 1.5));
         }
 

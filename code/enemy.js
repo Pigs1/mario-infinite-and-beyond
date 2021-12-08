@@ -61,6 +61,9 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 if (this.Winged) {
                     this.Winged = false;
                     this.Ya = 0;
+                    if (Mario.MarioCharacter.GroundPoundTimer != 0) {
+                        Mario.MarioCharacter.Stomp(this);
+                    }
                 } else {
                     this.YPicO = 31 - (32 - 8);
                     this.PicHeight = 8;

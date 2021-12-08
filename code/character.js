@@ -50,6 +50,7 @@ Mario.Character = function () {
 
     //Sprite
     this.Carried = null;
+    this.CarriedCheck = false;
 
     this.LastLarge = false;
     this.LastFire = false;
@@ -179,7 +180,7 @@ Mario.Character.prototype.Move = function () {
         this.Ya = 0;
         return;
     }
-    // Moved to the front of the function because it was happening after mario moved, and thus shell's movement was delayed
+
     if (this.Carried !== null) {
         this.Carried.X = this.X + 10 * this.Facing;
         this.Carried.Y = this.Y;
@@ -288,7 +289,7 @@ Mario.Character.prototype.Move = function () {
             this.Xa *= 0.9
             this.FloatTimer -= 1
         }
-        if (this.Carried == null) {
+        if (!this.CarriedCheck && !this.Ducking) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
                 this.Xa = 0;
                 this.Ya = 15;
@@ -350,7 +351,7 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         this.FloatTimer = 30;
-        if (this.Carried == null) {
+        if (!this.CarriedCheck) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
                 this.Xa = 0;
                 this.Ya = 15;
@@ -805,6 +806,9 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
         if (ya > 0) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
+            if (this.Carried == null) {
+                this.CarriedCheck = false;
+            }
         }
 
         return false;
@@ -872,6 +876,7 @@ Mario.Character.prototype.Stomp = function (object) {
             if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
                 this.Carried = object;
                 object.Carried = true;
+                this.CarriedCheck = true;
             }
         }
     } else {
@@ -970,6 +975,7 @@ Mario.Character.prototype.Kick = function (shell) {
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
         this.Carried = shell;
         shell.Carried = true;
+        this.CarriedCheck = true;
     } else {
         Enjine.Resources.PlaySound("kick");
         this.InvulnerableTime = 1;
