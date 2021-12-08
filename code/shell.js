@@ -31,7 +31,8 @@ Mario.Shell = function (world, x, y, type) {
 
     this.Drop = false;
     this.collide = true;
-
+    this.fallingtime = -1;
+    this.fallingtime2 = 5;
 };
 
 Mario.Shell.prototype = new Mario.NotchSprite();
@@ -73,9 +74,8 @@ Mario.Shell.prototype.CollideCheck = function () {
     if (xMarioD > -16 && xMarioD < 16) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             if (Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                if (this.stompable) {
-                    Mario.MarioCharacter.Stomp(this);
-                }
+                Mario.MarioCharacter.Stomp(this);
+
                 if (Mario.MarioCharacter.GroundPoundTimer > 0) {
                     this.Die()
                     this.World.RemoveSprite(this);
@@ -110,9 +110,14 @@ Mario.Shell.prototype.CollideCheck = function () {
 Mario.Shell.prototype.Move = function () {
     var sideWaysSpeed = 13, i = 0;
     if (this.Drop) {
-        this.CollideCheck()
-        if (!Mario.MarioCharacter.OnGroundShellCheck) {
-            this.SubMove(0, -(this.Ya * 8));
+        if (this.OnGround) {
+            this.fallingtime = -1;
+            this.fallingtime2 = 5;
+        }
+        else {
+            this.fallingtime += 1;
+            this.X += (this.fallingtime2 * 0.95) * this.Facing
+            this.SubMove(0, (this.fallingtime * 1.5));
         }
 
         return;
@@ -254,6 +259,7 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
     }
 
     if (collide) {
+        this.collide = true;
         if (xa < 0) {
             this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
             this.Xa = 0;
@@ -270,9 +276,12 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
         }
-        Mario.MarioCharacter.OnGroundShellCheck = true;
+        else {
+            this.OnGround = false;
+        }
         return false;
     } else {
+        this.collide = false;
         this.X += xa;
         this.Y += ya;
 
@@ -338,7 +347,7 @@ Mario.Shell.prototype.Release = function (mario) {
         this.X += (3 + (Mario.MarioCharacter.Xa)) * this.Facing;
         if (!Mario.MarioCharacter.OnGround) {
             this.Xa = 2 * this.Facing;
-            this.Ya = -1;
+            this.OnGround = false;
         }
     }
     else {
