@@ -48,6 +48,7 @@ Mario.Enemy = function (world, x, y, dir, type, winged) {
 Mario.Enemy.prototype = new Mario.NotchSprite();
 
 Mario.Enemy.prototype.CollideCheck = function () {
+    var mariolaunchcheck = true;
     if (this.DeadTime > 0 || this.Dead || this.DeadTime !== 0) {
         return;
     }
@@ -56,12 +57,12 @@ Mario.Enemy.prototype.CollideCheck = function () {
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
                 if (this.Winged) {
                     this.Winged = false;
                     this.Ya = 0;
-                    if (Mario.MarioCharacter.GroundPoundTimer != 0) {
+                    if (Mario.MarioCharacter.GroundPoundTimer != 0 && Mario.MarioCharacter.launched == 0) {
                         Mario.MarioCharacter.Stomp(this);
                     }
                 } else {
@@ -83,7 +84,21 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 }
             } else {
                 if (!(this.Deadtime > 1)) {
-                    Mario.MarioCharacter.GetHurt();
+                    if (Mario.MarioCharacter.character_select == 2 && mariolaunchcheck) {
+                        mariolaunchcheck = false
+                        Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
+                        if (this.X > Mario.MarioCharacter.X) {
+                            Mario.MarioCharacter.launchangleX = -1 * (5 + (Mario.MarioCharacter.percentdamage * 0.45))
+                        }
+                        else {
+                            Mario.MarioCharacter.launchangleX = 5 + (Mario.MarioCharacter.percentdamage * 0.45)
+                        }
+                        Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
+                        Mario.MarioCharacter.percentdamage += 2;
+                    }
+                    else {
+                        Mario.MarioCharacter.GetHurt();
+                    }
                 }
             }
         }

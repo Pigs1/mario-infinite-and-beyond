@@ -113,7 +113,6 @@ Mario.Shell.prototype.Move = function () {
         if (this.OnGround) {
             this.fallingtime = -1;
             this.fallingtime2 = 5;
-
         }
         else {
             this.fallingtime += 1;
@@ -224,6 +223,9 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             collide = true;
         } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
             collide = true;
+            if (this.Drop) {
+                this.X -= 50
+            }
         }
     }
     if (ya < 0) {

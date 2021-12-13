@@ -122,12 +122,17 @@ Mario.LevelState.prototype.Update = function (delta) {
         this.StartTime++;
     }
 
-    this.Camera.X = Mario.MarioCharacter.X - 160;
-    if (this.Camera.X < 0) {
-        this.Camera.X = 0;
+    if (Mario.MarioCharacter.waslaunched) {
+        this.Camera.X = this.Camera.X
     }
-    if (this.Camera.X > this.Level.Width * 16 - 320) {
-        this.Camera.X = this.Level.Width * 16 - 320;
+    else {
+        this.Camera.X = Mario.MarioCharacter.X - 160;
+        if (this.Camera.X < 0) {
+            this.Camera.X = 0;
+        }
+        if (this.Camera.X > this.Level.Width * 16 - 320) {
+            this.Camera.X = this.Level.Width * 16 - 320;
+        }
     }
 
     this.FireballsOnScreen = 0;
@@ -247,24 +252,32 @@ Mario.LevelState.prototype.Update = function (delta) {
     this.Sprites.RemoveList(this.SpritesToRemove);
     this.SpritesToAdd.length = 0;
     this.SpritesToRemove.length = 0;
-
-    this.Camera.X = (Mario.MarioCharacter.XOld + (Mario.MarioCharacter.X - Mario.MarioCharacter.XOld) * delta) - 160;
-    this.Camera.Y = (Mario.MarioCharacter.YOld + (Mario.MarioCharacter.Y - Mario.MarioCharacter.YOld) * delta) - 120;
+    if (Mario.MarioCharacter.waslaunched) {
+        this.Camera.X = this.Camera.X
+        this.Camera.Y = this.Camera.Y
+        if (Mario.MarioCharacter.X - this.Camera.X < -5 || Mario.MarioCharacter.X - this.Camera.X > 320 + 5 || sprite.Y - this.Camera.Y < -20 && Mario.MarioCharacter.launched > 0 || sprite.Y - this.Camera.Y > 240 + 20 && Mario.MarioCharacter.launched > 0) {
+            Mario.MarioCharacter.DeathTime++
+        }
+    }
+    else {
+        this.Camera.X = (Mario.MarioCharacter.XOld + (Mario.MarioCharacter.X - Mario.MarioCharacter.XOld) * delta) - 160;
+        this.Camera.Y = (Mario.MarioCharacter.YOld + (Mario.MarioCharacter.Y - Mario.MarioCharacter.YOld) * delta) - 120;
+    }
 };
 
 Mario.LevelState.prototype.Draw = function (context) {
     var i = 0, time = 0, t = 0;
 
-    if (this.Camera.X < 0) {
+    if (this.Camera.X < 0 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.X = 0;
     }
-    if (this.Camera.Y < 0) {
+    if (this.Camera.Y < 0 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.Y = 0;
     }
-    if (this.Camera.X > this.Level.Width * 16 - 320) {
+    if (this.Camera.X > this.Level.Width * 16 - 320 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.X = this.Level.Width * 16 - 320;
     }
-    if (this.Camera.Y > this.Level.Height * 16 - 240) {
+    if (this.Camera.Y > this.Level.Height * 16 - 240 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.Y = this.Level.Height * 16 - 240;
     }
 
@@ -307,7 +320,9 @@ Mario.LevelState.prototype.Draw = function (context) {
         time = 0;
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
-
+    if (Mario.MarioCharacter.character_select == 2) {
+        this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
+    }
     if (this.StartTime > 0) {
         t = this.StartTime + this.Delta - 2;
         t = t * t * 0.6;

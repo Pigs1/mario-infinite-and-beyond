@@ -56,6 +56,13 @@ Mario.Character = function () {
     this.LastFire = false;
     this.NewLarge = false;
     this.NewFire = false;
+
+    this.launched = 0;
+    this.waslaunched = false;
+    this.percentdamage = 0;
+
+    this.launchangleX = null;
+    this.launchangleY = null;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -66,6 +73,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.Y = 0;
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
+    this.percentdamage = 0
     // Character Specific Speed Values
     if (this.character_select == 2) {
         this.GroundInertia = 0.9
@@ -174,11 +182,33 @@ Mario.Character.prototype.Blink = function (on) {
 };
 
 Mario.Character.prototype.Move = function () {
+    var launchfirsttime = true, launchtime = 0;
     if (this.WinTime > 0) {
         this.WinTime++;
         this.Xa = 0;
         this.Ya = 0;
         return;
+    }
+
+    if (this.launched > 0) {
+        this.launched -= 1
+        if (launchfirsttime == true) {
+            this.Xa = 0
+            this.Ya = 0
+            launchfirsttime = false
+        }
+        else if (this.launched > 2) {
+            launchfirsttime = true
+        }
+        launchtime += 1
+        this.Xa = this.launchangleX
+
+        this.Ya -= this.launchangleY / launchtime
+
+        this.waslaunched = true;
+    }
+    else {
+        launchtime = 0
     }
 
     if (this.Carried !== null) {
@@ -754,6 +784,7 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
 
     if (collide) {
         this.collide = true;
+
         if (xa < 0) {
             if (this.Carried !== null) {
                 this.X = (((this.X - 16) / 16) | 0) * 16 + 16;
@@ -806,6 +837,7 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
         if (ya > 0) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
+            this.waslaunched = false;
             if (this.Carried == null) {
                 this.CarriedCheck = false;
             }
@@ -997,4 +1029,3 @@ Mario.Character.prototype.GetCoin = function () {
         this.Get1Up();
     }
 };
-
