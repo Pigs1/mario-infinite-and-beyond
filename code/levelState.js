@@ -31,6 +31,7 @@ Mario.LevelState = function (difficulty, type) {
     this.GotoMapState = false;
     this.GotoLoseState = false;
 
+    this.launchdeath = false;
 };
 
 Mario.LevelState.prototype = new Enjine.GameState();
@@ -257,6 +258,7 @@ Mario.LevelState.prototype.Update = function (delta) {
         this.Camera.Y = this.Camera.Y
         if (Mario.MarioCharacter.X - this.Camera.X < -5 || Mario.MarioCharacter.X - this.Camera.X > 320 + 5 || sprite.Y - this.Camera.Y < -20 && Mario.MarioCharacter.launched > 0 || sprite.Y - this.Camera.Y > 240 + 20 && Mario.MarioCharacter.launched > 0) {
             Mario.MarioCharacter.DeathTime++
+            this.launchdeath = true;
         }
     }
     else {
@@ -266,7 +268,7 @@ Mario.LevelState.prototype.Update = function (delta) {
 };
 
 Mario.LevelState.prototype.Draw = function (context) {
-    var i = 0, time = 0, t = 0;
+    var i = 0, time = 0, t = 0, x = 0, y = 0;
 
     if (this.Camera.X < 0 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.X = 0;
@@ -321,6 +323,7 @@ Mario.LevelState.prototype.Draw = function (context) {
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
     if (Mario.MarioCharacter.character_select == 2) {
+        this.AddSprite(new Mario.Blastzone(x, y))
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
     if (this.StartTime > 0) {
@@ -356,8 +359,15 @@ Mario.LevelState.prototype.Draw = function (context) {
                 this.GotoLoseState = true;
             }
         }
-
-        this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
+        if (Mario.MarioCharacter.character_select == 2) {
+            x = Mario.MarioCharacter.XDeathPos
+            y = Mario.MarioCharacter.YDeathPos
+            this.AddSprite(new Mario.Blastzone(x, y))
+            this.launchdeath = false
+        }
+        else {
+            this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
+        }
     }
 };
 
