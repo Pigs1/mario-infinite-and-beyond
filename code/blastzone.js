@@ -11,9 +11,19 @@ Mario.Blastzone = function (world, x, y) {
     this.Y = y;
     this.Xa = 0;
     this.Ya = -6;
-    this.XPic = 1;
-    this.YPic = 1;
-    this.Layer = 1;
+    this.XPic = 0;
+    this.YPic = 0;
+    this.Life = 5;
+
 };
 
 Mario.Blastzone.prototype = new Mario.NotchSprite();
+
+Mario.Blastzone.prototype.Move = function () {
+    var x = 0, y = 0;
+    if (this.Life-- < 0) {
+        this.World.RemoveSprite(this);
+        this.X = this.X
+        this.Y = this.Y
+    }
+};

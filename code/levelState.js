@@ -32,6 +32,7 @@ Mario.LevelState = function (difficulty, type) {
     this.GotoLoseState = false;
 
     this.launchdeath = false;
+    this.blastzonedrawn = false;
 };
 
 Mario.LevelState.prototype = new Enjine.GameState();
@@ -268,7 +269,7 @@ Mario.LevelState.prototype.Update = function (delta) {
 };
 
 Mario.LevelState.prototype.Draw = function (context) {
-    var i = 0, time = 0, t = 0, x = 0, y = 0;
+    var i = 0, time = 0, t = 0, x = 0, y = 0, drawn = false;
 
     if (this.Camera.X < 0 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.X = 0;
@@ -323,7 +324,6 @@ Mario.LevelState.prototype.Draw = function (context) {
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
     if (Mario.MarioCharacter.character_select == 2) {
-        this.AddSprite(new Mario.Blastzone(this, x, y))
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
     if (this.StartTime > 0) {
@@ -360,9 +360,13 @@ Mario.LevelState.prototype.Draw = function (context) {
             }
         }
         if (Mario.MarioCharacter.character_select == 2) {
-            x = Mario.MarioCharacter.XDeathPos
-            y = Mario.MarioCharacter.YDeathPos
-            this.AddSprite(new Mario.Blastzone(this, x, y))
+            x = Mario.MarioCharacter.X - 75
+            y = Mario.MarioCharacter.Y - 172
+            if (!this.blastzonedrawn) {
+                this.AddSprite(new Mario.Blastzone(this, x, y))
+                this.blastzonedrawn = true
+            }
+
             this.launchdeath = false
         }
         else {
