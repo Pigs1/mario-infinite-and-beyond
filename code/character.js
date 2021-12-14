@@ -381,8 +381,8 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         this.FloatTimer = 30;
-        if (!this.CarriedCheck) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && !this.waslaunched) {
+        if (!this.CarriedCheck && !this.waslaunched) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
                 this.Xa = 0;
                 this.Ya = 15;
                 this.GroundPoundTimer = 10;

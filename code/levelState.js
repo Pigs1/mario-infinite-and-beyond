@@ -323,7 +323,7 @@ Mario.LevelState.prototype.Draw = function (context) {
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
     if (Mario.MarioCharacter.character_select == 2) {
-        this.AddSprite(new Mario.Blastzone(x, y))
+        this.AddSprite(new Mario.Blastzone(this, x, y))
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
     if (this.StartTime > 0) {
@@ -362,7 +362,7 @@ Mario.LevelState.prototype.Draw = function (context) {
         if (Mario.MarioCharacter.character_select == 2) {
             x = Mario.MarioCharacter.XDeathPos
             y = Mario.MarioCharacter.YDeathPos
-            this.AddSprite(new Mario.Blastzone(x, y))
+            this.AddSprite(new Mario.Blastzone(this, x, y))
             this.launchdeath = false
         }
         else {
