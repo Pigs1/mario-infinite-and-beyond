@@ -257,7 +257,7 @@ Mario.LevelState.prototype.Update = function (delta) {
     if (Mario.MarioCharacter.waslaunched) {
         this.Camera.X = this.Camera.X
         this.Camera.Y = this.Camera.Y
-        if (Mario.MarioCharacter.X - this.Camera.X < -5 || Mario.MarioCharacter.X - this.Camera.X > 320 + 5 || sprite.Y - this.Camera.Y < -20 && Mario.MarioCharacter.launched > 0 || sprite.Y - this.Camera.Y > 240 + 20 && Mario.MarioCharacter.launched > 0) {
+        if (Mario.MarioCharacter.X - this.Camera.X < -5 || Mario.MarioCharacter.X - this.Camera.X > 320 + 5 || Mario.MarioCharacter.Y - this.Camera.Y < -20 || Mario.MarioCharacter.Y - this.Camera.Y > 240 + 20 && Mario.MarioCharacter.launched > 0) {
             Mario.MarioCharacter.DeathTime++
             this.launchdeath = true;
         }
@@ -269,7 +269,7 @@ Mario.LevelState.prototype.Update = function (delta) {
 };
 
 Mario.LevelState.prototype.Draw = function (context) {
-    var i = 0, time = 0, t = 0, x = 0, y = 0, drawn = false;
+    var i = 0, time = 0, t = 0, x = 0, y = 0, ypic = 0, xpic = 0;
 
     if (this.Camera.X < 0 && !Mario.MarioCharacter.waslaunched) {
         this.Camera.X = 0;
@@ -325,6 +325,7 @@ Mario.LevelState.prototype.Draw = function (context) {
     this.DrawStringShadow(context, " " + time, 34, 1);
     if (Mario.MarioCharacter.character_select == 2) {
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
+        this.DrawStringShadow(context, Mario.Blastzone.Direction + " ", 34, 5);
     }
     if (this.StartTime > 0) {
         t = this.StartTime + this.Delta - 2;
@@ -360,10 +361,41 @@ Mario.LevelState.prototype.Draw = function (context) {
             }
         }
         if (Mario.MarioCharacter.character_select == 2) {
-            x = Mario.MarioCharacter.X - 75
-            y = Mario.MarioCharacter.Y - 172
             if (!this.blastzonedrawn) {
-                this.AddSprite(new Mario.Blastzone(this, x, y))
+                if (Mario.MarioCharacter.X - this.Camera.X < -5) {
+                    Mario.Blastzone.Direction = -3;
+                    xpic = 0
+                    ypic = 1
+                    x = Mario.MarioCharacter.X + 130
+                    y = Mario.MarioCharacter.Y - 15
+                    Mario.MarioCharacter.YPic = 1
+                }
+                else if (Mario.MarioCharacter.X - this.Camera.X > 320 + 5) {
+                    Mario.Blastzone.Direction = 3;
+                    xpic = 1
+                    ypic = 1
+                    x = Mario.MarioCharacter.X
+                    y = Mario.MarioCharacter.Y - 15
+                    Mario.MarioCharacter.YPic = 1
+                }
+                else if (Mario.MarioCharacter.Y - this.Camera.Y < -20) {
+                    Mario.Blastzone.Direction = 1;
+                    xpic = 1
+                    ypic = 0
+                    x = Mario.MarioCharacter.X + 75
+                    y = Mario.MarioCharacter.Y + 15
+                    Mario.MarioCharacter.YPic = 1
+                }
+                else if (Mario.MarioCharacter.Y - this.Camera.Y > 240 + 20) {
+                    Mario.Blastzone.Direction = -1;
+                    xpic = 0
+                    ypic = 0
+                    x = Mario.MarioCharacter.X + 75
+                    y = Mario.MarioCharacter.Y - 15
+                    Mario.MarioCharacter.YPic = 1
+                }
+
+                this.AddSprite(new Mario.Blastzone(this, x, y, xpic, ypic))
                 this.blastzonedrawn = true
             }
 

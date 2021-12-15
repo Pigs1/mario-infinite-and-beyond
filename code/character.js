@@ -71,6 +71,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.World = world;
     this.X = 32;
     this.Y = 0;
+    this.YPic = 0
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
     this.percentdamage = 0
@@ -362,10 +363,13 @@ Mario.Character.prototype.Move = function () {
         } else if (this.Sliding && this.MayJump && this.Carried == null) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = -this.Facing * 6;
-            if (this.character_select = 1) {
+            if (this.character_select == 1) {
                 this.YJumpSpeed = -2;
-            } else if (this.character_select = 2) {
+            } else if (this.character_select == 2) {
                 this.YJumpSpeed = -5;
+            }
+            else {
+                this.YJumpSpeed = -2;
             }
             this.JumpTime = -6;
             this.Xa = this.XJumpSpeed;
