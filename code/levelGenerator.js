@@ -236,14 +236,14 @@ Mario.LevelGenerator.prototype = {
     AddEnemyLine: function (level, x0, x1, y) {
         var x = 0, type = 0;
         for (x = x0; x < x1; x++) {
-            if (((Math.random() * 35) | 0) < this.Difficulty + 1) {
-                type = (Math.random() * 4) | 0;
+            if (((Math.random() * 40) | 0) < this.Difficulty + 1) {
+                type = (Math.random() * 5) | 0;
                 if (this.Difficulty < 1) {
                     type = Mario.Enemy.Goomba;
                 } else if (this.Difficulty < 3) {
-                    type = (Math.random() * 3) | 0;
+                    type = (Math.random() * 4) | 0;
                 }
-                level.SetSpriteTemplate(x, y, new Mario.SpriteTemplate(type, ((Math.random() * 35) | 0) < this.Difficulty));
+                level.SetSpriteTemplate(x, y, new Mario.SpriteTemplate(type, ((Math.random() * 40) | 0) < this.Difficulty));
             }
         }
     },

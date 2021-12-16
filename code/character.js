@@ -76,13 +76,13 @@ Mario.Character.prototype.Initialize = function (world) {
     this.character_select = Mario.MarioCharacter.character_select;
     this.percentdamage = 0
     // Character Specific Speed Values
-    if (this.character_select == 2) {
+    if (this.character_select == 2 || this.character_select == 1) {
         this.GroundInertia = 0.9
         this.AirInertia = 0.9
     }
     else if (this.character_select == 3) {
-        this.GroundInertia = 0.83
-        this.AirInertia = 0.83
+        this.GroundInertia = 0.89
+        this.AirInertia = 0.89
     }
 
     //non static variables in Notch's code
@@ -194,6 +194,7 @@ Mario.Character.prototype.Move = function () {
     if (this.launched > 0) {
         this.launched -= 1
         if (launchfirsttime == true) {
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
             this.Xa = 0
             this.Ya = 0
             launchfirsttime = false

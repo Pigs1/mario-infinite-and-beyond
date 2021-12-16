@@ -43,6 +43,18 @@ Mario.Enemy = function (world, x, y, dir, type, winged) {
     }
 
     this.PicWidth = 16;
+    if (this.Type == 3) {
+        this.PicWidth = 24
+        this.Width = 7
+        this.Height = 22
+    }
+
+    this.chucktype = 1;
+    this.looktimer = 30;
+    this.chuckrun = false;
+    this.collidetimer = 0;
+    this.chuckstomptimer = 0;
+    this.chuckstomped = false;
 };
 
 Mario.Enemy.prototype = new Mario.NotchSprite();
@@ -58,7 +70,21 @@ Mario.Enemy.prototype.CollideCheck = function () {
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
+
+                if (this.Type == 3) {
+                    if (this.chuckstomptimer > 0) {
+                        Mario.MarioCharacter.Stomp(this);
+                    }
+                    else {
+                        this.chuckstomped = true;
+                        Mario.MarioCharacter.Stomp(this);
+                        this.XPic = 6
+                    }
+                }
+                else {
+                    Mario.MarioCharacter.Stomp(this);
+                }
+
                 if (this.Winged) {
                     this.Winged = false;
                     this.Ya = 0;
@@ -66,14 +92,22 @@ Mario.Enemy.prototype.CollideCheck = function () {
                         Mario.MarioCharacter.Stomp(this);
                     }
                 } else {
-                    this.YPicO = 31 - (32 - 8);
-                    this.PicHeight = 8;
+                    if (this.Type != 3) {
+                        this.YPicO = 31 - (32 - 8);
+                        this.PicHeight = 8;
+                    }
 
                     if (this.SpriteTemplate !== null) {
                         this.SpriteTemplate.IsDead = true;
                     }
-
-                    this.DeadTime = 10;
+                    if (this.Type == 3) {
+                        if (this.chuckstomptimer > 0) {
+                            this.DeadTime = 10;
+                        }
+                    }
+                    else {
+                        this.DeadTime = 10;
+                    }
                     this.Winged = false;
 
                     if (this.Type === Mario.Enemy.RedKoopa && Mario.MarioCharacter.GroundPoundTimer == 0) {
@@ -107,6 +141,59 @@ Mario.Enemy.prototype.CollideCheck = function () {
 
 Mario.Enemy.prototype.Move = function () {
     var i = 0, sideWaysSpeed = 1.75, runFrame = 0;
+    if (this.Type == 3 && this.DeadTime == 0) {
+
+        if (this.chucktype == 1) {
+            if (this.looktimer > 0) {
+                this.looktimer -= 1
+            }
+            if (this.collidetimer > 0) {
+                this.collidetimer -= 1
+            }
+            if (this.chuckstomped && this.chuckstomptimer == 0) {
+                this.chuckstomptimer = 30
+            }
+            if (this.chuckstomptimer > 0) {
+                this.chuckstomptimer -= 1
+                this.collidetimer = 0
+                this.chuckrun = false
+            }
+
+            if (this.looktimer == 0 && !this.chuckrun && this.collidetimer == 0 && this.chuckstomptimer == 0) {
+                this.Facing *= -1
+                if (this.XPic != 0) {
+                    this.XPic = 0
+                }
+                if (this.XFlip) {
+                    this.XFlip = false
+                }
+                else {
+                    this.XFlip = true
+                }
+                this.chuckstomped = false;
+                this.looktimer = 30
+            }
+            if (this.collidetimer == 0 && this.chuckstomptimer == 0 && this.Facing == 1 && Mario.MarioCharacter.X > this.X && Mario.MarioCharacter.Y - this.Y <= 2 && Mario.MarioCharacter.Y - this.Y >= -2) {
+                this.chuckrun = true
+                this.collidetimer = 55
+                this.chuckstomped = false
+            }
+            else if (this.collidetimer == 0 && this.chuckstomptimer == 0 && this.Facing == -1 && Mario.MarioCharacter.X < this.X && Mario.MarioCharacter.Y - this.Y <= 2 && Mario.MarioCharacter.Y - this.Y >= -2) {
+                this.chuckrun = true
+                this.collidetimer = 55
+                this.chuckstomped = false
+            }
+            if (this.chuckrun) {
+                if (this.XPic == 3) [
+                    this.XPic = 4
+                ]
+                else {
+                    this.XPic = 3
+                }
+                this.Xa = 3 * this.Facing
+            }
+        }
+    }
 
     this.WingTime++;
     if (this.DeadTime > 0) {
@@ -135,8 +222,9 @@ Mario.Enemy.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
-
-    this.Xa = this.Facing * sideWaysSpeed;
+    if (this.Type != 3) {
+        this.Xa = this.Facing * sideWaysSpeed;
+    }
 
     this.MayJump = this.OnGround;
 
@@ -176,8 +264,9 @@ Mario.Enemy.prototype.Move = function () {
     if (this.Winged) {
         runFrame = ((this.WingTime / 4) | 0) % 2;
     }
-
-    this.XPic = runFrame;
+    if (this.Type != 3) {
+        this.XPic = runFrame;
+    }
 };
 
 Mario.Enemy.prototype.SubMove = function (xa, ya) {
@@ -264,10 +353,20 @@ Mario.Enemy.prototype.SubMove = function (xa, ya) {
         if (xa < 0) {
             this.X = (((this.X - this.Width) / 16) | 0) * 16 + this.Width;
             this.Xa = 0;
+            if (this.Type == 3) {
+                this.chuckrun = false
+                this.XPic = 5
+                this.collidetimer = 55
+            }
         }
         if (xa > 0) {
             this.X = (((this.X + this.Width) / 16 + 1) | 0) * 16 - this.Width - 1;
             this.Xa = 0;
+            if (this.Type == 3) {
+                this.chuckrun = false
+                this.XPic = 5
+                this.collidetimer = 55
+            }
         }
         if (ya < 0) {
             this.Y = (((this.Y - this.Height) / 16) | 0) * 16 + this.Height;
@@ -424,6 +523,6 @@ Mario.Enemy.prototype.Draw = function (context, camera) {
 Mario.Enemy.RedKoopa = 0;
 Mario.Enemy.GreenKoopa = 1;
 Mario.Enemy.Goomba = 2;
-Mario.Enemy.Spiky = 3;
-Mario.Enemy.Flower = 4;
-Mario.Enemy.Thwomp = 5;
+Mario.Enemy.Spiky = 4;
+Mario.Enemy.Flower = 5;
+Mario.Enemy.Chuck = 3;
