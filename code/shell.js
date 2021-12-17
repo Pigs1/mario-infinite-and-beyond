@@ -66,6 +66,7 @@ Mario.Shell.prototype.FireballCollideCheck = function (fireball) {
 };
 
 Mario.Shell.prototype.CollideCheck = function () {
+    var mariolaunchcheck = true;
     if (this.Carried || this.Dead || this.DeadTime > 0) {
         return;
     }
@@ -88,7 +89,8 @@ Mario.Shell.prototype.CollideCheck = function () {
                         this.Facing = Mario.MarioCharacter.Facing;
                     }
                 }
-            } else {
+            }
+            else {
                 if (this.Facing !== 0 && !(this.DeadTime > 0)) {
                     if (this.Drop) {
                         Mario.MarioCharacter.Kick(this);
@@ -96,7 +98,21 @@ Mario.Shell.prototype.CollideCheck = function () {
                         this.Drop = false;
                     }
                     else {
-                        Mario.MarioCharacter.GetHurt();
+                        if (Mario.MarioCharacter.character_select == 4 && mariolaunchcheck) {
+                            mariolaunchcheck = false
+                            Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
+                            if (this.X > Mario.MarioCharacter.X) {
+                                Mario.MarioCharacter.launchangleX = -1 * (5 + (Mario.MarioCharacter.percentdamage * 0.45))
+                            }
+                            else {
+                                Mario.MarioCharacter.launchangleX = 5 + (Mario.MarioCharacter.percentdamage * 0.45)
+                            }
+                            Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
+                            Mario.MarioCharacter.percentdamage += 2;
+                        }
+                        else {
+                            Mario.MarioCharacter.GetHurt();
+                        }
                     }
                 } else {
                     Mario.MarioCharacter.Kick(this);

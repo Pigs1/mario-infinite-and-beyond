@@ -111,6 +111,12 @@ Mario.MapState.prototype.Enter = function () {
         this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
     }
+    else if (this.character_select == 4) {
+        Mario.MarioCharacter.character_select = 4
+        this.character_select = 4
+        this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+    }
 
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
     this.Font = Mario.SpriteCuts.CreateWhiteFont();
@@ -522,6 +528,13 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
             } else if (this.character_select == 3 && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = 4
+                this.character_select = 4
+                this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+                this.IsKeyDownLast = 1
+            }
+            else if (this.character_select == 4 && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = 1
                 this.character_select = 1
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap"]

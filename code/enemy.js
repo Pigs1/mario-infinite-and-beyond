@@ -74,6 +74,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 if (this.Type == 3) {
                     if (this.chuckstomptimer > 0) {
                         Mario.MarioCharacter.Stomp(this);
+                        this.PicHeight = 12;
                     }
                     else {
                         this.chuckstomped = true;
@@ -118,7 +119,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 }
             } else {
                 if (!(this.Deadtime > 1)) {
-                    if (Mario.MarioCharacter.character_select == 2 && mariolaunchcheck) {
+                    if (Mario.MarioCharacter.character_select == 4 && mariolaunchcheck) {
                         mariolaunchcheck = false
                         Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
                         if (this.X > Mario.MarioCharacter.X) {
@@ -190,7 +191,7 @@ Mario.Enemy.prototype.Move = function () {
                 else {
                     this.XPic = 3
                 }
-                this.Xa = 3 * this.Facing
+                this.Xa = 4 * this.Facing
             }
         }
     }

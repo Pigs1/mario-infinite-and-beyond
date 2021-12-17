@@ -84,6 +84,10 @@ Mario.Character.prototype.Initialize = function (world) {
         this.GroundInertia = 0.89
         this.AirInertia = 0.89
     }
+    else if (this.character_select == 4) {
+        this.GroundInertia = 0.92
+        this.AirInertia = 0.92
+    }
 
     //non static variables in Notch's code
     this.RunTime = 0;
@@ -137,6 +141,7 @@ Mario.Character.prototype.SetLarge = function (large, fire) {
 Mario.Character.prototype.Blink = function (on) {
     this.Large = on ? this.NewLarge : this.LastLarge;
     this.Fire = on ? this.NewFire : this.LastFire;
+
 
     // set character images
     if (this.Large) {
@@ -973,7 +978,7 @@ Mario.Character.prototype.Die = function () {
 };
 
 Mario.Character.prototype.GetFlower = function () {
-    if (this.DeathTime > 0 && this.World.Paused) {
+    if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
         return;
     }
 
@@ -989,11 +994,14 @@ Mario.Character.prototype.GetFlower = function () {
 };
 
 Mario.Character.prototype.GetMushroom = function () {
-    if (this.DeathTime > 0 && this.World.Paused) {
+    if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
         return;
     }
+    if (this.character_select == 4) {
+        this.percentdamage -= 10
+    }
 
-    if (!this.Large) {
+    if (!this.Large && this.character_select != 4) {
         this.World.Paused = true;
         this.PowerUpTime = 18;
         Enjine.Resources.PlaySound("powerup");

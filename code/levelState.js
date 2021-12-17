@@ -323,7 +323,7 @@ Mario.LevelState.prototype.Draw = function (context) {
         time = 0;
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
-    if (Mario.MarioCharacter.character_select == 2) {
+    if (Mario.MarioCharacter.character_select == 4) {
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
     if (this.StartTime > 0) {
@@ -359,7 +359,7 @@ Mario.LevelState.prototype.Draw = function (context) {
                 this.GotoLoseState = true;
             }
         }
-        if (Mario.MarioCharacter.character_select == 2) {
+        if (Mario.MarioCharacter.character_select == 4) {
             if (!this.blastzonedrawn) {
                 if (Mario.MarioCharacter.X - this.Camera.X < -5) {
                     Mario.Blastzone.Direction = -3;
