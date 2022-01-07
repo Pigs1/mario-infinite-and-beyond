@@ -29,7 +29,7 @@ Mario.Mushroom.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
     if (xMarioD > -16 && xMarioD < 16) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (Mario.MarioCharacter.character_select != 4) {
+            if (Mario.MarioCharacter.character_select != "fox") {
                 Mario.MarioCharacter.GetMushroom();
             }
             this.World.RemoveSprite(this);
@@ -60,7 +60,7 @@ Mario.Mushroom.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
-    if (Mario.MarioCharacter.character_select == 4) {
+    if (Mario.MarioCharacter.character_select == "fox") {
         return;
     }
     this.Xa = this.Facing * sideWaysSpeed;

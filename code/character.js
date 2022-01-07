@@ -76,15 +76,15 @@ Mario.Character.prototype.Initialize = function (world) {
     this.character_select = Mario.MarioCharacter.character_select;
     this.percentdamage = 0
     // Character Specific Speed Values
-    if (this.character_select == 2 || this.character_select == 1) {
+    if (this.character_select == "luigi" || this.character_select == "mario") {
         this.GroundInertia = 0.9
         this.AirInertia = 0.9
     }
-    else if (this.character_select == 3) {
+    else if (this.character_select == "peach") {
         this.GroundInertia = 0.89
         this.AirInertia = 0.89
     }
-    else if (this.character_select == 4) {
+    else if (this.character_select == "fox") {
         this.GroundInertia = 0.92
         this.AirInertia = 0.92
     }
@@ -146,23 +146,23 @@ Mario.Character.prototype.Blink = function (on) {
     // set character images
     if (this.Large) {
         if (this.Fire) {
-            if (this.character_select == 2) {
+            if (this.character_select == "luigi") {
                 this.Image = Enjine.Resources.Images["fireLuigi"];
             }
-            else if (this.character_select == 3) {
+            else if (this.character_select == "peach") {
                 this.Image = Enjine.Resources.Images["firePeach"];
             }
-            else if (this.character_select == 1) {
+            else if (this.character_select == "mario") {
                 this.Image = Enjine.Resources.Images["fireMario"];
             }
         }
-        else if (this.character_select == 2) {
+        else if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["luigi"];
         }
-        else if (this.character_select == 3) {
+        else if (this.character_select == "peach") {
             this.Image = Enjine.Resources.Images["peach"];
         }
-        else if (this.character_select == 1) {
+        else if (this.character_select == "mario") {
             this.Image = Enjine.Resources.Images["mario"];
         }
 
@@ -170,13 +170,13 @@ Mario.Character.prototype.Blink = function (on) {
         this.YPicO = 31;
         this.PicWidth = this.PicHeight = 32;
     } else {
-        if (this.character_select == 2) {
+        if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["smallLuigi"];
         }
-        else if (this.character_select == 3) {
+        else if (this.character_select == "peach") {
             this.Image = Enjine.Resources.Images["smallPeach"];
         }
-        else if (this.character_select == 1) {
+        else if (this.character_select == "mario") {
             this.Image = Enjine.Resources.Images["smallMario"];
         }
 
@@ -321,7 +321,7 @@ Mario.Character.prototype.Move = function () {
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         // peach float
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == 3) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == "peach") {
             this.Ya = 0
             this.Xa *= 0.9
             this.FloatTimer -= 1
@@ -356,7 +356,7 @@ Mario.Character.prototype.Move = function () {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = 0;
             //character specific jump height
-            if (this.character_select == 2) {
+            if (this.character_select == "luigi") {
                 this.YJumpSpeed = -3;
             } else {
                 this.YJumpSpeed = -1.9;
@@ -369,9 +369,9 @@ Mario.Character.prototype.Move = function () {
         } else if (this.Sliding && this.MayJump && this.Carried == null) {
             Enjine.Resources.PlaySound("jump");
             this.XJumpSpeed = -this.Facing * 6;
-            if (this.character_select == 1) {
+            if (this.character_select == "mario") {
                 this.YJumpSpeed = -2;
-            } else if (this.character_select == 2) {
+            } else if (this.character_select == "luigi") {
                 this.YJumpSpeed = -5;
             }
             else {
@@ -979,7 +979,7 @@ Mario.Character.prototype.Die = function () {
 
 Mario.Character.prototype.GetFlower = function () {
     var y = this.Y / 16, x = (this.X / 16), world = this.World;
-    if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
+    if (this.DeathTime > 0 && this.World.Paused || this.character_select == "fox") {
         if (this.percentdamage > 10) {
             this.percentdamage -= 10
         }
@@ -1007,7 +1007,7 @@ Mario.Character.prototype.GetFlower = function () {
 
 Mario.Character.prototype.GetMushroom = function () {
     var y = this.Y / 16, x = this.X / 16;
-    if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
+    if (this.DeathTime > 0 && this.World.Paused || this.character_select == "fox") {
         if (this.percentdamage >= 10) {
             this.percentdamage -= 10
         }
@@ -1016,11 +1016,11 @@ Mario.Character.prototype.GetMushroom = function () {
         }
         return;
     }
-    if (this.character_select == 4) {
+    if (this.character_select == 'fox') {
         this.percentdamage -= 10
     }
 
-    if (!this.Large && this.character_select != 4) {
+    if (!this.Large && this.character_select != "fox") {
         this.World.Paused = true;
         this.PowerUpTime = 18;
         Enjine.Resources.PlaySound("powerup");

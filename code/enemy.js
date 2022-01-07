@@ -119,7 +119,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 }
             } else {
                 if (!(this.Deadtime > 1)) {
-                    if (Mario.MarioCharacter.character_select == 4 && mariolaunchcheck) {
+                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck) {
                         mariolaunchcheck = false
                         Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
                         if (this.X > Mario.MarioCharacter.X) {
