@@ -978,7 +978,14 @@ Mario.Character.prototype.Die = function () {
 };
 
 Mario.Character.prototype.GetFlower = function () {
+    var y = this.Y / 16, x = (this.X / 16), world = this.World;
     if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
+        if (this.percentdamage > 10) {
+            this.percentdamage -= 10
+        }
+        else {
+            this.percentdamage = 0
+        }
         return;
     }
 
@@ -988,13 +995,25 @@ Mario.Character.prototype.GetFlower = function () {
         Enjine.Resources.PlaySound("powerup");
         this.SetLarge(true, true);
     } else {
-        this.GetCoin();
-        Enjine.Resources.PlaySound("coin");
+        for (let i = 0; i < 20; i += 0.25) {
+            if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
+                this.GetCoin();
+                Enjine.Resources.PlaySound("coin");
+                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
+            }
+        }
     }
 };
 
 Mario.Character.prototype.GetMushroom = function () {
+    var y = this.Y / 16, x = this.X / 16;
     if (this.DeathTime > 0 && this.World.Paused || this.character_select == 4) {
+        if (this.percentdamage >= 10) {
+            this.percentdamage -= 10
+        }
+        else {
+            this.percentdamage = 0
+        }
         return;
     }
     if (this.character_select == 4) {
@@ -1007,8 +1026,13 @@ Mario.Character.prototype.GetMushroom = function () {
         Enjine.Resources.PlaySound("powerup");
         this.SetLarge(true, false);
     } else {
-        this.GetCoin();
-        Enjine.Resources.PlaySound("coin");
+        for (let i = 0; i < 20; i += 0.25) {
+            if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
+                this.GetCoin();
+                Enjine.Resources.PlaySound("coin");
+                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
+            }
+        }
     }
 };
 

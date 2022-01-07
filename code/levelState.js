@@ -323,6 +323,7 @@ Mario.LevelState.prototype.Draw = function (context) {
         time = 0;
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
+
     if (Mario.MarioCharacter.character_select == 4) {
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
