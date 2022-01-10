@@ -682,8 +682,8 @@ Mario.MapState.prototype.Draw = function (context) {
         this.LargeMario.Draw(context, this.camera);
     }
 
-    this.Font.Strings[0] = { String: "MARIO " + Mario.MarioCharacter.Lives, X: 4, Y: 4 };
-    this.FontShadow.Strings[0] = { String: "MARIO " + Mario.MarioCharacter.Lives, X: 5, Y: 5 };
+    this.Font.Strings[0] = { String: "LIVES " + Mario.MarioCharacter.Lives, X: 4, Y: 4 };
+    this.FontShadow.Strings[0] = { String: "LIVES " + Mario.MarioCharacter.Lives, X: 5, Y: 5 };
     this.Font.Strings[1] = { String: "WORLD " + (this.WorldNumber + 1), X: 256, Y: 4 };
     this.FontShadow.Strings[1] = { String: "WORLD " + (this.WorldNumber + 1), X: 257, Y: 5 };
     this.Font.Strings[2] = { String: "CHAR " + this.character_select, X: 4, Y: 15 };

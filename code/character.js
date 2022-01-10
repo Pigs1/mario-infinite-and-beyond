@@ -16,6 +16,7 @@ Mario.Character = function () {
     this.GroundPoundTimer = 0;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
+    this.GroundTraction = 0.9;
 
     // Char specific vars
     this.FloatTimer = 10;
@@ -78,17 +79,25 @@ Mario.Character.prototype.Initialize = function (world) {
     this.character_select = Mario.MarioCharacter.character_select;
     this.percentdamage = 0
     // Character Specific Speed Values
-    if (this.character_select == "luigi" || this.character_select == "mario") {
+    if (this.character_select == "mario") {
         this.GroundInertia = 0.9
         this.AirInertia = 0.9
+        this.GroundTraction = 0.85
+    }
+    else if (this.character_select == "luigi") {
+        this.GroundInertia = 0.89
+        this.AirInertia = 0.9
+        this.GroundTraction = 0.93
     }
     else if (this.character_select == "peach") {
         this.GroundInertia = 0.89
         this.AirInertia = 0.89
+        this.GroundTraction = 0.8
     }
     else if (this.character_select == "fox") {
-        this.GroundInertia = 0.92
+        this.GroundInertia = 0.95
         this.AirInertia = 0.92
+        this.GroundTraction = 0.82
     }
 
     //non static variables in Notch's code
@@ -512,9 +521,13 @@ Mario.Character.prototype.Move = function () {
     }
 
     this.Ya *= 0.85;
-    if (this.OnGround) {
+    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) || this.XPic == 7) {
+        this.Xa *= this.GroundTraction;
+    }
+    else if (this.OnGround) {
         this.Xa *= this.GroundInertia;
-    } else {
+    }
+    else if (!this.OnGround) {
         this.Xa *= this.AirInertia;
     }
 
