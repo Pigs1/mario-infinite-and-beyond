@@ -328,28 +328,6 @@ Mario.LevelState.prototype.Draw = function (context) {
     if (Mario.MarioCharacter.character_select == "fox") {
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }
-
-    if (Mario.MarioCharacter.EscapePause) {
-        if (Mario.MarioCharacter.character_select == "mario") {
-            this.DrawStringShadow(context, "Mario:", 7, 5);
-            this.DrawStringShadow(context, "Heroic plumber residing", 7, 6);
-            this.DrawStringShadow(context, "in the Mushroom Kingdom.", 7, 7);
-            this.DrawStringShadow(context, "The most basic character,", 7, 9);
-            this.DrawStringShadow(context, "lacking special abilities.", 7, 10);
-            this.DrawStringShadow(context, "Controls:", 7, 13);
-            this.DrawStringShadow(context, "S to Jump", 7, 14);
-            this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 15);
-            this.DrawStringShadow(context, "Down to Crouch and Groundpound", 7, 16);
-        }
-        // else if (Mario.MarioCharacter.character_select == "luigi") {
-
-        //     this.DrawStringShadow(context, "Controls:", 7, 5);
-        //     this.DrawStringShadow(context, "S to Jump", 7, 8);
-        //     this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 11);
-
-        // }
-    }
-
     if (this.StartTime > 0) {
         t = this.StartTime + this.Delta - 2;
         t = t * t * 0.6;

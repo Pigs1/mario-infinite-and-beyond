@@ -31,7 +31,7 @@ Mario.MapState = function () {
     this.EnterLevel = false;
     this.LevelDifficulty = 0;
     this.LevelType = 0;
-    this.character_select = "Mario";
+    this.character_select = "mario";
     this.IsKeyDownLast = 0;
 
     this.WorldNumber = -1;
@@ -95,25 +95,25 @@ Mario.MapState.prototype.Enter = function () {
     this.LargeMario.X = 0;
     this.LargeMario.Y = 0;
 
-    if (this.character_select == "Mario") {
+    if (this.character_select == "mario") {
         Mario.MarioCharacter.character_select = "mario"
-        this.character_select = "Mario"
+        this.character_select = "mario"
         this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
-    } else if (this.character_select == "Luigi") {
+    } else if (this.character_select == "luigi") {
         Mario.MarioCharacter.character_select = "luigi"
-        this.character_select = "Luigi"
+        this.character_select = "luigi"
         this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
         this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
-    } else if (this.character_select == "Peach") {
+    } else if (this.character_select == "peach") {
         Mario.MarioCharacter.character_select = "peach"
-        this.character_select = "Peach"
+        this.character_select = "peach"
         this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
     }
-    else if (this.character_select == "Fox") {
+    else if (this.character_select == "fox") {
         Mario.MarioCharacter.character_select = "fox"
-        this.character_select = "Fox"
+        this.character_select = "fox"
         this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
     }
@@ -515,28 +515,28 @@ Mario.MapState.prototype.Update = function (delta) {
         this.YMarioA = 0;
         // Swap Character
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E)) {
-            if (this.character_select == "Mario" && this.IsKeyDownLast == 0) {
+            if (this.character_select == "mario" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "luigi"
-                this.character_select = "Luigi"
+                this.character_select = "luigi"
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
                 this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
                 this.IsKeyDownLast = 1
-            } else if (this.character_select == "Luigi" && this.IsKeyDownLast == 0) {
+            } else if (this.character_select == "luigi" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "peach"
-                this.character_select = "Peach"
+                this.character_select = "peach"
                 this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
-            } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
+            } else if (this.character_select == "peach" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "fox"
-                this.character_select = "Fox"
+                this.character_select = "peach"
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
                 this.IsKeyDownLast = 1
             }
-            else if (this.character_select == "Fox" && this.IsKeyDownLast == 0) {
+            else if (this.character_select == "fox" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "mario"
-                this.character_select = "Mario"
+                this.character_select = "mario"
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
                 this.IsKeyDownLast = 1
@@ -686,8 +686,6 @@ Mario.MapState.prototype.Draw = function (context) {
     this.FontShadow.Strings[0] = { String: "MARIO " + Mario.MarioCharacter.Lives, X: 5, Y: 5 };
     this.Font.Strings[1] = { String: "WORLD " + (this.WorldNumber + 1), X: 256, Y: 4 };
     this.FontShadow.Strings[1] = { String: "WORLD " + (this.WorldNumber + 1), X: 257, Y: 5 };
-    this.Font.Strings[2] = { String: "CHAR " + this.character_select, X: 4, Y: 15 };
-    this.FontShadow.Strings[2] = { String: "CHAR " + this.character_select, X: 5, Y: 16 };
 
     this.FontShadow.Draw(context, this.camera);
     this.Font.Draw(context, this.camera);
