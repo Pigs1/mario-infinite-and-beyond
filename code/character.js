@@ -346,13 +346,17 @@ Mario.Character.prototype.Move = function () {
     //     this.WasKeyDown = 0;
     // }
 
+    // peach float
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == "peach") {
+        this.Ya = 0
+        this.Xa *= 0.9
+        this.FloatTimer -= 1
+    }
+    else if (this.OnGround) {
+        this.FloatTimer = 30;
+    }
+
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
-        // peach float
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.FloatTimer > 0 && !this.OnGround && this.character_select == "peach") {
-            this.Ya = 0
-            this.Xa *= 0.9
-            this.FloatTimer -= 1
-        }
         if (!this.CarriedCheck && !this.Ducking && !this.waslaunched) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
                 this.Xa = 0;
@@ -417,7 +421,6 @@ Mario.Character.prototype.Move = function () {
         }
     } else {
         this.JumpTime = 0;
-        this.FloatTimer = 30;
         if (!this.CarriedCheck && !this.waslaunched) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
                 this.Xa = 0;
