@@ -82,7 +82,7 @@ Mario.Character.prototype.Initialize = function (world) {
     if (this.character_select == "mario") {
         this.GroundInertia = 0.9
         this.AirInertia = 0.9
-        this.GroundTraction = 0.85
+        this.GroundTraction = 0.83
     }
     else if (this.character_select == "luigi") {
         this.GroundInertia = 0.89
@@ -367,7 +367,7 @@ Mario.Character.prototype.Move = function () {
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         if (!this.CarriedCheck && !this.Ducking && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach") {
                 this.Xa = 0;
                 this.Ya = 15;
                 this.GroundPoundTimer = 10;
@@ -431,7 +431,7 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         if (!this.CarriedCheck && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach") {
                 this.Xa = 0;
                 this.Ya = 15;
                 this.GroundPoundTimer = 10;
