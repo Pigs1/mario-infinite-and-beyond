@@ -215,6 +215,10 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (this.EscapePause) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.X)) {
+            this.Die();
+            this.EscapePause = false;
+        }
         return;
     }
 

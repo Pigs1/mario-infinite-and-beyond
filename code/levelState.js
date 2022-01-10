@@ -340,6 +340,9 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "S to Jump", 7, 14);
             this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 15);
             this.DrawStringShadow(context, "Down to Crouch and Groundpound", 7, 16);
+
+            this.DrawStringShadow(context, "Esc to close", 7, 18);
+            this.DrawStringShadow(context, "X to exit level", 7, 19);
         }
         // else if (Mario.MarioCharacter.character_select == "luigi") {
 
