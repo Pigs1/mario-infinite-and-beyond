@@ -428,7 +428,7 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.launchdeath = false
         }
         else {
-            this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (320 - t) | 0);
+            this.RenderBlackout(context, ((Mario.MarioCharacter.XDeathPos - this.Camera.X) | 0), ((Mario.MarioCharacter.YDeathPos - this.Camera.Y) | 0), (150 - t) | 0);
         }
     }
 };
