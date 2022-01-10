@@ -114,8 +114,9 @@ Mario.LevelState.prototype.Update = function (delta) {
         dir = 0, st = null, b = 0;
 
     this.Delta = delta;
-
-    this.TimeLeft -= delta;
+    if (!Mario.MarioCharacter.EscapePause) {
+        this.TimeLeft -= delta;
+    }
     if ((this.TimeLeft | 0) === 0) {
         Mario.MarioCharacter.Die();
     }

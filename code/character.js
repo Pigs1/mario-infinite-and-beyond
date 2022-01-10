@@ -63,6 +63,8 @@ Mario.Character = function () {
 
     this.launchangleX = null;
     this.launchangleY = null;
+
+    this.EscapePause = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -195,6 +197,27 @@ Mario.Character.prototype.Move = function () {
         this.Ya = 0;
         return;
     }
+
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && !this.World.Paused) {
+        this.World.Paused = true;
+        this.WasEscapeDown = true;
+        this.EscapePause = true;
+        return;
+    }
+    else if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && this.World.Paused) {
+        this.World.Paused = false;
+        this.WasEscapeDown = true;
+        this.EscapePause = false;
+    }
+
+    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape)) {
+        this.WasEscapeDown = false;
+    }
+
+    if (this.EscapePause) {
+        return;
+    }
+
 
     if (this.launched > 0) {
         this.launched -= 1

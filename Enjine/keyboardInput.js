@@ -4,6 +4,7 @@
 */
 
 Enjine.Keys = {
+    Escape: 27,
     A: 65,
     B: 66,
     C: 67,
