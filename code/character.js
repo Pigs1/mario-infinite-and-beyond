@@ -17,6 +17,7 @@ Mario.Character = function () {
     this.GroundPoundTimer = 0;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
+    this.Gravity = 3;
 
     // Char specific vars
     this.FloatTimer = 10;
@@ -81,24 +82,28 @@ Mario.Character.prototype.Initialize = function (world) {
     this.percentdamage = 0
     // Character Specific Speed Values
     if (this.character_select == "mario") {
-        this.GroundInertia = 0.9
-        this.AirInertia = 0.9
-        this.GroundTraction = 0.83
+        this.GroundInertia = 0.9;
+        this.AirInertia = 0.9;
+        this.GroundTraction = 0.83;
+        this.Gravity = 3;
     }
     else if (this.character_select == "luigi") {
-        this.GroundInertia = 0.89
-        this.AirInertia = 0.9
-        this.GroundTraction = 0.93
+        this.GroundInertia = 0.89;
+        this.AirInertia = 0.9;
+        this.GroundTraction = 0.93;
+        this.Gravity = 3;
     }
     else if (this.character_select == "peach") {
-        this.GroundInertia = 0.89
-        this.AirInertia = 0.89
-        this.GroundTraction = 0.8
+        this.GroundInertia = 0.89;
+        this.AirInertia = 0.89;
+        this.GroundTraction = 0.8;
+        this.Gravity = 2;
     }
     else if (this.character_select == "fox") {
-        this.GroundInertia = 0.95
-        this.AirInertia = 0.92
-        this.GroundTraction = 0.75
+        this.GroundInertia = 0.95;
+        this.AirInertia = 0.92;
+        this.GroundTraction = 0.75;
+        this.Gravity = 4;
     }
 
     //non static variables in Notch's code
@@ -474,7 +479,7 @@ Mario.Character.prototype.Move = function () {
         if (this.Facing === 1) {
             this.Sliding = false;
         }
-        if (this.OnGround && this.DashDance) {
+        if (this.OnGround && this.DashDance && this.character_select == "fox") {
             this.Xa = -10
 
             if (this.RunTime == 120 && this.character_select == "fox") {
@@ -493,7 +498,7 @@ Mario.Character.prototype.Move = function () {
         if (this.Facing === -1) {
             this.Sliding = false;
         }
-        if (this.OnGround && this.DashDance) {
+        if (this.OnGround && this.DashDance && this.character_select == "fox") {
 
             this.Xa = 10
 
@@ -570,7 +575,7 @@ Mario.Character.prototype.Move = function () {
 
     if (!this.OnGround) {
         // falling speed
-        this.Ya += 3;
+        this.Ya += this.Gravity;
     }
 };
 
