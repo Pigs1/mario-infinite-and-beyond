@@ -12,11 +12,11 @@ Mario.Character = function () {
     this.Lives = 3;
     this.LevelString = "none";
     this.GroundInertia = 0.89;
+    this.GroundTraction = 0.89;
     this.AirInertia = 0.89;
     this.GroundPoundTimer = 0;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
-    this.GroundTraction = 0.9;
 
     // Char specific vars
     this.FloatTimer = 10;
@@ -66,6 +66,7 @@ Mario.Character = function () {
     this.launchangleY = null;
 
     this.EscapePause = false;
+    this.DashDance = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -97,7 +98,7 @@ Mario.Character.prototype.Initialize = function (world) {
     else if (this.character_select == "fox") {
         this.GroundInertia = 0.95
         this.AirInertia = 0.92
-        this.GroundTraction = 0.82
+        this.GroundTraction = 0.75
     }
 
     //non static variables in Notch's code
@@ -229,6 +230,23 @@ Mario.Character.prototype.Move = function () {
             this.EscapePause = false;
         }
         return;
+    }
+
+    if ((this.XPic == 7 && this.RunTime <= 120 && this.character_select == "fox") && this.OnGround || this.RunTime == 0) {
+        this.DashDance = true;
+    }
+    else if (this.RunTime > 120) {
+        this.DashDance = false;
+    }
+    if (this.Xa > 0 && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && this.OnGround) {
+        if (this.RunTime <= 120) {
+            this.RunTime = 0;
+        }
+    }
+    if (this.Xa < 0 && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && this.OnGround) {
+        if (this.RunTime <= 120) {
+            this.RunTime = 0;
+        }
     }
 
 
@@ -367,7 +385,7 @@ Mario.Character.prototype.Move = function () {
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
         if (!this.CarriedCheck && !this.Ducking && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach") {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
                 this.Xa = 0;
                 this.Ya = 15;
                 this.GroundPoundTimer = 10;
@@ -431,7 +449,7 @@ Mario.Character.prototype.Move = function () {
     } else {
         this.JumpTime = 0;
         if (!this.CarriedCheck && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach") {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
                 this.Xa = 0;
                 this.Ya = 15;
                 this.GroundPoundTimer = 10;
@@ -456,7 +474,16 @@ Mario.Character.prototype.Move = function () {
         if (this.Facing === 1) {
             this.Sliding = false;
         }
-        this.Xa -= sideWaysSpeed;
+        if (this.OnGround && this.DashDance) {
+            this.Xa = -10
+
+            if (this.RunTime == 120 && this.character_select == "fox") {
+                this.Xa -= 2 * this.Facing;
+            }
+        }
+        else {
+            this.Xa -= sideWaysSpeed;
+        }
         if (this.JumpTime >= 0) {
             this.Facing = -1;
         }
@@ -466,7 +493,17 @@ Mario.Character.prototype.Move = function () {
         if (this.Facing === -1) {
             this.Sliding = false;
         }
-        this.Xa += sideWaysSpeed;
+        if (this.OnGround && this.DashDance) {
+
+            this.Xa = 10
+
+            if (this.RunTime == 120 && this.character_select == "fox") {
+                this.Xa -= 2 * this.Facing;
+            }
+        }
+        else {
+            this.Xa += sideWaysSpeed;
+        }
         if (this.JumpTime >= 0) {
             this.Facing = 1;
         }
@@ -532,6 +569,7 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (!this.OnGround) {
+        // falling speed
         this.Ya += 3;
     }
 };
@@ -590,7 +628,12 @@ Mario.Character.prototype.CalcPic = function () {
 
     if (this.OnGround && ((this.Facing === -1 && this.Xa > 0) || (this.Facing === 1 && this.Xa < 0))) {
         if (this.Xa > 1 || this.Xa < -1) {
-            runFrame = this.Large ? 9 : 7;
+            if (this.character_select == "fox") {
+                runFrame = this.Large ? 9 : 3;
+            }
+            else {
+                runFrame = this.Large ? 9 : 7;
+            }
         }
 
         if (this.Xa > 3 || this.Xa < -3) {

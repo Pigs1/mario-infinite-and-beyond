@@ -312,7 +312,7 @@ Mario.LevelState.prototype.Draw = function (context) {
 
     this.Layer.DrawExit1(context, this.Camera);
 
-    this.DrawStringShadow(context, "LIVES " + Mario.MarioCharacter.Lives, 0, 0);
+    this.DrawStringShadow(context, "LIVES " + Mario.MarioCharacter.RunTime, 0, 0);
     this.DrawStringShadow(context, "00000000", 0, 1);
     this.DrawStringShadow(context, "COIN", 14, 0);
     this.DrawStringShadow(context, " " + Mario.MarioCharacter.Coins, 14, 1);
@@ -357,8 +357,8 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 16);
             this.DrawStringShadow(context, "Down to Crouch and Groundpound", 7, 17);
 
-            this.DrawStringShadow(context, "Esc to close", 7, 18);
-            this.DrawStringShadow(context, "X to exit level", 7, 19);
+            this.DrawStringShadow(context, "Esc to close", 7, 19);
+            this.DrawStringShadow(context, "X to exit level", 7, 20);
 
         }
         else if (Mario.MarioCharacter.character_select == "peach") {
@@ -375,8 +375,26 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 17);
             this.DrawStringShadow(context, "E to float", 7, 18);
 
-            this.DrawStringShadow(context, "Esc to close", 7, 19);
-            this.DrawStringShadow(context, "X to exit level", 7, 20);
+            this.DrawStringShadow(context, "Esc to close", 7, 20);
+            this.DrawStringShadow(context, "X to exit level", 7, 21);
+
+        }
+        else if (Mario.MarioCharacter.character_select == "fox") {
+
+            this.DrawStringShadow(context, "Peach:", 7, 5);
+            this.DrawStringShadow(context, "The Princess of", 7, 6);
+            this.DrawStringShadow(context, "the Mushroom Kingdom.", 7, 7);
+            this.DrawStringShadow(context, "She always seems", 7, 8);
+            this.DrawStringShadow(context, "to get kidnapped.", 7, 9);
+            this.DrawStringShadow(context, "She's slower,", 7, 11);
+            this.DrawStringShadow(context, "but she can float.", 7, 12);
+            this.DrawStringShadow(context, "Controls:", 7, 15);
+            this.DrawStringShadow(context, "S to Jump", 7, 16);
+            this.DrawStringShadow(context, "A to Run and Shoot Fireballs", 7, 17);
+            this.DrawStringShadow(context, "E to float", 7, 18);
+
+            this.DrawStringShadow(context, "Esc to close", 7, 20);
+            this.DrawStringShadow(context, "X to exit level", 7, 21);
 
         }
     }
