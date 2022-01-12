@@ -366,6 +366,27 @@ Mario.Character.prototype.Move = function () {
         }
     }
 
+    if (!this.CarriedCheck && !this.waslaunched && !this.Ducking) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
+            this.Xa = 0;
+            this.Ya = 15;
+            this.GroundPoundTimer = 10;
+            this.defaultairinertia = this.AirInertia
+            this.defaultgroundinertia = this.GroundInertia
+        }
+    }
+    if (this.OnGround && this.GroundPoundTimer > 0) {
+        this.Xa *= 0
+        this.Ducking = true
+        this.GroundPoundTimer -= 1;
+        this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
+            ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
+            this.GroundPoundTimer = 0
+            this.Ducking = false
+        }
+    }
+
     if (this.Xa > 2) {
         this.Facing = 1;
     }
@@ -397,27 +418,6 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
-        if (!this.CarriedCheck && !this.Ducking && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
-                this.Xa = 0;
-                this.Ya = 15;
-                this.GroundPoundTimer = 10;
-                this.defaultairinertia = this.AirInertia
-                this.defaultgroundinertia = this.GroundInertia
-            }
-            if (this.OnGround && this.GroundPoundTimer > 0) {
-                this.Xa *= 0
-                this.Ducking = true
-                this.GroundPoundTimer -= 1;
-                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8,
-                    ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
-                if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime <= 0) {
-                    this.GroundPoundTimer = 0
-                    this.Ducking = false
-                }
-            }
-        }
-
 
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
@@ -456,26 +456,6 @@ Mario.Character.prototype.Move = function () {
         }
     } else {
         this.JumpTime = 0;
-        if (!this.CarriedCheck && !this.waslaunched) {
-            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
-                this.Xa = 0;
-                this.Ya = 15;
-                this.GroundPoundTimer = 10;
-                this.defaultairinertia = this.AirInertia
-                this.defaultgroundinertia = this.GroundInertia
-            }
-            if (this.OnGround && this.GroundPoundTimer > 0) {
-                this.Xa *= 0
-                this.Ducking = true
-                this.GroundPoundTimer -= 1;
-                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
-                    ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
-                if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
-                    this.GroundPoundTimer = 0
-                    this.Ducking = false
-                }
-            }
-        }
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !this.Ducking) {

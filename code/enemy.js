@@ -191,7 +191,7 @@ Mario.Enemy.prototype.Move = function () {
                 else {
                     this.XPic = 3
                 }
-                this.Xa = 4 * this.Facing
+                this.Xa = 4.3 * this.Facing
             }
         }
     }
