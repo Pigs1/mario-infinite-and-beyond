@@ -41,7 +41,7 @@ Mario.Mushroom.prototype.Move = function () {
 
     if (this.Life < 9) {
         this.Layer = 0;
-        if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+        if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y < this.Y) {
             this.Y++;
         }
         else {

@@ -1103,25 +1103,26 @@ Mario.Character.prototype.GetMushroom = function () {
         return;
     }
 
+    if (this.character_select == "fox") {
+        this.percentdamage -= 10
+    }
+
     if (!this.Large && this.character_select != "fox") {
         this.World.Paused = true;
         this.PowerUpTime = 18;
         Enjine.Resources.PlaySound("powerup");
         this.SetLarge(true, false);
     } else {
-        if (this.character_select == 'fox') {
-            this.percentdamage -= 10
-        }
-        else {
-            for (let i = 0; i < 20; i += 0.25) {
-                if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
-                    this.GetCoin();
-                    Enjine.Resources.PlaySound("coin");
-                    this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
-                }
+
+        for (let i = 0; i < 20; i += 0.25) {
+            if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
+                this.GetCoin();
+                Enjine.Resources.PlaySound("coin");
+                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
             }
         }
     }
+
 };
 
 Mario.Character.prototype.Kick = function (shell) {

@@ -559,14 +559,14 @@ Mario.LevelState.prototype.Bump = function (x, y, canBreakBricks) {
         if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Special) > 0) {
             Enjine.Resources.PlaySound("sprout");
             if (!Mario.MarioCharacter.Large) {
-                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
                     this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 20));
                 }
                 else {
                     this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 8));
                 }
             } else {
-                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
                     this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 20));
                 }
                 else {
