@@ -104,8 +104,8 @@ Mario.Character.prototype.Initialize = function (world) {
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "fox") {
-        this.GroundInertia = 0.95;
-        this.AirInertia = 0.92;
+        this.GroundInertia = 0.91;
+        this.AirInertia = 0.9;
         this.GroundTraction = 0.82;
         this.Gravity = 4.5;
         this.JumpVel = -1.9;
@@ -483,10 +483,9 @@ Mario.Character.prototype.Move = function () {
             this.Sliding = false;
         }
         if (this.OnGround && this.DashDance && this.character_select == "fox") {
-            this.Xa = -10
-
-            if (this.RunTime == 120 && this.character_select == "fox") {
-                this.Xa -= 2 * this.Facing;
+            this.Xa = -7
+            if (this.RunTime <= 30) {
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
             }
         }
         else {
@@ -503,10 +502,9 @@ Mario.Character.prototype.Move = function () {
         }
         if (this.OnGround && this.DashDance && this.character_select == "fox") {
 
-            this.Xa = 10
-
-            if (this.RunTime == 120 && this.character_select == "fox") {
-                this.Xa -= 2 * this.Facing;
+            this.Xa = 7
+            if (this.RunTime <= 30) {
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
             }
         }
         else {
@@ -1101,17 +1099,8 @@ Mario.Character.prototype.GetFlower = function () {
 
 Mario.Character.prototype.GetMushroom = function () {
     var y = this.Y / 16, x = this.X / 16;
-    if (this.DeathTime > 0 && this.World.Paused || this.character_select == "fox") {
-        if (this.percentdamage >= 10) {
-            this.percentdamage -= 10
-        }
-        else {
-            this.percentdamage = 0
-        }
+    if (this.DeathTime > 0 && this.World.Paused) {
         return;
-    }
-    if (this.character_select == 'fox') {
-        this.percentdamage -= 10
     }
 
     if (!this.Large && this.character_select != "fox") {
@@ -1120,11 +1109,16 @@ Mario.Character.prototype.GetMushroom = function () {
         Enjine.Resources.PlaySound("powerup");
         this.SetLarge(true, false);
     } else {
-        for (let i = 0; i < 20; i += 0.25) {
-            if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
-                this.GetCoin();
-                Enjine.Resources.PlaySound("coin");
-                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
+        if (this.character_select == 'fox') {
+            this.percentdamage -= 10
+        }
+        else {
+            for (let i = 0; i < 20; i += 0.25) {
+                if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14 || i == 16 || i == 18 || i == 20) {
+                    this.GetCoin();
+                    Enjine.Resources.PlaySound("coin");
+                    this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
+                }
             }
         }
     }
