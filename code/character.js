@@ -607,7 +607,7 @@ Mario.Character.prototype.CalcPic = function () {
             runFrame = 8;
         }
         else {
-            runFrame = 4;
+            runFrame = 6;
         }
 
     }
