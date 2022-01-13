@@ -987,7 +987,7 @@ Mario.Character.prototype.Stomp = function (object) {
         this.InvulnerableTime = 1;
     } else if (object instanceof Mario.Shell && this.GroundPoundTimer == 0) {
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.Carried == null) {
-            if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+            if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && object.Xa == 0) {
                 this.Carried = object;
                 object.Carried = true;
                 this.CarriedCheck = true;

@@ -30,7 +30,7 @@ Mario.Shell = function (world, x, y, type) {
     this.Anim = 0;
 
     this.Drop = false;
-    this.collide = true;
+    this.collide = false;
     this.fallingtime = -1;
     this.fallingtime2 = 5;
 };
@@ -129,17 +129,16 @@ Mario.Shell.prototype.Move = function () {
         if (this.OnGround) {
             this.fallingtime = -1;
             this.fallingtime2 = 5;
+            return;
         }
         else {
             this.fallingtime += 1;
-            this.X += (this.fallingtime2 * 0.95 + (Mario.MarioCharacter.Xa * this.Facing)) * this.Facing
-            this.SubMove(0, (this.fallingtime * 1.5));
+            this.Xa = (1 + Math.abs(Mario.MarioCharacter.Xa)) * this.Facing;
+            sideWaysSpeed = 5;
         }
-
-        return;
     }
 
-    if (this.Carried) {
+    if (this.Carried && !this.Drop) {
         this.World.CheckShellCollide(this);
         return;
     }
@@ -239,9 +238,6 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
             collide = true;
         } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
             collide = true;
-            if (this.Drop) {
-                this.X -= 50
-            }
         }
     }
     if (ya < 0) {
