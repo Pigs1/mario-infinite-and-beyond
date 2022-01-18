@@ -121,6 +121,10 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 if (!(this.Deadtime > 1)) {
                     if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck) {
                         mariolaunchcheck = false
+                        if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0) {
+                            Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
+                            Mario.MarioCharacter.Xa = 0;
+                        }
                         Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
                         if (this.X > Mario.MarioCharacter.X) {
                             Mario.MarioCharacter.launchangleX = -1 * (5 + (Mario.MarioCharacter.percentdamage * 0.45))
