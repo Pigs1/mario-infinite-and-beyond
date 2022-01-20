@@ -69,6 +69,14 @@ Mario.Character = function () {
 
     this.EscapePause = false;
     this.DashDance = false;
+
+    this.wavedashtime = 15;
+    this.airdodging = false;
+    this.DWasDown = false;
+    this.UpWasDown = false;
+    this.RightWasDown = false;
+    this.LeftWasDown = false;
+    this.DownWasDown = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -240,6 +248,85 @@ Mario.Character.prototype.Move = function () {
             this.EscapePause = false;
         }
         return;
+    }
+
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D) && this.character_select == "fox" && this.wavedashtime > 0 || this.DWasDown && this.wavedashtime > 0) {
+        if (!this.OnGround) {
+
+            this.DWasDown = true;
+
+            this.airdodging = true;
+
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up) && this.wavedashtime >= 13) {
+                this.UpWasDown = true;
+            }
+
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && this.wavedashtime >= 13) {
+                this.DownWasDown = true;
+            }
+
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && this.wavedashtime >= 13) {
+                this.RightWasDown = true;
+            }
+
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && this.wavedashtime >= 13) {
+                this.LeftWasDown = true;
+            }
+
+            if (this.RightWasDown) {
+                this.Xa = 2 + (this.wavedashtime / 4);
+            }
+
+            if (this.LeftWasDown) {
+                this.Xa = -2 - (this.wavedashtime / 4);
+            }
+
+            if (this.UpWasDown) {
+                this.Ya = -2 - (this.wavedashtime / 4);
+            }
+            else if (this.DownWasDown) {
+                this.Ya = 7 + (this.wavedashtime / 4);
+            }
+
+            if (!this.UpWasDown && !this.DownWasDown) {
+                this.Ya = 0;
+            }
+
+            if (this.wavedashtime == 15 || this.wavedashtime <= 2) {
+                this.Xa = 0;
+                this.Ya = 0;
+            }
+
+            this.wavedashtime -= 1;
+
+            if (this.wavedashtime == 0) {
+                this.JumpTime = 0;
+                this.airdodging = false;
+            }
+        }
+    }
+    if (this.character_select == "fox" && this.OnGround) {
+        if (!this.airdodgingwastrue) {
+            this.wavedashslidetime = 6;
+        }
+        this.wavedashtime = 15;
+        this.DWasDown = false;
+        this.UpWasDown = false;
+        this.DownWasDown = false;
+        this.RightWasDown = false;
+        this.LeftWasDown = false;
+        if (this.airdodging || this.airdodgingwastrue) {
+            if (this.wavedashslidetime > 0) {
+                this.Xa = (2 + this.wavedashslidetime) * this.Facing;
+                this.airdodgingwastrue = true;
+                this.wavedashslidetime -= 1;
+            }
+            else {
+                this.wavedashslidetime = 6;
+                this.airdodgingwastrue = false;
+            }
+        }
+        this.airdodging = false;
     }
 
     if ((this.XPic == 7 && this.RunTime <= 120 && this.character_select == "fox") && this.OnGround || this.RunTime == 0) {
@@ -417,7 +504,7 @@ Mario.Character.prototype.Move = function () {
         this.FloatTimer = 30;
     }
 
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.GroundPoundTimer < 5 && !this.airdodging || (this.JumpTime < 0 && !this.OnGround && !this.Sliding)) {
 
         if (this.JumpTime < 0) {
             this.Xa = this.XJumpSpeed;
@@ -550,7 +637,7 @@ Mario.Character.prototype.Move = function () {
     else if (this.OnGround) {
         this.Xa *= this.GroundInertia;
     }
-    else if (!this.OnGround) {
+    else if (!this.OnGround && !this.airdodging) {
         this.Xa *= this.AirInertia;
     }
 
