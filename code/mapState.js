@@ -33,6 +33,7 @@ Mario.MapState = function () {
     this.LevelType = 0;
     this.character_select = "Mario";
     this.IsKeyDownLast = 0;
+    this.ghost = false;
 
     this.WorldNumber = -1;
     this.NextWorld();
@@ -547,6 +548,10 @@ Mario.MapState.prototype.Update = function (delta) {
             this.IsKeyDownLast = 0
         }
 
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.G) && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.T)) {
+            this.ghost = true;
+        }
+
         if (this.CanEnterLevel && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
             if (this.Level[x][y] === Mario.MapTile.Level && this.Data[x][y] !== -11) {
                 if (this.Level[x][y] === Mario.MapTile.Level && this.Data[x][y] !== 0 && this.Data[x][y] > -10) {
@@ -562,14 +567,17 @@ Mario.MapState.prototype.Update = function (delta) {
                         if (this.Data[x][y] === -2) {
                             Mario.MarioCharacter.LevelString += "X";
                             difficulty += 2;
+                            type = Mario.LevelType.Castle;
                         } else if (this.Data[x][y] === -1) {
                             Mario.MarioCharacter.LevelString += "?";
+                            type = Mario.LevelType.Toad;
                         } else {
                             Mario.MarioCharacter.LevelString += "#";
                             difficulty += 1;
+                            type = Mario.LevelType.Castle;
                         }
 
-                        type = Mario.LevelType.Castle;
+                        // type = Mario.LevelType.Castle;
                     } else {
                         Mario.MarioCharacter.LevelString += this.Data[x][y];
                     }
@@ -617,7 +625,7 @@ Mario.MapState.prototype.TryWalking = function (xd, yd) {
 
     if (this.Level[xt][yt] === Mario.MapTile.Road || this.Level[xt][yt] === Mario.MapTile.Level) {
         if (this.Level[xt][yt] === Mario.MapTile.Road) {
-            if ((this.Data[xt][yt] !== 0) && (this.Data[x][y] !== 0 && this.Data[x][y] > -10)) {
+            if ((this.Data[xt][yt] !== 0) && (this.Data[x][y] !== 0 && this.Data[x][y] > -10) && !this.ghost) {
                 return;
             }
         }

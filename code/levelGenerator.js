@@ -12,6 +12,7 @@ Mario.LevelGenerator = function (width, height,) {
     this.Type = 0;
 };
 
+
 Mario.LevelGenerator.prototype = {
     CreateLevel: function (type, difficulty,) {
         var i = 0, length = 0, floor = 0, x = 0, y = 0, ceiling = 0, run = 0, level = null;
@@ -37,16 +38,42 @@ Mario.LevelGenerator.prototype = {
             this.TotalOdds += this.Odds[i];
             this.Odds[i] = this.TotalOdds - this.Odds[i];
         }
+        if (type === Mario.LevelType.Toad) {
+            level = new Mario.Level(this.Width, this.Height);
+            length = 0;
+            floor = 11;
+            ceiling = 20;
+            run = 0;
+            for (x = 0; x < level.Width; x++) {
+                if (run-- <= 0 && x > 0) {
+                    ceiling = 10;
+                    run = 0;
+                }
+                for (y = 0; y < level.Height; y++) {
+                    if ((x < 6 && y < 5) || x < 1 || x > 4) {
+                        level.SetBlock(x, y, 1 + 9 * 16);
+                    }
+                }
+            }
 
-        level = new Mario.Level(this.Width, this.Height);
-        length += this.BuildStraight(level, 0, level.Width, true);
-        while (length < level.Width - 64) {
-            length += this.BuildZone(level, length, level.Width - length);
+        }
+        else {
+            level = new Mario.Level(this.Width, this.Height);
+            length += this.BuildStraight(level, 0, level.Width, true);
+            while (length < level.Width - 64) {
+                length += this.BuildZone(level, length, level.Width - length);
+            }
+
+            floor = this.Height - 1 - (Math.random() * 4) | 0;
         }
 
-        floor = this.Height - 1 - (Math.random() * 4) | 0;
-        level.ExitX = length + 8;
-        level.ExitY = floor;
+        if (type !== Mario.LevelType.Toad) {
+            level.ExitX = length + 8;
+            level.ExitY = floor;
+        }
+        else {
+            level.ExitX = 10000;
+        }
 
         for (x = length; x < level.Width; x++) {
             for (y = 0; y < this.Height; y++) {
