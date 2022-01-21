@@ -306,7 +306,7 @@ Mario.Character.prototype.Move = function () {
         }
     }
     if (this.character_select == "fox" && this.OnGround) {
-        if (!this.airdodgingwastrue) {
+        if (!this.airdodgingwastrue && this.RightWasDown) {
             this.wavedashslidetime = 6;
         }
         this.wavedashtime = 15;
@@ -322,7 +322,6 @@ Mario.Character.prototype.Move = function () {
                 this.wavedashslidetime -= 1;
             }
             else {
-                this.wavedashslidetime = 6;
                 this.airdodgingwastrue = false;
             }
         }

@@ -72,11 +72,11 @@ Mario.Enemy.prototype.CollideCheck = function () {
             if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
 
                 if (this.Type == 3) {
-                    if (this.chuckstomptimer > 0) {
+                    if (this.chuckstomptimer > 0 && !Mario.MarioCharacter.airdodging) {
                         Mario.MarioCharacter.Stomp(this);
                         this.PicHeight = 12;
                     }
-                    else {
+                    else if (!Mario.MarioCharacter.airdodging) {
                         this.chuckstomped = true;
                         Mario.MarioCharacter.Stomp(this);
                         this.XPic = 6
@@ -89,7 +89,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 if (this.Winged) {
                     this.Winged = false;
                     this.Ya = 0;
-                    if (Mario.MarioCharacter.GroundPoundTimer != 0 && !Mario.MarioCharacter.waslaunched) {
+                    if (Mario.MarioCharacter.GroundPoundTimer != 0 && !Mario.MarioCharacter.waslaunched && !Mario.MarioCharacter.airdodging) {
                         Mario.MarioCharacter.Stomp(this);
                     }
                 } else {
@@ -119,7 +119,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 }
             } else {
                 if (!(this.Deadtime > 1)) {
-                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck) {
+                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
                         mariolaunchcheck = false
                         if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
                             Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
