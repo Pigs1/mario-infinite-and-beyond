@@ -83,9 +83,15 @@ Mario.Character.prototype = new Mario.NotchSprite(null);
 
 Mario.Character.prototype.Initialize = function (world) {
     this.World = world;
-    this.X = 32;
-    this.Y = 0;
-    this.YPic = 0
+    if (this.World.LevelType == 3) {
+        this.Y = 100;
+        this.X = 40;
+    }
+    else {
+        this.X = 32;
+        this.Y = -50;
+    }
+    this.YPic = 0;
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
     this.percentdamage = 0

@@ -41,7 +41,7 @@ Mario.LevelGenerator.prototype = {
         if (type === Mario.LevelType.Toad) {
             level = new Mario.Level(this.Width, this.Height);
             length = 0;
-            floor = 11;
+            floor = 13;
             ceiling = 20;
             run = 0;
             for (x = 0; x < level.Width; x++) {
@@ -50,7 +50,7 @@ Mario.LevelGenerator.prototype = {
                     run = 0;
                 }
                 for (y = 0; y < level.Height; y++) {
-                    if ((x < 6 && y < 5) || x < 1 || x > 4) {
+                    if (x < 1 || (x < 4 && y > 8) || (x > 14 && y > 12) || (x > 18 && y < 12) || (x > 15 && y > 8) || (y < 5 && x > 16) || (y < 5 && x < 3) || (y < 5 && x > 16) || (y < 3 && x < 5) || (y < 3 && x > 14) || (y < 1)) {
                         level.SetBlock(x, y, 1 + 9 * 16);
                     }
                 }
