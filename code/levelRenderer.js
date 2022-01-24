@@ -38,7 +38,12 @@ Mario.LevelRenderer.prototype.DrawStatic = function (context, camera) {
             b = this.Level.GetBlock(x, y) & 0xff;
             if ((Mario.Tile.Behaviors[b] & Mario.Tile.Animated) === 0) {
                 frame = this.Background[b % 16][(b / 16) | 0];
-                context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, ((x << 4) - camera.X) | 0, (y << 4) | 0, frame.Width, frame.Height);
+                if (Mario.MarioCharacter.LevelType == Mario.LevelType.Toad) {
+                    context.drawImage(Enjine.Resources.Images["toadmap"], frame.X, frame.Y, frame.Width, frame.Height, ((x << 4) - camera.X) | 0, (y << 4) | 0, frame.Width, frame.Height);
+                }
+                else {
+                    context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, ((x << 4) - camera.X) | 0, (y << 4) | 0, frame.Width, frame.Height);
+                }
             }
         }
     }

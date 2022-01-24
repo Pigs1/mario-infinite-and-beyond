@@ -6,9 +6,11 @@
 Mario.LevelState = function (difficulty, type) {
     this.LevelDifficulty = difficulty;
     this.LevelType = type;
+    Mario.MarioCharacter.LevelType = type;
     this.Level = null;
     this.Layer = null;
     this.BgLayer = [];
+
 
     this.Paused = false;
     this.Sprites = null;

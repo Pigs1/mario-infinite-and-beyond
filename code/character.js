@@ -77,6 +77,8 @@ Mario.Character = function () {
     this.RightWasDown = false;
     this.LeftWasDown = false;
     this.DownWasDown = false;
+
+    this.LevelType = null;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
