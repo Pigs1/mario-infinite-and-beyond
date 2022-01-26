@@ -88,6 +88,10 @@ Mario.LevelState.prototype.Enter = function () {
 
     this.GotoMapState = false;
     this.GotoLoseState = false;
+
+    if (this.LevelType == Mario.LevelType.Toad) {
+        this.AddSprite(new Mario.Chest(this, 100, 50));
+    }
 };
 
 Mario.LevelState.prototype.Exit = function () {

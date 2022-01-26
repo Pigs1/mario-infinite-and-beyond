@@ -30,7 +30,10 @@ Mario.BackgroundRenderer.prototype.Draw = function (context, camera) {
 
             //bitshifting by five is the same as multiplying by 32
             if (Mario.MarioCharacter.LevelType == Mario.LevelType.Toad) {
-                context.drawImage(Enjine.Resources.Images["toadbackground"], frame.X, frame.Y, frame.Width, frame.Height, ((x << 5) - xCam) | 0, (y << 5) | 0, frame.Width, frame.Height);
+                context.drawImage(Enjine.Resources.Images["toadbackground"], frame.X, frame.Y, 63, 96, ((x << 5) - xCam) | 0, (y << 5) | 0, 63, 96);
+                context.drawImage(Enjine.Resources.Images["toadbackground"], frame.X + 63, frame.Y, 97, 53, (x - xCam + 2) | 0, (y << 2) | 0, 136, 74);
+                context.drawImage(Enjine.Resources.Images["toadbackground"], frame.X + 63, frame.Y, 97, 53, (x + 136 - xCam + 2) | 0, (y << 2) | 0, 136, 74);
+                context.drawImage(Enjine.Resources.Images["toadbackground"], frame.X + 63, frame.Y, 97, 53, (x + (136 * 2) - xCam + 2) | 0, (y << 2) | 0, 136, 74);
             }
             else {
                 context.drawImage(Enjine.Resources.Images["background"], frame.X, frame.Y, frame.Width, frame.Height, ((x << 5) - xCam) | 0, (y << 5) | 0, frame.Width, frame.Height);

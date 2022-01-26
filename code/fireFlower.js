@@ -52,6 +52,8 @@ Mario.FireFlower.prototype.Move = function () {
 		return;
 	}
 
+	this.Layer = 1;
+
 	if (!this.SubMove(this.Xa, 0)) {
 		this.Facing = -this.Facing;
 	}
