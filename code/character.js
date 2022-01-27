@@ -876,6 +876,7 @@ Mario.Character.prototype.SubMove = function (xa, ya) {
         }
     }
     if (xa < 0) {
+        this.Sliding = true;
         if (this.Carried !== null) {
             if (this.IsBlocking(this.X + xa - 16, this.Y + ya - this.Height, xa, ya)) {
                 collide = true;
