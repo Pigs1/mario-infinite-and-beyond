@@ -55,6 +55,7 @@ Mario.Chest.prototype.CollideCheck = function () {
 };
 
 Mario.Chest.prototype.Move = function () {
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
 
     if (this.Life < 9) {
         this.Layer = 1;
@@ -69,7 +70,7 @@ Mario.Chest.prototype.Move = function () {
         this.layertimer -= 1
         this.EndTimer -= 1
     }
-    if (this.layertimer == 0) {
+    if (this.layertimer == 0 || xMarioD > -20 && xMarioD < 20) {
         this.Layer = 0;
     }
     if (this.EndTimer == 0) {
