@@ -43,7 +43,7 @@ Mario.Enemy = function (world, x, y, dir, type, winged) {
     }
 
     this.PicWidth = 16;
-    if (this.Type == 3) {
+    if (this.Type == Mario.Enemy.Chuck) {
         this.PicWidth = 24
         this.Width = 7
         this.Height = 22
@@ -69,9 +69,9 @@ Mario.Enemy.prototype.CollideCheck = function () {
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (this.Type !== Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            if (this.Type != Mario.Enemy.Spiky && Mario.MarioCharacter.Ya > 0 && yMarioD <= 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
 
-                if (this.Type == 3) {
+                if (this.Type == Mario.Enemy.Chuck) {
                     if (this.chuckstomptimer > 0 && !Mario.MarioCharacter.airdodging) {
                         Mario.MarioCharacter.Stomp(this);
                         this.PicHeight = 12;
@@ -495,7 +495,7 @@ Mario.Enemy.prototype.Draw = function (context, camera) {
             context.save();
             context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
             context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
-            context.drawImage(this.Image, (((this.WingTime / 4) | 0) % 2) * 16, 4 * 32, 16, 32,
+            context.drawImage(this.Image, (((this.WingTime / 4) | 0) % 2) * 16, Mario.Enemy.Wing * 32, 16, 32,
                 this.XFlip ? (320 - xPixel - 24) : xPixel - 8, this.YFlip ? (240 - yPixel - 32) : yPixel - 8, 16, 32);
             context.restore();
             this.XFlip = !this.XFlip;
@@ -512,14 +512,14 @@ Mario.Enemy.prototype.Draw = function (context, camera) {
             context.save();
             context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
             context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
-            context.drawImage(this.Image, (((this.WingTime / 4) | 0) % 2) * 16, 4 * 32, 16, 32,
+            context.drawImage(this.Image - 1, (((this.WingTime / 4) | 0) % 2) * 16, Mario.Enemy.Wing * 32, 16, 32,
                 this.XFlip ? (320 - xPixel - 24) : xPixel - 8, this.YFlip ? (240 - yPixel) : yPixel - 8, 16, 32);
             context.restore();
         } else {
             context.save();
             context.scale(this.XFlip ? -1 : 1, this.YFlip ? -1 : 1);
             context.translate(this.XFlip ? -320 : 0, this.YFlip ? -240 : 0);
-            context.drawImage(this.Image, (((this.WingTime / 4) | 0) % 2) * 16, 4 * 32, 16, 32,
+            context.drawImage(this.Image, (((this.WingTime / 4) | 0) % 2) * 16, Mario.Enemy.Wing * 32, 16, 32,
                 this.XFlip ? (320 - xPixel - 24) : xPixel - 8, this.YFlip ? (240 - yPixel - 32) : yPixel - 8, 16, 32);
             context.restore();
         }
@@ -530,6 +530,7 @@ Mario.Enemy.prototype.Draw = function (context, camera) {
 Mario.Enemy.RedKoopa = 0;
 Mario.Enemy.GreenKoopa = 1;
 Mario.Enemy.Goomba = 2;
-Mario.Enemy.Spiky = 4;
-Mario.Enemy.Flower = 5;
 Mario.Enemy.Chuck = 3;
+Mario.Enemy.Spiky = 4;
+Mario.Enemy.Wing = 5;
+Mario.Enemy.Flower = 6;

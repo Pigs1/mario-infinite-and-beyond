@@ -85,6 +85,7 @@ Mario.Character.prototype = new Mario.NotchSprite(null);
 
 Mario.Character.prototype.Initialize = function (world) {
     this.World = world;
+
     if (this.World.LevelType == 3) {
         this.Y = 100;
         this.X = 40;
@@ -99,6 +100,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.percentdamage = 0
     // Character Specific Movement Stats
     if (this.character_select == "mario") {
+        // localStorage.setItem("test", "Mario");
         this.GroundInertia = 0.9;
         this.AirInertia = 0.9;
         this.GroundTraction = 0.83;
@@ -106,11 +108,13 @@ Mario.Character.prototype.Initialize = function (world) {
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "luigi") {
+        // localStorage.setItem("test", "Luigi");
         this.GroundInertia = 0.89;
         this.AirInertia = 0.9;
         this.GroundTraction = 0.93;
         this.Gravity = 3;
         this.JumpVel = -2.75;
+
     }
     else if (this.character_select == "peach") {
         this.GroundInertia = 0.89;
@@ -227,6 +231,10 @@ Mario.Character.prototype.Blink = function (on) {
 
 Mario.Character.prototype.Move = function () {
     var launchfirsttime = true, launchtime = 0;
+    if (localStorage.test == "Luigi") {
+        return;
+    }
+
     if (this.WinTime > 0) {
         this.WinTime++;
         this.Xa = 0;
