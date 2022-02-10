@@ -30,6 +30,7 @@ Mario.Toad.prototype = new Mario.NotchSprite();
 Mario.Toad.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
     if (yMarioD > -this.Height && xMarioD > -this.Width && xMarioD < 5) {
+        Mario.MarioCharacter.GroundPoundTimer = 0;
         Mario.MarioCharacter.Stomp(this);
         this.XPic = 2;
     }

@@ -567,7 +567,7 @@ Mario.MapState.prototype.Update = function (delta) {
                         if (this.Data[x][y] === -2) {
                             Mario.MarioCharacter.LevelString += "X";
                             difficulty += 2;
-                            type = Mario.LevelType.Castle;
+                            type = Mario.LevelType.BigCastle;
                         } else if (this.Data[x][y] === -1) {
                             Mario.MarioCharacter.LevelString += "?";
                             type = Mario.LevelType.Toad;
