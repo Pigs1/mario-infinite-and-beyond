@@ -91,6 +91,7 @@ Mario.LevelState.prototype.Enter = function () {
 
     if (this.LevelType == Mario.LevelType.Toad) {
         this.AddSprite(new Mario.Chest(this, 100, 50));
+        this.AddSprite(new Mario.Toad(this, 100, 50));
     }
 };
 

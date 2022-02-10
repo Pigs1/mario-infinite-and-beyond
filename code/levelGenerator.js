@@ -16,9 +16,6 @@ Mario.LevelGenerator = function (width, height,) {
 Mario.LevelGenerator.prototype = {
     CreateLevel: function (type, difficulty,) {
         var i = 0, length = 0, floor = 0, x = 0, y = 0, ceiling = 0, run = 0, level = null;
-        if (this.levelpersist == 1) {
-            level = level
-        }
         this.Type = type;
         this.Difficulty = difficulty;
         this.Odds[Mario.Odds.Straight] = 20;
