@@ -16,7 +16,7 @@ Mario.LoadingState.prototype = new Enjine.GameState();
 
 Mario.LoadingState.prototype.Enter = function () {
     var i = 0;
-    for (i = 0; i < 33; i++) {
+    for (i = 0; i < 34; i++) {
         this.Images[i] = {};
     }
 
@@ -53,6 +53,7 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[30].name = "chest";
     this.Images[31].name = "Toad";
     this.Images[32].name = "Door";
+    this.Images[33].name = "Bridge";
 
 
     this.Images[0].src = "images/bgsheet.png";
@@ -88,6 +89,7 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[30].src = "images/chest.png";
     this.Images[31].src = "images/toad.png";
     this.Images[32].src = "images/door.png";
+    this.Images[33].src = "images/bridge.png";
 
     Enjine.Resources.AddImages(this.Images);
 

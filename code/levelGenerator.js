@@ -54,6 +54,24 @@ Mario.LevelGenerator.prototype = {
             }
 
         }
+        else if (type === Mario.LevelType.Bossroom) {
+            level = new Mario.Level(this.Width, this.Height);
+            length = 0;
+            floor = 50;
+            ceiling = 21;
+            run = 0;
+            for (x = 0; x < level.Width; x++) {
+                if (run-- <= 0 && x > 0) {
+                    ceiling = 20;
+                    run = 0;
+                }
+                for (y = 0; y < level.Height; y++) {
+                    if ((x >= 0 && x <= 2 && y > 10) || (x >= 18 && y > 10) || (x <= 2 && y < 3) || (y < 1) || (x >= 18 && y < 3)) {
+                        level.SetBlock(x, y, 1 + 9 * 16);
+                    }
+                }
+            }
+        }
         else {
             level = new Mario.Level(this.Width, this.Height);
             length += this.BuildStraight(level, 0, level.Width, true);
@@ -64,7 +82,7 @@ Mario.LevelGenerator.prototype = {
             floor = this.Height - 1 - (Math.random() * 4) | 0;
         }
 
-        if (type !== Mario.LevelType.Toad) {
+        if (type !== Mario.LevelType.Toad && type !== Mario.LevelType.Bossroom) {
             level.ExitX = length + 8;
             level.ExitY = floor;
         }
@@ -80,7 +98,7 @@ Mario.LevelGenerator.prototype = {
             }
         }
 
-        if (type === Mario.LevelType.Castle || type === Mario.LevelType.Underground) {
+        if (type === Mario.LevelType.Castle || type === Mario.LevelType.Underground || type === Mario.LevelType.BigCastle) {
             for (x = 0; x < level.Width; x++) {
                 if (run-- <= 0 && x > 4) {
                     ceiling = (Math.random() * 4) | 0;
@@ -414,7 +432,7 @@ Mario.LevelGenerator.prototype = {
             b[i] = [];
         }
 
-        if (this.Type === Mario.LevelType.Castle) {
+        if (this.Type === Mario.LevelType.Castle || this.Type === Mario.LevelType.BigCastle || this.Type === Mario.LevelType.Bossroom) {
             to = 8;
         } else if (this.Type === Mario.LevelType.Underground) {
             to = 12;

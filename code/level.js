@@ -157,7 +157,8 @@ Mario.LevelType = {
     Underground: 1,
     Castle: 2,
     Toad: 3,
-    BigCastle: 4
+    BigCastle: 4,
+    Bossroom: 5
 };
 
 Mario.Odds = {

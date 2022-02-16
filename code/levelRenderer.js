@@ -82,15 +82,18 @@ Mario.LevelRenderer.prototype.DrawDynamic = function (context, camera) {
 
 Mario.LevelRenderer.prototype.DrawExit0 = function (context, camera, bar) {
     var y = 0, yh = 0, frame = null;
-    if (this.LevelType == Mario.LevelType.BigCastle) {
-        context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (this.Level.ExitX << 4) - camera.X - 16, (y << 4) - camera.Y, frame.Width, frame.Height);
+
+    if (Mario.MarioCharacter.LevelType === Mario.LevelType.BigCastle) {
+        for (y = this.Level.ExitY - 4; y < this.Level.ExitY - 3; y++) {
+            context.drawImage(Enjine.Resources.Images["Door"], 0, 0, 50, 57, (this.Level.ExitX << 4) - camera.X - 16, (y << 4) - camera.Y + 7, 50, 57);
+        }
     }
+
     else {
         for (y = this.Level.ExitY - 8; y < this.Level.ExitY; y++) {
             frame = this.Background[12][y === this.Level.ExitY - 8 ? 4 : 5];
             context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (this.Level.ExitX << 4) - camera.X - 16, (y << 4) - camera.Y, frame.Width, frame.Height);
         }
-
         if (bar) {
             yh = this.Level.ExitY * 16 - (3 * 16) - (Math.sin(this.AnimTime) * 3 * 16) - 8;// - ((Math.sin(((this.Bounce + this.Delta) / 20) * 0.5 + 0.5) * 7 * 16) | 0) - 8;
             frame = this.Background[12][3];
@@ -103,8 +106,10 @@ Mario.LevelRenderer.prototype.DrawExit0 = function (context, camera, bar) {
 
 Mario.LevelRenderer.prototype.DrawExit1 = function (context, camera) {
     var y = 0, frame = null;
-    for (y = this.Level.ExitY - 8; y < this.Level.ExitY; y++) {
-        frame = this.Background[13][y === this.Level.ExitY - 8 ? 4 : 5];
-        context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (this.Level.ExitX << 4) - camera.X + 16, (y << 4) - camera.Y, frame.Width, frame.Height);
+    if (Mario.MarioCharacter.LevelType != Mario.LevelType.BigCastle) {
+        for (y = this.Level.ExitY - 8; y < this.Level.ExitY; y++) {
+            frame = this.Background[13][y === this.Level.ExitY - 8 ? 4 : 5];
+            context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (this.Level.ExitX << 4) - camera.X + 16, (y << 4) - camera.Y, frame.Width, frame.Height);
+        }
     }
 };

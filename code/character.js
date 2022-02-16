@@ -79,6 +79,7 @@ Mario.Character = function () {
     this.DownWasDown = false;
 
     this.LevelType = null;
+    this.bossroom = null;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -93,6 +94,13 @@ Mario.Character.prototype.Initialize = function (world) {
     else {
         this.X = 32;
         this.Y = -50;
+    }
+    if (this.LevelType == Mario.LevelType.BigCastle) {
+        this.X = this.World.Level.ExitX * 15
+        this.Y = 50;
+    }
+    if (this.LevelType == Mario.LevelType.Bossroom) {
+        this.Y = 100;
     }
     this.YPic = 0;
     this.PowerUpTime = 0;
@@ -231,6 +239,7 @@ Mario.Character.prototype.Blink = function (on) {
 
 Mario.Character.prototype.Move = function () {
     var launchfirsttime = true, launchtime = 0;
+    var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
     if (localStorage.test == "Luigi") {
         return;
     }
@@ -636,8 +645,15 @@ Mario.Character.prototype.Move = function () {
         this.Xa = 0;
     }
 
-    if (this.X > this.World.Level.ExitX * 16) {
+    if (this.X > this.World.Level.ExitX * 16 && this.LevelType != Mario.LevelType.BigCastle) {
         this.Win();
+    }
+    else if (this.LevelType === Mario.LevelType.BigCastle) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up) && Math.abs(this.X - (this.World.Level.ExitX * 16 + 10)) < 25) {
+            this.bossroom = true;
+            this.Win();
+            this.World.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
+        }
     }
 
     if (this.X > this.World.Level.Width * 16) {

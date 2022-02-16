@@ -93,6 +93,9 @@ Mario.LevelState.prototype.Enter = function () {
         this.AddSprite(new Mario.Chest(this, 100, 50));
         this.AddSprite(new Mario.Toad(this, 100, 50));
     }
+    if (this.LevelType == Mario.LevelType.Bossroom) {
+        this.AddSprite(new Mario.Bridge(this, 100, 50));
+    }
 };
 
 Mario.LevelState.prototype.Exit = function () {
