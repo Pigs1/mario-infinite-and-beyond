@@ -1,6 +1,6 @@
 /**
-    Represents a life-giving mushroom.
-    Code by Rob Kleffner, 2011
+    Global representation of the Bowser Boss
+    Original sprites by Fnafguy123
 */
 
 Mario.Bowser = function (world, x, y) {
@@ -12,7 +12,7 @@ Mario.Bowser = function (world, x, y) {
     this.Height = 71;
     this.World = world;
     this.X = 300;
-    this.Y = 200;
+    this.Y = 180;
     this.Image = Enjine.Resources.Images["Bowser"];
     this.XPicO = 30;
     this.YPicO = 93;
@@ -24,12 +24,25 @@ Mario.Bowser = function (world, x, y) {
     this.Health = 20;
     this.Deadtime = 0;
     this.State = null;
+    this.Begin = true;
 
     this.walkframe = 0;
     this.walkframetimer = 10;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
+
+/**
+    States:
+    0 = Waiting for fight pose
+    1 = Idle
+    2 = Walk
+    3 = Punch
+    4 = Shell Attack
+    5 = Jump Attack
+    6 = Death State
+    7 = Fireball 
+*/
 
 Mario.Bowser.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null, mariolaunchcheck = true;
@@ -38,9 +51,22 @@ Mario.Bowser.prototype.CollideCheck = function () {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
-                this.Health -= 1;
+                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                    this.Health -= 5;
+                    Mario.MarioCharacter.GroundPoundEnabled = false;
+                    Mario.MarioCharacter.GroundPoundTimer = 0;
+                    if (xMarioD >= 0) {
+                        Mario.MarioCharacter.Xa = 18;
+                    }
+                    else {
+                        Mario.MarioCharacter.Xa = -18;
+                    }
+                    Mario.MarioCharacter.Ya = -3;
+                }
+                else {
+                    this.Health -= 1;
+                }
             }
-
             else {
                 if (!(this.Deadtime > 1) && yMarioD < Mario.MarioCharacter.Height) {
                     if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
@@ -68,15 +94,24 @@ Mario.Bowser.prototype.CollideCheck = function () {
             }
         }
     }
+    if (Mario.MarioCharacter.X >= 49) {
+        this.Begin = false;
+    }
 };
 
 Mario.Bowser.prototype.Move = function () {
     if (this.Health == 0) {
+
         this.Deadtime = 10;
         this.World.RemoveSprite(this);
     }
-
-    this.State = 2;
+    if (this.Begin) {
+        this.State = 0;
+        this.Facing = -1
+    }
+    else {
+        this.State = 2;
+    }
     this.YPic = this.State;
     if (this.State == 2) {
         this.PicWidth = 67;
@@ -109,7 +144,9 @@ Mario.Bowser.prototype.Move = function () {
     }
     this.XFlip = this.Facing === -1;
     this.Ya = 2;
-    // this.SubMove(0, this.Ya);
+    if (this.Y <= 192) {
+        this.SubMove(0, this.Ya);
+    }
 };
 
 Mario.Bowser.prototype.SubMove = function (xa, ya) {

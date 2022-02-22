@@ -15,6 +15,7 @@ Mario.Character = function () {
     this.GroundTraction = 0.89;
     this.AirInertia = 0.89;
     this.GroundPoundTimer = 0;
+    this.GroundPoundEnabled = true;
     this.defaultairinertia = 0.89;
     this.defaultgroundinertia = 0.89;
     this.Gravity = 3;
@@ -476,9 +477,12 @@ Mario.Character.prototype.Move = function () {
             }
         }
     }
+    if (this.OnGround) {
+        this.GroundPoundEnabled = true;
+    }
 
     if (!this.CarriedCheck && !this.waslaunched && !this.Ducking) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox") {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox" && this.GroundPoundEnabled) {
             this.Xa = 0;
             this.Ya = 15;
             this.GroundPoundTimer = 10;
