@@ -1090,9 +1090,13 @@ Mario.Character.prototype.Stomp = function (object) {
     if (this.DeathTime > 0 || this.World.Paused) {
         return;
     }
-
     targetY = object.Y - object.Height / 2;
-    this.SubMove(0, targetY - this.Y);
+    if (object instanceof Mario.Bowser) {
+        this.SubMove(0, targetY - this.Y - object.Height);
+    }
+    else {
+        this.SubMove(0, targetY - this.Y);
+    }
 
     if (object instanceof Mario.Enemy && this.GroundPoundTimer == 0 || object instanceof Mario.BulletBill && this.GroundPoundTimer == 0) {
 

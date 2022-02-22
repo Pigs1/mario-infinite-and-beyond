@@ -28,7 +28,7 @@ Mario.Bridge = function (world, x, y) {
 Mario.Bridge.prototype = new Mario.NotchSprite();
 
 Mario.Bridge.prototype.CollideCheck = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null;
     if (yMarioD >= -28) {
         Mario.MarioCharacter.Ya = 0;
         if (xMarioD <= 150) {
@@ -37,7 +37,6 @@ Mario.Bridge.prototype.CollideCheck = function () {
         Mario.MarioCharacter.OnGround = true;
 
     }
-
 };
 
 Mario.Bridge.prototype.Move = function () {
