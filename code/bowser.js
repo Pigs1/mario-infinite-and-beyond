@@ -80,14 +80,12 @@ Mario.Bowser.prototype.Move = function () {
     this.YPic = this.State;
     if (this.State == 2) {
         this.PicWidth = 67;
-        this.Xa = 2 * this.Facing;
         if (Mario.MarioCharacter.X <= this.X) {
             this.Facing = -1;
         }
         else {
             this.Facing = 1;
         }
-        this.SubMove(this.Xa, 0);
         if (this.walkframetimer == 0) {
             this.walkframetimer = 10;
             if (this.walkframe < 3) {
@@ -101,6 +99,13 @@ Mario.Bowser.prototype.Move = function () {
             this.walkframetimer -= 1;
         }
         this.XPic = this.walkframe;
+        if (this.XPic == 1 || this.XPic == 3) {
+            this.Xa = 0.2 * this.Facing
+        }
+        else {
+            this.Xa = 1.5 * this.Facing;
+        }
+        this.SubMove(this.Xa, 0);
     }
     this.XFlip = this.Facing === -1;
     this.Ya = 2;
