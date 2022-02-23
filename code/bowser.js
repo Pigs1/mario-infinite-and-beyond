@@ -17,7 +17,7 @@ Mario.Bowser = function (world, x, y) {
     this.XPicO = 30;
     this.YPicO = 93;
     this.YPic = 0;
-    this.PicWidth = 71;
+    this.PicWidth = 66;
     this.PicHeight = 81;
     this.Layer = 1;
     this.Facing = 0;
@@ -28,6 +28,8 @@ Mario.Bowser = function (world, x, y) {
 
     this.walkframe = 0;
     this.walkframetimer = 10;
+
+    this.FireballTimer = 10;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
@@ -100,19 +102,26 @@ Mario.Bowser.prototype.CollideCheck = function () {
 };
 
 Mario.Bowser.prototype.Move = function () {
-    if (this.Health == 0) {
-
+    if (this.Health <= 0) {
         this.Deadtime = 10;
         this.World.RemoveSprite(this);
     }
+
     if (this.Begin) {
         this.State = 0;
         this.Facing = -1
     }
     else {
-        this.State = 2;
+        if (this.State != 1) {
+            this.State = 7;
+        }
     }
     this.YPic = this.State;
+    if (this.State == 1) {
+        this.XPic = 0;
+        this.PicWidth = 69;
+        // this.State = (Math.random() * 7) | 0;
+    }
     if (this.State == 2) {
         this.PicWidth = 67;
         if (Mario.MarioCharacter.X <= this.X) {
@@ -141,6 +150,33 @@ Mario.Bowser.prototype.Move = function () {
             this.Xa = 1.5 * this.Facing;
         }
         this.SubMove(this.Xa, 0);
+    }
+    if (this.State == 7) {
+        this.YPic = 0;
+        if (this.XPic == 0) {
+            this.XPic = 1;
+        }
+        this.PicWidth = 67;
+        if (this.FireballTimer == 0) {
+            if (this.XPic == 2) {
+                this.FireballTimer = 25;
+            }
+            else {
+                this.FireballTimer = 10;
+            }
+            if (this.XPic < 3) {
+                this.XPic += 1;
+            }
+            else {
+                this.State = 1;
+            }
+        }
+        else {
+            if (this.XPic == 3 && this.FireballTimer == 25) {
+                this.World.AddSprite(new Mario.BowserFireball(this.World, this.X + this.Facing * 6, this.Y - 50, this.Facing));
+            }
+            this.FireballTimer -= 1;
+        }
     }
     this.XFlip = this.Facing === -1;
     this.Ya = 2;
