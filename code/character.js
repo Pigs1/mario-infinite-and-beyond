@@ -81,8 +81,6 @@ Mario.Character = function () {
 
     this.LevelType = null;
     this.bossroom = null;
-
-    this.BowserStun = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -243,9 +241,6 @@ Mario.Character.prototype.Blink = function (on) {
 Mario.Character.prototype.Move = function () {
     var launchfirsttime = true, launchtime = 0;
     var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
-    if (this.BowserStun) {
-        return;
-    }
     if (localStorage.test == "Luigi") {
         return;
     }

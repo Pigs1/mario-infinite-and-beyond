@@ -41,6 +41,8 @@ Mario.Bowser = function (world, x, y) {
     this.ShellTotalTime = 0;
 
     this.JumpTimer = 20;
+    this.JumpVelMult = 1.3;
+    this.JumpLockOn = false;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
@@ -120,7 +122,8 @@ Mario.Bowser.prototype.Move = function () {
 
     if (this.Begin) {
         this.State = 0;
-        this.Facing = -1
+        this.Facing = -1;
+        this.IdleTime = (Math.random() * 30 | 0);
     }
     else if (this.Begin2) {
         this.Begin2 = false;
@@ -131,6 +134,7 @@ Mario.Bowser.prototype.Move = function () {
     this.YPic = this.State;
 
     if (this.State == 1) {
+        this.IdleTime -= 1;
         this.walkframe = 0;
         this.walkframetimer = 10;
         this.WalkTotalTime = 0;
@@ -141,6 +145,8 @@ Mario.Bowser.prototype.Move = function () {
         this.ShellMomentumMult = 6;
         this.ShellTotalTime = 0;
         this.JumpTimer = 20;
+        this.JumpVelMult = 1.3;
+        this.JumpLockOn = false;
         if (Mario.MarioCharacter.X <= this.X) {
             this.Facing = -1;
         }
@@ -148,9 +154,12 @@ Mario.Bowser.prototype.Move = function () {
             this.Facing = 1;
         }
         this.XPic = 0;
+        this.YPic = 1;
         this.PicWidth = 69;
-        this.State = (Math.random() * 8) | 0;
-        // this.State = 4;
+        if (this.IdleTime <= 0) {
+            this.State = (Math.random() * 8) | 0;
+            this.IdleTime = (Math.random() * 30 | 0);
+        }
     }
     if (!this.Begin && this.State == 0 || !this.Begin && this.State == 6) {
         this.State = 1;
@@ -292,7 +301,6 @@ Mario.Bowser.prototype.Move = function () {
             }
             else {
                 this.FireballTimer = 10;
-                this.YPic = 1;
                 this.State = 1;
             }
         }
@@ -303,19 +311,45 @@ Mario.Bowser.prototype.Move = function () {
             this.FireballTimer -= 1;
         }
     }
+
     if (this.State == 5) {
-        this.JumpTimer -= 1;
         this.PicWidth = 61;
         if (this.JumpTimer == 0) {
-            this.Ya = -5;
+            this.XPic = 1;
+            this.Ya = -5 * this.JumpVelMult;
+            this.JumpVelMult -= 0.1;
+            if (this.JumpVelMult == 0) {
+                this.Xa = 0;
+                this.JumpLockOn = true;
+            }
+            else {
+                this.Xa = 0;
+                if (!this.JumpLockOn) {
+                    if (Mario.MarioCharacter.X > this.X) {
+                        this.Xa = 3 - this.JumpVelMult;
+                    }
+                    else if (Mario.MarioCharacter.X < this.X) {
+                        this.Xa = -3 + this.JumpVelMult;
+                    }
+                }
+            }
+            if (this.Y > 193) {
+                this.Y = 192;
+                this.JumpTimer = 20;
+                this.State = 1;
+            }
         }
         else {
             this.Ya = 0;
+            this.JumpTimer -= 1;
         }
-        this.SubMove(0, this.Ya);
+        this.SubMove(this.Xa, this.Ya);
     }
+
     this.XFlip = this.Facing === -1;
-    this.Ya = 2;
+    if (this.JumpTimer != 0) {
+        this.Ya = 2;
+    }
     if (this.Y <= 192) {
         this.SubMove(0, this.Ya);
     }
