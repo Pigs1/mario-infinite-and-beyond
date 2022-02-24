@@ -29,10 +29,18 @@ Mario.Bowser = function (world, x, y) {
 
     this.walkframe = 0;
     this.walkframetimer = 10;
+    this.WalkTotalTime = 0;
 
     this.FireballTimer = 10;
+
     this.PunchTimer = 10;
     this.PunchMomentumMult = 1.0;
+
+    this.SpinTimer = 2;
+    this.ShellMomentumMult = 6;
+    this.ShellTotalTime = 0;
+
+    this.JumpTimer = 20;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
@@ -54,7 +62,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+            if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
                 if (Mario.MarioCharacter.GroundPoundTimer > 0) {
                     this.Health -= 5;
@@ -119,12 +127,35 @@ Mario.Bowser.prototype.Move = function () {
         this.State = 1;
 
     }
+
     this.YPic = this.State;
+
     if (this.State == 1) {
+        this.walkframe = 0;
+        this.walkframetimer = 10;
+        this.WalkTotalTime = 0;
+        this.FireballTimer = 10;
+        this.PunchTimer = 10;
+        this.PunchMomentumMult = 1.0;
+        this.SpinTimer = 2;
+        this.ShellMomentumMult = 6;
+        this.ShellTotalTime = 0;
+        this.JumpTimer = 20;
+        if (Mario.MarioCharacter.X <= this.X) {
+            this.Facing = -1;
+        }
+        else {
+            this.Facing = 1;
+        }
         this.XPic = 0;
         this.PicWidth = 69;
-        this.State = (Math.random() * 6) | 0;
+        this.State = (Math.random() * 8) | 0;
+        // this.State = 4;
     }
+    if (!this.Begin && this.State == 0 || !this.Begin && this.State == 6) {
+        this.State = 1;
+    }
+
     if (this.State == 2) {
         this.PicWidth = 67;
         if (Mario.MarioCharacter.X <= this.X) {
@@ -153,6 +184,13 @@ Mario.Bowser.prototype.Move = function () {
             this.Xa = 1.5 * this.Facing;
         }
         this.SubMove(this.Xa, 0);
+        this.WalkTotalTime += 1;
+        if (this.WalkTotalTime == 65) {
+            this.WalkTotalTime = 0;
+            this.walkframetimer = 10;
+            this.State = 1;
+            this.XPic = 1;
+        }
     }
 
     if (this.State == 3) {
@@ -172,10 +210,68 @@ Mario.Bowser.prototype.Move = function () {
                 this.PunchTimer = 20;
             }
             else {
+                this.PunchTimer = 10;
                 this.State = 1;
             }
         }
         this.PunchTimer -= 1;
+    }
+
+    if (this.State == 4) {
+        this.PicWidth = 50;
+        this.Width = 10;
+        this.Height = 50;
+        if (this.Xa > 0 && Mario.MarioCharacter.X < this.X) {
+            if (this.ShellMomentumMult == 0) {
+                this.ShellMomentumMult = 10;
+            }
+            if (this.ShellMomentumMult > -0.5) {
+                this.ShellMomentumMult -= 0.25;
+            }
+            this.Xa = 6 * this.ShellMomentumMult;
+        }
+        else if (this.Xa < 0 && Mario.MarioCharacter.X > this.X) {
+            if (this.ShellMomentumMult == 0) {
+                this.ShellMomentumMult = 10;
+            }
+            if (this.ShellMomentumMult > -0.5) {
+                this.ShellMomentumMult -= 0.25;
+            }
+            this.Xa = -6 * this.ShellMomentumMult;
+        }
+        else {
+            this.ShellMomentumMult = 0;
+        }
+
+        if (Mario.MarioCharacter.X > this.X) {
+            this.Xa = 6 - this.ShellMomentumMult;
+        }
+        else if (Mario.MarioCharacter.X < this.X) {
+            this.Xa = -6 + this.ShellMomentumMult;
+        }
+
+        this.SubMove(this.Xa, 0);
+
+        if (this.SpinTimer == 0) {
+            if (this.XPic < 3) {
+                this.XPic += 1;
+            }
+            else {
+                this.XPic = 0;
+            }
+            this.SpinTimer = 2;
+        }
+        this.SpinTimer -= 1;
+        this.ShellTotalTime += 1;
+
+        if (this.ShellTotalTime == 80) {
+            this.XPic = 0;
+            this.State = 1;
+        }
+    }
+    else {
+        this.Width = 15;
+        this.Height = 71;
     }
 
     if (this.State == 7) {
@@ -195,6 +291,7 @@ Mario.Bowser.prototype.Move = function () {
                 this.XPic += 1;
             }
             else {
+                this.FireballTimer = 10;
                 this.YPic = 1;
                 this.State = 1;
             }
@@ -205,6 +302,17 @@ Mario.Bowser.prototype.Move = function () {
             }
             this.FireballTimer -= 1;
         }
+    }
+    if (this.State == 5) {
+        this.JumpTimer -= 1;
+        this.PicWidth = 61;
+        if (this.JumpTimer == 0) {
+            this.Ya = -5;
+        }
+        else {
+            this.Ya = 0;
+        }
+        this.SubMove(0, this.Ya);
     }
     this.XFlip = this.Facing === -1;
     this.Ya = 2;

@@ -71,7 +71,7 @@ Mario.BowserFireball.prototype.Move = function () {
 
     this.World.CheckFireballCollide(this);
 
-    this.FlipX = this.Facing === -1;
+    this.XFlip = this.Facing === 1;
 
     if (!this.SubMove(this.Xa, 0)) {
         this.Die();

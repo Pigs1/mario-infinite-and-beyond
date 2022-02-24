@@ -9,7 +9,7 @@ Mario.Character = function () {
     this.Large = false;
     this.Fire = false;
     this.Coins = 0;
-    this.Lives = 3;
+    this.Lives = 99;
     this.LevelString = "none";
     this.GroundInertia = 0.89;
     this.GroundTraction = 0.89;
@@ -81,6 +81,8 @@ Mario.Character = function () {
 
     this.LevelType = null;
     this.bossroom = null;
+
+    this.BowserStun = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -241,6 +243,9 @@ Mario.Character.prototype.Blink = function (on) {
 Mario.Character.prototype.Move = function () {
     var launchfirsttime = true, launchtime = 0;
     var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
+    if (this.BowserStun) {
+        return;
+    }
     if (localStorage.test == "Luigi") {
         return;
     }
