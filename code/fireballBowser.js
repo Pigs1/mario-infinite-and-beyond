@@ -18,7 +18,7 @@ Mario.BowserFireball = function (world, x, y, facing) {
     this.YPicO = 15;
     this.YPic = 0;
     this.XPic = 2;
-    this.Height = 8;
+    this.Height = 10;
     this.Width = 8;
     this.PicWidth = 33;
     this.PicHeight = 31;
@@ -100,12 +100,28 @@ Mario.BowserFireball.prototype.Move = function () {
 };
 
 Mario.BowserFireball.prototype.CollideCheck = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, mariolaunchcheck = true;
     if (xMarioD < this.Width * 2 + 4 && xMarioD > -this.Width * 2 - 4 && yMarioD < this.Height && yMarioD > -this.Height) {
-        Mario.MarioCharacter.GetHurt();
+
+        if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
+            mariolaunchcheck = false
+            if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
+                Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
+                Mario.MarioCharacter.Xa = 0;
+            }
+            if (Mario.MarioCharacter.launched <= 0) {
+                Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
+                Mario.MarioCharacter.launchangleX = (5 + (Mario.MarioCharacter.percentdamage * 0.45)) * this.Facing
+                Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
+                Mario.MarioCharacter.percentdamage += 2;
+            }
+        }
+        else if (yMarioD < 0) {
+            Mario.MarioCharacter.GetHurt();
+        }
         this.Die();
     }
-}
+};
 
 Mario.BowserFireball.prototype.SubMove = function (xa, ya) {
     var collide = false;

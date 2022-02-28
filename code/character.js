@@ -277,7 +277,7 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D) && this.character_select == "fox" && this.wavedashtime > 0 || this.DWasDown && this.wavedashtime > 0) {
-        if (!this.OnGround) {
+        if (!this.OnGround && this.launched <= 0) {
 
             this.DWasDown = true;
 
