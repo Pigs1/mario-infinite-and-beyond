@@ -93,7 +93,7 @@ Mario.LevelState.prototype.Enter = function () {
         this.AddSprite(new Mario.Chest(this, 100, 50));
         this.AddSprite(new Mario.Toad(this, 100, 50));
     }
-    if (this.LevelType == Mario.LevelType.Bossroom) {
+    if (this.LevelType == Mario.LevelType.Bowser) {
         this.AddSprite(new Mario.Bridge(this, 100, 50));
         this.AddSprite(new Mario.Bowser(this, 100, 50));
     }
@@ -136,7 +136,7 @@ Mario.LevelState.prototype.Update = function (delta) {
         this.StartTime++;
     }
 
-    if (Mario.MarioCharacter.waslaunched) {
+    if (Mario.MarioCharacter.waslaunched || Mario.MarioCharacter.character_select == "fox" && this.LevelType == Mario.LevelType.Bowser) {
         this.Camera.X = this.Camera.X
     }
     else {
@@ -266,7 +266,7 @@ Mario.LevelState.prototype.Update = function (delta) {
     this.Sprites.RemoveList(this.SpritesToRemove);
     this.SpritesToAdd.length = 0;
     this.SpritesToRemove.length = 0;
-    if (Mario.MarioCharacter.waslaunched) {
+    if (Mario.MarioCharacter.waslaunched || Mario.MarioCharacter.character_select == "fox" && this.LevelType == Mario.LevelType.Bowser) {
         this.Camera.X = this.Camera.X
         this.Camera.Y = this.Camera.Y
         if (Mario.MarioCharacter.X - this.Camera.X < -5 || Mario.MarioCharacter.X - this.Camera.X > 320 + 5 || Mario.MarioCharacter.Y - this.Camera.Y < -20 || Mario.MarioCharacter.Y - this.Camera.Y > 240 + 20 && Mario.MarioCharacter.launched > 0) {

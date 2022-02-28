@@ -80,7 +80,7 @@ Mario.Character = function () {
     this.DownWasDown = false;
 
     this.LevelType = null;
-    this.bossroom = null;
+    this.Bowser = null;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -100,7 +100,7 @@ Mario.Character.prototype.Initialize = function (world) {
         this.X = this.World.Level.ExitX * 15
         this.Y = 50;
     }
-    if (this.LevelType == Mario.LevelType.Bossroom) {
+    if (this.LevelType == Mario.LevelType.Bowser) {
         this.Y = 100;
     }
     this.YPic = 0;
@@ -644,7 +644,7 @@ Mario.Character.prototype.Move = function () {
         this.Die();
     }
 
-    if (this.X < 0) {
+    if (this.X < 0 && this.character_select != "fox") {
         this.X = 0;
         this.Xa = 0;
     }
@@ -654,7 +654,7 @@ Mario.Character.prototype.Move = function () {
     }
     else if (this.LevelType === Mario.LevelType.BigCastle) {
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up) && Math.abs(this.X - (this.World.Level.ExitX * 16 + 10)) < 25) {
-            this.bossroom = true;
+            this.Bowser = true;
             this.Win();
             this.World.Level = levelGenerator.CreateLevel(this.LevelType, this.LevelDifficulty);
         }

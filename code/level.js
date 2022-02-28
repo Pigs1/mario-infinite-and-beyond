@@ -158,7 +158,7 @@ Mario.LevelType = {
     Castle: 2,
     Toad: 3,
     BigCastle: 4,
-    Bossroom: 5
+    Bowser: 5
 };
 
 Mario.Odds = {
@@ -222,7 +222,7 @@ Mario.Level.prototype = {
     },
 
     SetBlock: function (x, y, block) {
-        if (x < 0) { return; }
+        if (x < -10) { return; }
         if (y < 0) { return; }
         if (x >= this.Width) { return; }
         if (y >= this.Height) { return; }

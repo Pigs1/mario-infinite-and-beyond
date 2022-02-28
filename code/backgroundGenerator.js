@@ -33,7 +33,7 @@ Mario.BackgroundGenerator.prototype = {
             case Mario.LevelType.BigCastle:
                 this.GenerateCastle(level);
                 break;
-            case Mario.LevelType.Bossroom:
+            case Mario.LevelType.Bowser:
                 this.GenerateCastle(level);
                 break;
         }

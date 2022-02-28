@@ -144,7 +144,7 @@ Mario.BowserFireball.prototype.SubMove = function (xa, ya) {
         } else if (this.IsBlocking(this.X + xa + this.Width, this.Y + ya + 1, xa, ya)) {
             collide = true;
         }
-        if (Mario.MarioCharacter.LevelType == Mario.LevelType.Bossroom) {
+        if (Mario.MarioCharacter.LevelType == Mario.LevelType.Bowser) {
             if (this.Y >= 165) {
                 collide = true;
                 this.OnGround = true;

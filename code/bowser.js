@@ -12,10 +12,10 @@ Mario.Bowser = function (world, x, y) {
     this.Height = 71;
     this.World = world;
     this.X = 300;
-    this.Y = 180;
+    this.Y = 179;
     this.Image = Enjine.Resources.Images["Bowser"];
     this.XPicO = 30;
-    this.YPicO = 93;
+    this.YPicO = 85;
     this.YPic = 0;
     this.PicWidth = 66;
     this.PicHeight = 81;
@@ -124,6 +124,9 @@ Mario.Bowser.prototype.Move = function () {
         this.State = 0;
         this.Facing = -1;
         this.IdleTime = (Math.random() * 30 | 0);
+        if (this.IdleTime < 5) {
+            this.IdleTime == 5;
+        }
     }
     else if (this.Begin2) {
         this.Begin2 = false;
@@ -132,6 +135,15 @@ Mario.Bowser.prototype.Move = function () {
     }
 
     this.YPic = this.State;
+    if (this.Y >= 185 && this.Ya > 0) {
+        this.OnGround = true;
+        if (this.Y > 185) {
+            this.Y = 185;
+        }
+    }
+    else if (this.JumpTimer == 0) {
+        this.OnGround = false;
+    }
 
     if (this.State == 1) {
         this.IdleTime -= 1;
@@ -313,12 +325,14 @@ Mario.Bowser.prototype.Move = function () {
     }
 
     if (this.State == 5) {
+        this.Ya = 0;
         this.PicWidth = 61;
+        this.Xa = 0;
         if (this.JumpTimer == 0) {
             this.XPic = 1;
             this.Ya = -5 * this.JumpVelMult;
             this.JumpVelMult -= 0.1;
-            if (this.JumpVelMult == 0) {
+            if (this.JumpVelMult == 0 || Mario.MarioCharacter.X - this.X < 5 && Mario.MarioCharacter.X - this.X > -5) {
                 this.Xa = 0;
                 this.JumpLockOn = true;
             }
@@ -333,9 +347,8 @@ Mario.Bowser.prototype.Move = function () {
                     }
                 }
             }
-            if (this.Y > 193) {
-                this.Y = 192;
-                this.JumpTimer = 20;
+            if (this.OnGround) {
+                this.Ya = 0;
                 this.State = 1;
             }
         }
@@ -343,14 +356,17 @@ Mario.Bowser.prototype.Move = function () {
             this.Ya = 0;
             this.JumpTimer -= 1;
         }
-        this.SubMove(this.Xa, this.Ya);
+        if (!this.OnGround) {
+            this.SubMove(this.Xa, this.Ya);
+        }
     }
 
     this.XFlip = this.Facing === -1;
-    if (this.JumpTimer != 0) {
-        this.Ya = 2;
-    }
-    if (this.Y <= 192) {
+
+    if (!this.OnGround) {
+        if (this.JumpTimer != 0) {
+            this.Ya = 2;
+        }
         this.SubMove(0, this.Ya);
     }
 };
@@ -456,9 +472,9 @@ Mario.Bowser.prototype.SubMove = function (xa, ya) {
 
 Mario.Bowser.prototype.IsBlocking = function (x, y, xa, ya) {
     x = (x / 16) | 0;
-    y = (y / 16) | 0;
+    y = (y / 17) | 0;
 
-    if (x === (this.X / 16) | 0 && y === (this.Y / 16) | 0) {
+    if (x === (this.X / 16) | 0 && y === (this.Y / 17) | 0) {
         return false;
     }
 

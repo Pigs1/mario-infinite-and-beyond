@@ -406,7 +406,7 @@ Mario.MapState.prototype.RenderStatic = function () {
     var x = 0, y = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 0, s = 0, xx = 0, yy = 0,
         image = Enjine.Resources.Images["worldMap"], type = 0;
 
-    if (Mario.Character.bossroom == true) {
+    if (Mario.Character.Bowser == true) {
         return;
     }
 
@@ -662,7 +662,7 @@ Mario.MapState.prototype.CalcDistance = function (x, y, xa, ya) {
 Mario.MapState.prototype.Draw = function (context) {
     var x = 0, y = 0;
 
-    if (this.WorldNumber === 8 || Mario.MarioCharacter.bossroom == true) {
+    if (this.WorldNumber === 8 || Mario.MarioCharacter.Bowser == true) {
         return;
     }
 
@@ -728,8 +728,8 @@ Mario.MapState.prototype.GetY = function () {
 };
 
 Mario.MapState.prototype.CheckForChange = function (context) {
-    if (Mario.MarioCharacter.bossroom == true) {
-        context.ChangeState(new Mario.LevelState(this.LevelDifficulty, Mario.LevelType.Bossroom));
+    if (Mario.MarioCharacter.Bowser == true) {
+        context.ChangeState(new Mario.LevelState(this.LevelDifficulty, Mario.LevelType.Bowser));
     }
     if (this.WorldNumber === 8) {
         context.ChangeState(new Mario.WinState());

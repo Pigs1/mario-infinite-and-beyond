@@ -54,7 +54,7 @@ Mario.LevelGenerator.prototype = {
             }
 
         }
-        else if (type === Mario.LevelType.Bossroom) {
+        else if (type === Mario.LevelType.Bowser) {
             level = new Mario.Level(this.Width, this.Height);
             length = 0;
             floor = 50;
@@ -82,7 +82,7 @@ Mario.LevelGenerator.prototype = {
             floor = this.Height - 1 - (Math.random() * 4) | 0;
         }
 
-        if (type !== Mario.LevelType.Toad && type !== Mario.LevelType.Bossroom) {
+        if (type !== Mario.LevelType.Toad && type !== Mario.LevelType.Bowser) {
             level.ExitX = length + 8;
             level.ExitY = floor;
         }
@@ -432,7 +432,7 @@ Mario.LevelGenerator.prototype = {
             b[i] = [];
         }
 
-        if (this.Type === Mario.LevelType.Castle || this.Type === Mario.LevelType.BigCastle || this.Type === Mario.LevelType.Bossroom) {
+        if (this.Type === Mario.LevelType.Castle || this.Type === Mario.LevelType.BigCastle || this.Type === Mario.LevelType.Bowser) {
             to = 8;
         } else if (this.Type === Mario.LevelType.Underground) {
             to = 12;
