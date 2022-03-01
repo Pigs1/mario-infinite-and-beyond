@@ -1,48 +1,92 @@
 /**
-    Represents a bossfight bridge
-    Code by PigsSSBM, 2022
+    Represents a life-giving mushroom.
+    Code by Rob Kleffner, 2011
 */
 
-Mario.Bridge = function (world, x, y) {
+Mario.Mushroom = function (world, x, y) {
     this.RunTime = 0;
     this.GroundInertia = 0.89;
     this.AirInertia = 0.1;
     this.OnGround = false;
-    this.Width = 200;
+    this.Width = 4;
     this.Height = 24;
     this.World = world;
-    this.X = 300;
-    this.Y = 201;
-    this.Image = Enjine.Resources.Images["Bridge"];
-    this.XPicO = 252;
-    this.YPicO = 24;
+    this.X = x;
+    this.Y = y;
+    this.Image = Enjine.Resources.Images["items"];
+    this.XPicO = 8;
+    this.YPicO = 15;
     this.YPic = 0;
-    this.Height = 50;
+    this.Height = 12;
     this.Facing = 1;
-    this.PicWidth = 252;
-    this.PicHeight = 22;
+    this.PicWidth = this.PicHeight = 16;
     this.Life = 0;
-    this.Layer = 0;
 };
 
-Mario.Bridge.prototype = new Mario.NotchSprite();
+Mario.Mushroom.prototype = new Mario.NotchSprite();
 
-Mario.Bridge.prototype.CollideCheck = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null;
-    if (yMarioD >= -28) {
-        Mario.MarioCharacter.Ya = 0;
-        if (xMarioD <= 150) {
-            Mario.MarioCharacter.Y = this.Y - this.PicHeight - 4;
+Mario.Mushroom.prototype.CollideCheck = function () {
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
+    if (xMarioD > -16 && xMarioD < 16) {
+        if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+            if (Mario.MarioCharacter.character_select != "fox") {
+                Mario.MarioCharacter.GetMushroom();
+            }
+            this.World.RemoveSprite(this);
         }
-        Mario.MarioCharacter.OnGround = true;
-
     }
 };
 
-Mario.Bridge.prototype.Move = function () {
+Mario.Mushroom.prototype.Move = function () {
+
+    if (this.Life < 9) {
+        this.Layer = 0;
+        if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y < this.Y) {
+            this.Y++;
+        }
+        else {
+            this.Y--;
+        }
+        this.Life++;
+        return;
+    }
+
+    var sideWaysSpeed = 1.75;
+    this.Layer = 1;
+
+    if (this.Xa > 2) {
+        this.Facing = 1;
+    }
+    if (this.Xa < -2) {
+        this.Facing = -1;
+    }
+    if (Mario.MarioCharacter.character_select == "fox") {
+        return;
+    }
+    this.Xa = this.Facing * sideWaysSpeed;
+
+    this.XFlip = this.Facing === -1;
+    this.RunTime += Math.abs(this.Xa) + 5;
+
+    if (!this.SubMove(this.Xa, 0)) {
+        this.Facing = -this.Facing;
+    }
+    this.OnGround = false;
+    this.SubMove(0, this.Ya);
+
+    this.Ya *= 0.85;
+    if (this.OnGround) {
+        this.Xa *= this.GroundInertia;
+    } else {
+        this.Xa *= this.AirInertia;
+    }
+
+    if (!this.OnGround) {
+        this.Ya += 2;
+    }
 };
 
-Mario.Bridge.prototype.SubMove = function (xa, ya) {
+Mario.Mushroom.prototype.SubMove = function (xa, ya) {
     var collide = false;
 
     while (xa > 8) {
@@ -141,7 +185,7 @@ Mario.Bridge.prototype.SubMove = function (xa, ya) {
     }
 };
 
-Mario.Bridge.prototype.IsBlocking = function (x, y, xa, ya) {
+Mario.Mushroom.prototype.IsBlocking = function (x, y, xa, ya) {
     x = (x / 16) | 0;
     y = (y / 16) | 0;
 
@@ -152,7 +196,7 @@ Mario.Bridge.prototype.IsBlocking = function (x, y, xa, ya) {
     return this.World.Level.IsBlocking(x, y, xa, ya);
 };
 
-Mario.Bridge.prototype.BumpCheck = function (x, y) {
+Mario.Mushroom.prototype.BumpCheck = function (x, y) {
     if (this.X + this.Width > x * 16 && this.X - this.Width < x * 16 - 16 && y === ((y - 1) / 16) | 0) {
         this.Facing = -Mario.MarioCharacter.Facing;
         this.Ya = -10;

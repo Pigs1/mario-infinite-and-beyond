@@ -153,12 +153,13 @@ Mario.LevelState.prototype.Update = function (delta) {
 
     for (i = 0; i < this.Sprites.Objects.length; i++) {
         sprite = this.Sprites.Objects[i];
-        if (sprite !== Mario.MarioCharacter) {
+        if (sprite !== Mario.MarioCharacter && this.LevelType != Mario.LevelType.Bowser) {
             xd = sprite.X - this.Camera.X;
             yd = sprite.Y - this.Camera.Y;
             if (xd < -64 || xd > 320 + 64 || yd < -64 || yd > 240 + 64) {
                 this.Sprites.RemoveAt(i);
-            } else {
+            }
+            else {
                 if (sprite instanceof Mario.Fireball) {
                     this.FireballsOnScreen++;
                 }

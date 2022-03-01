@@ -1,48 +1,49 @@
-/**
-    Represents a bossfight bridge
-    Code by PigsSSBM, 2022
-*/
-
-Mario.Bridge = function (world, x, y) {
+Mario.BowserWall = function (world, x, y) {
     this.RunTime = 0;
     this.GroundInertia = 0.89;
     this.AirInertia = 0.1;
-    this.OnGround = false;
-    this.Width = 200;
-    this.Height = 24;
+
+    this.Width = 22;
+    this.Height = 200;
     this.World = world;
-    this.X = 300;
-    this.Y = 201;
-    this.Image = Enjine.Resources.Images["Bridge"];
-    this.XPicO = 252;
-    this.YPicO = 24;
+    this.X = x;
+    this.Y = 200;
+    this.Image = Enjine.Resources.Images["BowserWall"];
+    this.XPicO = 22;
+    this.YPicO = 252;
     this.YPic = 0;
-    this.Height = 50;
     this.Facing = 1;
-    this.PicWidth = 252;
-    this.PicHeight = 22;
+    this.PicWidth = 22;
+    this.PicHeight = 252;
     this.Life = 0;
     this.Layer = 0;
 };
 
-Mario.Bridge.prototype = new Mario.NotchSprite();
+Mario.BowserWall.prototype = new Mario.NotchSprite();
 
-Mario.Bridge.prototype.CollideCheck = function () {
+Mario.BowserWall.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null;
-    if (yMarioD >= -28) {
-        Mario.MarioCharacter.Ya = 0;
-        if (xMarioD <= 150) {
-            Mario.MarioCharacter.Y = this.Y - this.PicHeight - 4;
-        }
-        Mario.MarioCharacter.OnGround = true;
 
+    if (Mario.MarioCharacter.X >= this.X && this.X == 50 && Mario.MarioCharacter.X <= 50 + 5) {
+        Mario.MarioCharacter.X = 55;
+        Mario.MarioCharacter.Xa = 0;
+    }
+    if (Mario.MarioCharacter.X <= this.X && this.X == 311 && Mario.MarioCharacter.X >= 311 - 22) {
+        Mario.MarioCharacter.X = 311 - 22;
+        Mario.MarioCharacter.Xa = 0;
+    }
+    if (Mario.MarioCharacter.X > this.X && this.X == 311) {
+        Mario.MarioCharacter.X = 310;
+    }
+    if (Mario.MarioCharacter.X < this.X && this.X == 50) {
+        Mario.MarioCharacter.X = 51;
     }
 };
 
-Mario.Bridge.prototype.Move = function () {
+Mario.BowserWall.prototype.Move = function () {
 };
 
-Mario.Bridge.prototype.SubMove = function (xa, ya) {
+Mario.BowserWall.prototype.SubMove = function (xa, ya) {
     var collide = false;
 
     while (xa > 8) {
@@ -141,20 +142,9 @@ Mario.Bridge.prototype.SubMove = function (xa, ya) {
     }
 };
 
-Mario.Bridge.prototype.IsBlocking = function (x, y, xa, ya) {
-    x = (x / 16) | 0;
-    y = (y / 16) | 0;
+Mario.BowserWall.prototype.IsBlocking = function (x, y, xa, ya) {
+}
 
-    if (x === (this.X / 16) | 0 && y === (this.Y / 16) | 0) {
-        return false;
-    }
+Mario.BowserWall.prototype.BumpCheck = function (x, y) {
 
-    return this.World.Level.IsBlocking(x, y, xa, ya);
-};
-
-Mario.Bridge.prototype.BumpCheck = function (x, y) {
-    if (this.X + this.Width > x * 16 && this.X - this.Width < x * 16 - 16 && y === ((y - 1) / 16) | 0) {
-        this.Facing = -Mario.MarioCharacter.Facing;
-        this.Ya = -10;
-    }
 };

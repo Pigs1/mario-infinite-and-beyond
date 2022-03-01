@@ -11,7 +11,7 @@ Mario.Bowser = function (world, x, y) {
     this.Width = 15;
     this.Height = 71;
     this.World = world;
-    this.X = 300;
+    this.X = 250;
     this.Y = 179;
     this.Image = Enjine.Resources.Images["Bowser"];
     this.XPicO = 30;
@@ -43,6 +43,8 @@ Mario.Bowser = function (world, x, y) {
     this.JumpTimer = 20;
     this.JumpVelMult = 1.3;
     this.JumpLockOn = false;
+
+    this.ConsecutiveJumps = 0;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
@@ -57,6 +59,7 @@ Mario.Bowser.prototype = new Mario.NotchSprite();
     5 = Jump Attack
     6 = Death State
     7 = Fireball 
+    9 = Roar
 */
 
 Mario.Bowser.prototype.CollideCheck = function () {
@@ -66,6 +69,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
                 Mario.MarioCharacter.Stomp(this);
+                this.ConsecutiveJumps += 1;
                 if (Mario.MarioCharacter.GroundPoundTimer > 0) {
                     this.Health -= 5;
                     Mario.MarioCharacter.GroundPoundEnabled = false;
@@ -112,6 +116,22 @@ Mario.Bowser.prototype.CollideCheck = function () {
     if (Mario.MarioCharacter.X >= 49) {
         this.Begin = false;
     }
+
+    if (this.ConsecutiveJumps >= 5) {
+        this.State = 9
+        Mario.MarioCharacter.Xa = 8 * this.Facing;
+    }
+
+    if (Mario.MarioCharacter.OnGround) {
+        this.ConsecutiveJumps = 0;
+    }
+
+    if (this.X < 50 + this.Width) {
+        this.X = 50 + this.Width;
+    }
+    else if (this.X > 300 - this.Width) {
+        this.X = 300 - this.Width;
+    }
 };
 
 Mario.Bowser.prototype.Move = function () {
@@ -131,7 +151,10 @@ Mario.Bowser.prototype.Move = function () {
     else if (this.Begin2) {
         this.Begin2 = false;
         this.State = 1;
-
+        if (Mario.MarioCharacter.character_select != "fox") {
+            this.World.AddSprite(new Mario.BowserWall(this, 50, 50));
+            this.World.AddSprite(new Mario.BowserWall(this, 311, 50));
+        }
     }
 
     this.YPic = this.State;
