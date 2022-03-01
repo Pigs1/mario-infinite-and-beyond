@@ -93,7 +93,7 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[31].src = "images/toad.png";
     this.Images[32].src = "images/door.png";
     this.Images[33].src = "images/bridge.png";
-    this.Images[34].src = "images/bowser.png";
+    this.Images[34].src = "images/Bowser.png";
     this.Images[35].src = "images/bowserfireball.png";
     this.Images[36].src = "images/bowserwall.png";
 
