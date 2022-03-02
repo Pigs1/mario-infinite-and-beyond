@@ -21,7 +21,7 @@ Mario.Bowser = function (world, x, y) {
     this.PicHeight = 81;
     this.Layer = 1;
     this.Facing = 0;
-    this.Health = 20;
+    this.Health = 50;
     this.Deadtime = 0;
     this.State = null;
     this.Begin = true;
@@ -43,6 +43,8 @@ Mario.Bowser = function (world, x, y) {
     this.JumpTimer = 20;
     this.JumpVelMult = 1.3;
     this.JumpLockOn = false;
+
+    this.RoarFrameTimer = 5;
 
     this.ConsecutiveJumps = 0;
 };
@@ -117,9 +119,8 @@ Mario.Bowser.prototype.CollideCheck = function () {
         this.Begin = false;
     }
 
-    if (this.ConsecutiveJumps >= 5) {
-        this.State = 9
-        Mario.MarioCharacter.Xa = 8 * this.Facing;
+    if (this.ConsecutiveJumps >= 5 && this.OnGround) {
+        this.State = 9;
     }
 
     if (Mario.MarioCharacter.OnGround) {
@@ -182,6 +183,7 @@ Mario.Bowser.prototype.Move = function () {
         this.JumpTimer = 20;
         this.JumpVelMult = 1.3;
         this.JumpLockOn = false;
+        this.RoarFrameTimer = 5;
         if (Mario.MarioCharacter.X <= this.X) {
             this.Facing = -1;
         }
@@ -256,6 +258,7 @@ Mario.Bowser.prototype.Move = function () {
             else {
                 this.PunchTimer = 10;
                 this.State = 1;
+                this.XPic = 1;
             }
         }
         this.PunchTimer -= 1;
@@ -382,6 +385,28 @@ Mario.Bowser.prototype.Move = function () {
         if (!this.OnGround) {
             this.SubMove(this.Xa, this.Ya);
         }
+    }
+
+    if (this.State == 9) {
+        this.PicWidth = 67;
+        if (this.X > (312 + 50) / 2) {
+            this.Facing = -1;
+        } else {
+            this.Facing = 1;
+        }
+        this.YPic = 0;
+        Mario.MarioCharacter.Xa = 12 * this.Facing;
+        if (this.XPic == 0) {
+            this.XPic = 1;
+        }
+        if (this.RoarFrameTimer == 0 && this.XPic < 3) {
+            this.XPic += 1;
+            this.RoarFrameTimer = 5;
+        }
+        else if (this.XPic == 3 && this.RoarFrameTimer <= 0) {
+            this.State = 1;
+        }
+        this.RoarFrameTimer -= 1;
     }
 
     this.XFlip = this.Facing === -1;
