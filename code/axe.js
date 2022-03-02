@@ -1,110 +1,52 @@
-Mario.Chest = function (world, x, y) {
+Mario.Axe = function (world, x, y) {
     this.RunTime = 0;
     this.GroundInertia = 0.89;
     this.AirInertia = 0.1;
     this.OnGround = false;
     this.Width = 17;
-    this.Height = 50;
     this.World = world;
-    this.X = 160;
-    this.Y = 200;
-    this.Image = Enjine.Resources.Images["chest"];
+    this.X = 320;
+    this.Y = 185;
+    this.Image = Enjine.Resources.Images["Axe"];
     this.XPicO = 17;
     this.YPicO = 32;
     this.YPic = 0;
-    this.Height = 50;
+    this.Height = 48;
     this.Facing = 1;
-    this.PicWidth = this.PicHeight = 33;
+    this.PicWidth = this.PicHeight = 22;
     this.Life = 0;
+    this.Layer = 0;
 
-    this.Open = false;
-    this.Reward = 0;
-    this.layertimer = 10;
-    this.EndTimer = 125;
+    this.Triggered = false;
+    this.EndTimer = 200;
 };
 
-Mario.Chest.prototype = new Mario.NotchSprite();
+Mario.Axe.prototype = new Mario.NotchSprite();
 
-Mario.Chest.prototype.CollideCheck = function () {
+Mario.Axe.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
-    if (xMarioD > -31 && xMarioD < 31) {
+    if (xMarioD > -22 && xMarioD < 22) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+            this.Triggered = true;
+            Mario.MarioCharacter.BowserHealth = 0;
             this.XPic = 1;
-            if (!this.Open) {
-                for (i = 0; i <= 2; i++) {
-                    if (Math.random() * 2 | 0) {
-                        this.Reward += 1
-                    }
-                }
-                if (this.Reward == 1) {
-                    this.Layer = 1;
-                    this.World.AddSprite(new Mario.Mushroom(this.World, this.X, this.Y - 5));
-                }
-                else {
-                    this.World.AddSprite(new Mario.FireFlower(this.World, this.X, this.Y - 5));
-                }
-                this.Open = true;
-            }
+            Mario.MarioCharacter.Bowser = false;
         }
     }
 };
 
-Mario.Chest.prototype.Move = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
+Mario.Axe.prototype.Move = function () {
 
-    if (this.Life < 9) {
-        this.Layer = 1;
-        this.Y--;
-        this.Life++;
-        return;
-    }
-
-    var sideWaysSpeed = 0;
-
-    if (this.Open) {
-        this.layertimer -= 1
+    if (this.Triggered) {
         this.EndTimer -= 1
     }
-    if (this.layertimer == 0 || xMarioD > -20 && xMarioD < 20) {
-        this.Layer = 0;
-    }
+
     if (this.EndTimer == 0) {
         Mario.MarioCharacter.Win()
     }
-
-    if (this.Xa > 2) {
-        this.Facing = 1;
-    }
-    if (this.Xa < -2) {
-        this.Facing = -1;
-    }
-    if (Mario.MarioCharacter.character_select == "fox") {
-        return;
-    }
-    this.Xa = this.Facing * sideWaysSpeed;
-
-    this.XFlip = this.Facing === -1;
-    this.RunTime += Math.abs(this.Xa) + 5;
-
-    if (!this.SubMove(this.Xa, 0)) {
-        this.Facing = -this.Facing;
-    }
-    this.OnGround = false;
-    this.SubMove(0, this.Ya);
-
-    this.Ya *= 0.85;
-    if (this.OnGround) {
-        this.Xa *= this.GroundInertia;
-    } else {
-        this.Xa *= this.AirInertia;
-    }
-
-    if (!this.OnGround) {
-        this.Ya += 2;
-    }
 };
 
-Mario.Chest.prototype.SubMove = function (xa, ya) {
+Mario.Axe.prototype.SubMove = function (xa, ya) {
     var collide = false;
 
     while (xa > 8) {
@@ -203,7 +145,7 @@ Mario.Chest.prototype.SubMove = function (xa, ya) {
     }
 };
 
-Mario.Chest.prototype.IsBlocking = function (x, y, xa, ya) {
+Mario.Axe.prototype.IsBlocking = function (x, y, xa, ya) {
     x = (x / 16) | 0;
     y = (y / 16) | 0;
 
@@ -214,7 +156,7 @@ Mario.Chest.prototype.IsBlocking = function (x, y, xa, ya) {
     return this.World.Level.IsBlocking(x, y, xa, ya);
 };
 
-Mario.Chest.prototype.BumpCheck = function (x, y) {
+Mario.Axe.prototype.BumpCheck = function (x, y) {
     if (this.X + this.Width > x * 16 && this.X - this.Width < x * 16 - 16 && y === ((y - 1) / 16) | 0) {
         this.Facing = -Mario.MarioCharacter.Facing;
         this.Ya = -10;

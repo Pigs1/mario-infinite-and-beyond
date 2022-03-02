@@ -81,6 +81,7 @@ Mario.Character = function () {
 
     this.LevelType = null;
     this.Bowser = null;
+    this.BowserHealth = 50;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);

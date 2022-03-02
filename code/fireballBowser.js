@@ -116,7 +116,7 @@ Mario.BowserFireball.prototype.CollideCheck = function () {
                 Mario.MarioCharacter.percentdamage += 2;
             }
         }
-        else if (yMarioD < 0) {
+        else if (!Mario.MarioCharacter.airdoging) {
             Mario.MarioCharacter.GetHurt();
         }
         this.Die();

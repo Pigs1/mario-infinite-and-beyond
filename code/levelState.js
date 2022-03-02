@@ -337,6 +337,10 @@ Mario.LevelState.prototype.Draw = function (context) {
     }
     this.DrawStringShadow(context, " " + time, 34, 1);
 
+    if (this.LevelType == Mario.LevelType.Bowser) {
+        this.DrawStringShadow(context, "Health " + Mario.MarioCharacter.BowserHealth, 0, 2);
+    }
+
     if (Mario.MarioCharacter.character_select == "fox") {
         this.DrawStringShadow(context, (Mario.MarioCharacter.percentdamage * 6) + "%", 34, 3);
     }

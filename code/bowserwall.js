@@ -24,13 +24,23 @@ Mario.BowserWall.prototype = new Mario.NotchSprite();
 Mario.BowserWall.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null;
 
+    if (Mario.MarioCharacter.BowserHealth <= 10) {
+        this.World.RemoveSprite(this);
+    }
+
     if (Mario.MarioCharacter.X >= this.X && this.X == 50 && Mario.MarioCharacter.X <= 50 + 5) {
         Mario.MarioCharacter.X = 55;
         Mario.MarioCharacter.Xa = 0;
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+            Mario.MarioCharacter.Sliding = true;
+        }
     }
-    if (Mario.MarioCharacter.X <= this.X && this.X == 311 && Mario.MarioCharacter.X >= 311 - 22) {
-        Mario.MarioCharacter.X = 311 - 22;
+    if (Mario.MarioCharacter.X <= this.X && this.X == 311 && Mario.MarioCharacter.X >= 311 - 30) {
+        Mario.MarioCharacter.X = 311 - 30;
         Mario.MarioCharacter.Xa = 0;
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+            Mario.MarioCharacter.Sliding = true;
+        }
     }
     if (Mario.MarioCharacter.X > this.X && this.X == 311) {
         Mario.MarioCharacter.X = 310;

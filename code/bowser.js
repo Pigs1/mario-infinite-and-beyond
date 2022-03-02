@@ -21,7 +21,7 @@ Mario.Bowser = function (world, x, y) {
     this.PicHeight = 81;
     this.Layer = 1;
     this.Facing = 0;
-    this.Health = 50;
+    this.Health = 12;
     this.Deadtime = 0;
     this.State = null;
     this.Begin = true;
@@ -47,6 +47,9 @@ Mario.Bowser = function (world, x, y) {
     this.RoarFrameTimer = 5;
 
     this.ConsecutiveJumps = 0;
+
+    this.AxeSummoned = false;
+    this.DeathTimer = 50;
 };
 
 Mario.Bowser.prototype = new Mario.NotchSprite();
@@ -109,7 +112,9 @@ Mario.Bowser.prototype.CollideCheck = function () {
                         }
                     }
                     else if (yMarioD < 0) {
-                        Mario.MarioCharacter.GetHurt();
+                        if (this.State != 6) {
+                            Mario.MarioCharacter.GetHurt();
+                        }
                     }
                 }
             }
@@ -136,9 +141,38 @@ Mario.Bowser.prototype.CollideCheck = function () {
 };
 
 Mario.Bowser.prototype.Move = function () {
+    if (Mario.MarioCharacter.BowserHealth <= 0) {
+        this.Health = 0;
+    }
+
+    if (this.Health <= 10) {
+        if (!this.AxeSummoned) {
+            this.AxeSummoned = true;
+            this.World.AddSprite(new Mario.Axe(this.World, 50, 50));
+        }
+    }
+
     if (this.Health <= 0) {
-        this.Deadtime = 10;
-        this.World.RemoveSprite(this);
+        this.State = 6;
+    }
+    Mario.MarioCharacter.BowserHealth = this.Health;
+
+    if (this.State == 6) {
+        this.PicWidth = 84;
+        this.Layer = 1;
+        this.XPic = 0;
+        this.YPic = 6;
+        if (this.DeathTimer <= 0) {
+            this.XPic = 1;
+
+            this.Ya += 1;
+            this.SubMove(0, this.Ya);
+        }
+        else {
+            this.Ya = 2;
+        }
+        this.DeathTimer -= 1;
+        return;
     }
 
     if (this.Begin) {
@@ -153,8 +187,8 @@ Mario.Bowser.prototype.Move = function () {
         this.Begin2 = false;
         this.State = 1;
         if (Mario.MarioCharacter.character_select != "fox") {
-            this.World.AddSprite(new Mario.BowserWall(this, 50, 50));
-            this.World.AddSprite(new Mario.BowserWall(this, 311, 50));
+            this.World.AddSprite(new Mario.BowserWall(this.World, 50, 50));
+            this.World.AddSprite(new Mario.BowserWall(this.World, 311, 50));
         }
     }
 
@@ -395,6 +429,7 @@ Mario.Bowser.prototype.Move = function () {
             this.Facing = 1;
         }
         this.YPic = 0;
+        Mario.MarioCharacter.Sliding = false;
         Mario.MarioCharacter.Xa = 12 * this.Facing;
         if (this.XPic == 0) {
             this.XPic = 1;
@@ -522,7 +557,7 @@ Mario.Bowser.prototype.IsBlocking = function (x, y, xa, ya) {
     x = (x / 16) | 0;
     y = (y / 17) | 0;
 
-    if (x === (this.X / 16) | 0 && y === (this.Y / 17) | 0) {
+    if (x === (this.X / 16) | 0 && y === (this.Y / 17) | 0 || this.State == 6) {
         return false;
     }
 
