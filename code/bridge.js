@@ -40,6 +40,9 @@ Mario.Bridge.prototype.CollideCheck = function () {
 };
 
 Mario.Bridge.prototype.Move = function () {
+    if (Mario.MarioCharacter.AxeTriggered) {
+        this.World.RemoveSprite(this);
+    }
 };
 
 Mario.Bridge.prototype.SubMove = function (xa, ya) {
