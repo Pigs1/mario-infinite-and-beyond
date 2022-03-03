@@ -141,7 +141,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
 };
 
 Mario.Bowser.prototype.Move = function () {
-    if (Mario.MarioCharacter.BowserHealth <= 0) {
+    if (Mario.MarioCharacter.BowserHealth <= 0 && this.Health != 50) {
         this.Health = 0;
     }
 
@@ -423,7 +423,7 @@ Mario.Bowser.prototype.Move = function () {
 
     if (this.State == 9) {
         this.PicWidth = 67;
-        if (this.X > (312 + 50) / 2) {
+        if (this.X >= (312 + 50) / 2) {
             this.Facing = -1;
         } else {
             this.Facing = 1;
@@ -451,6 +451,21 @@ Mario.Bowser.prototype.Move = function () {
             this.Ya = 2;
         }
         this.SubMove(0, this.Ya);
+    }
+};
+
+Mario.Bowser.prototype.FireballCollideCheck = function (fireball) {
+    if (this.DeadTime !== 0) {
+        return false;
+    }
+
+    var xd = fireball.X - this.X, yd = fireball.Y - this.Y;
+    if (xd > -16 && xd < 16) {
+        if (yd > -this.Height && yd < fireball.Height) {
+
+            this.Health -= 1;
+            return true;
+        }
     }
 };
 

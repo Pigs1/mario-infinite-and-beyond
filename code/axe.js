@@ -28,9 +28,9 @@ Mario.Axe.prototype.CollideCheck = function () {
     if (xMarioD > -22 && xMarioD < 22) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
             this.Triggered = true;
+            Mario.MarioCharacter.AxeTriggered = true;
             Mario.MarioCharacter.BowserHealth = 0;
             this.XPic = 1;
-            Mario.MarioCharacter.Bowser = false;
         }
     }
 };
@@ -43,6 +43,7 @@ Mario.Axe.prototype.Move = function () {
 
     if (this.EndTimer == 0) {
         Mario.MarioCharacter.Win()
+        Mario.MarioCharacter.Bowser = false;
     }
 };
 
