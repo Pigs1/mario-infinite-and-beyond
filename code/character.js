@@ -9,7 +9,7 @@ Mario.Character = function () {
     this.Large = false;
     this.Fire = false;
     this.Coins = 0;
-    this.Lives = 5;
+    this.Lives = 3;
     this.LevelString = "none";
     this.GroundInertia = 0.89;
     this.GroundTraction = 0.89;
@@ -82,23 +82,24 @@ Mario.Character = function () {
     this.LevelType = null;
     this.Bowser = null;
     this.BowserHealth = 50;
-    this.AxeTriggered = false;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
 
 Mario.Character.prototype.Initialize = function (world) {
     this.World = world;
-    Mario.MarioCharacter.AxeTriggered = false;
-    Mario.MarioCharacter.BowserHealth = 50;
 
-    if (this.World.LevelType == Mario.LevelType.Toad) {
+    if (this.World.LevelType == 3) {
         this.Y = 100;
         this.X = 40;
     }
     else {
         this.X = 32;
         this.Y = -50;
+    }
+    if (this.LevelType == Mario.LevelType.BigCastle) {
+        this.X = this.World.Level.ExitX * 15
+        this.Y = 50;
     }
     if (this.LevelType == Mario.LevelType.Bowser) {
         this.Y = 100;
@@ -109,6 +110,7 @@ Mario.Character.prototype.Initialize = function (world) {
     this.percentdamage = 0
     // Character Specific Movement Stats
     if (this.character_select == "mario") {
+        // localStorage.setItem("test", "Mario");
         this.GroundInertia = 0.9;
         this.AirInertia = 0.9;
         this.GroundTraction = 0.83;
