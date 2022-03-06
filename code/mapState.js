@@ -533,13 +533,6 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
-                Mario.MarioCharacter.character_select = "fox"
-                this.character_select = "Fox"
-                this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
-                this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
-                this.IsKeyDownLast = 1
-            }
-            else if (this.character_select == "Fox" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "mario"
                 this.character_select = "Mario"
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
