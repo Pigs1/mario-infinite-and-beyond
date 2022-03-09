@@ -93,7 +93,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
             }
             else {
                 if (!(this.Deadtime > 1) && yMarioD < Mario.MarioCharacter.Height) {
-                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
+                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdodging) {
                         mariolaunchcheck = false
                         if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
                             Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
@@ -111,7 +111,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
                             Mario.MarioCharacter.percentdamage += 2;
                         }
                     }
-                    else if (yMarioD < 0) {
+                    else if (yMarioD < 0 && !Mario.MarioCharacter.airdodging) {
                         if (this.State != 6) {
                             Mario.MarioCharacter.GetHurt();
                         }

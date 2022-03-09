@@ -132,6 +132,7 @@ Mario.Character.prototype.Initialize = function (world) {
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "fox") {
+        this.SetLarge(true, false);
         this.GroundInertia = 0.91;
         this.AirInertia = 0.9;
         this.GroundTraction = 0.82;
@@ -205,6 +206,9 @@ Mario.Character.prototype.Blink = function (on) {
             else if (this.character_select == "mario") {
                 this.Image = Enjine.Resources.Images["fireMario"];
             }
+            else if (this.character_select == "fox") {
+                this.Image = Enjine.Resources.Images["Fox"];
+            }
         }
         else if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["luigi"];
@@ -215,10 +219,19 @@ Mario.Character.prototype.Blink = function (on) {
         else if (this.character_select == "mario") {
             this.Image = Enjine.Resources.Images["mario"];
         }
+        else if (this.character_select == "fox") {
+            this.Image = Enjine.Resources.Images["Fox"];
+        }
 
         this.XPicO = 16;
         this.YPicO = 31;
         this.PicWidth = this.PicHeight = 32;
+        if (this.character_select == "fox") {
+
+            this.PicWidth = 36;
+            this.PicHeight = 50;
+            this.YPicO = 49;
+        }
     } else {
         if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["smallLuigi"];
@@ -228,6 +241,9 @@ Mario.Character.prototype.Blink = function (on) {
         }
         else if (this.character_select == "mario") {
             this.Image = Enjine.Resources.Images["smallMario"];
+        }
+        else if (this.character_select == "fox") {
+            this.Image = Enjine.Resources.Images["Fox"];
         }
 
         this.XPicO = 8;
@@ -240,9 +256,6 @@ Mario.Character.prototype.Blink = function (on) {
 Mario.Character.prototype.Move = function () {
     var launchfirsttime = true, launchtime = 0;
     var levelGenerator = new Mario.LevelGenerator(320, 15), i = 0, scrollSpeed = 0, w = 0, h = 0, bgLevelGenerator = null;
-    if (localStorage.test == "Luigi") {
-        return;
-    }
 
     if (this.WinTime > 0) {
         this.WinTime++;
@@ -375,6 +388,14 @@ Mario.Character.prototype.Move = function () {
 
 
     if (this.launched > 0) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+            this.launchangleY += 1;
+        }
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+            this.launchangleY -= 1;
+        }
+
+
         this.launched -= 1
         if (launchfirsttime == true) {
             this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
@@ -506,6 +527,14 @@ Mario.Character.prototype.Move = function () {
     }
     if (this.Xa < -2) {
         this.Facing = -1;
+    }
+    if (this.launched > 0) {
+        if (this.Xa > 0) {
+            this.Facing = -1
+        }
+        else {
+            this.Facing = 1;
+        }
     }
     // Time Freeze
     // if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) && this.WasKeyDown == 0) {
@@ -733,14 +762,44 @@ Mario.Character.prototype.CalcPic = function () {
 
     }
 
+    if (this.character_select == "fox") {
+        runFrame = 0;
+        if (this.Xa > 0 || this.Xa < 0) {
+            if (this.wavedashslidetime > 0 && this.wavedashslidetime < 6) {
+                runFrame = 1;
+            }
+            else {
+                runFrame = 2;
+            }
+        }
+        if (!this.OnGround) {
+
+            runFrame = 3;
+
+        }
+        if (this.airdodging) {
+            if (this.wavedashtime >= 12) {
+                runFrame = 7;
+            }
+            else {
+                runFrame = 8;
+            }
+
+        }
+        if (this.launched > 0) {
+            runFrame = 9;
+        }
+    }
+
     if (this.OnGround && ((this.Facing === -1 && this.Xa > 0) || (this.Facing === 1 && this.Xa < 0))) {
         if (this.Xa > 1 || this.Xa < -1) {
             if (this.character_select == "fox") {
-                runFrame = this.Large ? 7 : 7;
+                runFrame = 2;
             }
             else {
                 runFrame = this.Large ? 9 : 7;
             }
+
         }
 
         if (this.Xa > 3 || this.Xa < -3) {
@@ -752,7 +811,14 @@ Mario.Character.prototype.CalcPic = function () {
 
     if (this.Large) {
         if (this.Ducking && this.GroundPoundTimer == 0) {
-            runFrame = 14;
+            if (this.character_select == "fox") {
+                if (!this.airdodging) {
+                    runFrame = 1;
+                }
+            }
+            else {
+                runFrame = 14;
+            }
         }
         this.Height = this.Ducking ? 12 : 24;
     } else {

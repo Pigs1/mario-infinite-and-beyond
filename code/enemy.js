@@ -64,7 +64,6 @@ Mario.Enemy.prototype.CollideCheck = function () {
     if (this.DeadTime > 0 || this.Dead || this.DeadTime !== 0) {
         return;
     }
-
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
@@ -119,7 +118,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                 }
             } else {
                 if (!(this.Deadtime > 1)) {
-                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
+                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdodging) {
                         mariolaunchcheck = false
                         if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
                             Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
@@ -135,9 +134,13 @@ Mario.Enemy.prototype.CollideCheck = function () {
                             }
                             Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
                             Mario.MarioCharacter.percentdamage += 2;
+                            if (Mario.MarioCharacter.Ducking && Mario.MarioCharacter.OnGround) {
+                                Mario.MarioCharacter.launched = Mario.MarioCharacter.launched * 0.5 + (Mario.MarioCharacter.percentdamage * 0.1)
+                                Mario.MarioCharacter.launchangleX = Mario.MarioCharacter.launchangleX * 0.5 + (Mario.MarioCharacter.percentdamage * 0.1)
+                            }
                         }
                     }
-                    else {
+                    else if (!Mario.MarioCharacter.airdodging) {
                         Mario.MarioCharacter.GetHurt();
                     }
                 }
@@ -148,6 +151,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
 
 Mario.Enemy.prototype.Move = function () {
     var i = 0, sideWaysSpeed = 1.75, runFrame = 0;
+
     if (this.Type == 3 && this.DeadTime == 0) {
 
         if (this.chucktype == 1) {
