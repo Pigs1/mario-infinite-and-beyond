@@ -115,8 +115,8 @@ Mario.MapState.prototype.Enter = function () {
     else if (this.character_select == "Fox") {
         Mario.MarioCharacter.character_select = "fox"
         this.character_select = "Fox"
-        this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
-        this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+        this.SmallMario.Image = Enjine.Resources.Images["FoxworldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["FoxworldMap"]
     }
 
     this.FontShadow = Mario.SpriteCuts.CreateBlackFont();
@@ -535,8 +535,8 @@ Mario.MapState.prototype.Update = function (delta) {
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "fox"
                 this.character_select = "Fox"
-                this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
-                this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
+                this.SmallMario.Image = Enjine.Resources.Images["FoxworldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["FoxworldMap"]
                 this.IsKeyDownLast = 1
             }
             else if (this.character_select == "Fox" && this.IsKeyDownLast == 0) {
@@ -613,7 +613,7 @@ Mario.MapState.prototype.Update = function (delta) {
     this.WaterSprite.Update(delta);
     this.DecoSprite.Update(delta);
     this.HelpSprite.Update(delta);
-    if (!Mario.MarioCharacter.Large) {
+    if (!Mario.MarioCharacter.Large || this.character_select == "Fox") {
         this.SmallMario.X = this.XMario + (this.XMarioA * delta) | 0;
         this.SmallMario.Y = this.YMario + ((this.YMarioA * delta) | 0) - 6;
         this.SmallMario.Update(delta);
@@ -688,7 +688,7 @@ Mario.MapState.prototype.Draw = function (context) {
         }
     }
 
-    if (!Mario.MarioCharacter.Large) {
+    if (!Mario.MarioCharacter.Large || this.character_select == "Fox") {
         this.SmallMario.Draw(context, this.camera);
     } else {
         this.LargeMario.Draw(context, this.camera);
