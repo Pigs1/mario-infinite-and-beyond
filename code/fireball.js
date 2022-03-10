@@ -56,6 +56,18 @@ Mario.Fireball.prototype.Move = function () {
 
     this.World.CheckFireballCollide(this);
 
+    Mario.MarioCharacter.BossFireballCheckX = this.X;
+    Mario.MarioCharacter.BossFireballCheckY = this.Y;
+
+    if (this.X - Mario.MarioCharacter.BossFireballCheckX2 > -50 && this.X - Mario.MarioCharacter.BossFireballCheckX2 < 50 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 > -32 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 < this.Height) {
+        this.World.RemoveSprite(this);
+        Mario.MarioCharacter.BossFireballCheckX = null;
+        Mario.MarioCharacter.BossFireballCheckY = null;
+    }
+
+
+
+
     this.FlipX = this.Facing === -1;
 
     this.XPic = this.Anim % 4;

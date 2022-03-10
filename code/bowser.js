@@ -68,7 +68,7 @@ Mario.Bowser.prototype = new Mario.NotchSprite();
 */
 
 Mario.Bowser.prototype.CollideCheck = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null, mariolaunchcheck = true;
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null, mariolaunchcheck = true, xd = Mario.MarioCharacter.BossFireballCheckX - this.X, yd = Mario.MarioCharacter.BossFireballCheckY - this.Y;
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
@@ -138,6 +138,14 @@ Mario.Bowser.prototype.CollideCheck = function () {
     else if (this.X > 300 - this.Width) {
         this.X = 300 - this.Width;
     }
+
+    if (xd > -50 && xd < 50) {
+        if (yd > -this.Height && yd < 8) {
+
+            this.Health -= 1;
+
+        }
+    }
 };
 
 Mario.Bowser.prototype.Move = function () {
@@ -156,6 +164,9 @@ Mario.Bowser.prototype.Move = function () {
         this.State = 6;
     }
     Mario.MarioCharacter.BowserHealth = this.Health;
+
+    Mario.MarioCharacter.BossFireballCheckX2 = this.X;
+    Mario.MarioCharacter.BossFireballCheckY2 = this.Y;
 
     if (this.State == 6) {
         this.PicWidth = 84;
@@ -459,14 +470,7 @@ Mario.Bowser.prototype.FireballCollideCheck = function (fireball) {
         return false;
     }
 
-    var xd = fireball.X - this.X, yd = fireball.Y - this.Y;
-    if (xd > -16 && xd < 16) {
-        if (yd > -this.Height && yd < fireball.Height) {
 
-            this.Health -= 1;
-            return true;
-        }
-    }
 };
 
 Mario.Bowser.prototype.SubMove = function (xa, ya) {

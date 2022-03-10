@@ -83,6 +83,10 @@ Mario.Character = function () {
     this.Bowser = null;
     this.BowserHealth = 50;
     this.AxeTriggered = false;
+    this.BossFireballCheckX = null;
+    this.BossFireballCheckY = null;
+    this.BossFireballCheckX2 = null;
+    this.BossFireballCheckY2 = null;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -116,7 +120,7 @@ Mario.Character.prototype.Initialize = function (world) {
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "luigi") {
-        // localStorage.setItem("test", "Luigi");
+        this.SetLarge(true, true);
         this.GroundInertia = 0.89;
         this.AirInertia = 0.9;
         this.GroundTraction = 0.93;
