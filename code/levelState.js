@@ -405,6 +405,7 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "E to shoot lasers", 7, 13);
             this.DrawStringShadow(context, "Side and E to use Illusion", 7, 14);
             this.DrawStringShadow(context, "Down and E to use Reflector", 7, 15);
+            this.DrawStringShadow(context, "D to Airdodge and Shield", 7, 16);
 
             this.DrawStringShadow(context, "Esc to close", 7, 19);
             this.DrawStringShadow(context, "X to exit level", 7, 20);
