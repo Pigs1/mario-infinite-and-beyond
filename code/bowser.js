@@ -68,32 +68,35 @@ Mario.Bowser.prototype = new Mario.NotchSprite();
 */
 
 Mario.Bowser.prototype.CollideCheck = function () {
-    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null, mariolaunchcheck = true;
+    var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, sprite = null, mariolaunchcheck = true, xd = Mario.MarioCharacter.BossFireballCheckX - this.X, yd = Mario.MarioCharacter.BossFireballCheckY - this.Y;
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
-                this.ConsecutiveJumps += 1;
-                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
-                    this.Health -= 5;
-                    Mario.MarioCharacter.GroundPoundEnabled = false;
-                    Mario.MarioCharacter.GroundPoundTimer = 0;
-                    if (xMarioD >= 0) {
-                        Mario.MarioCharacter.Xa = 18;
+            if (yMarioD <= -50 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+                if (!Mario.MarioCharacter.airdodging) {
+                    Mario.MarioCharacter.Stomp(this);
+                    this.ConsecutiveJumps += 1;
+
+                    if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                        this.Health -= 5;
+                        Mario.MarioCharacter.GroundPoundEnabled = false;
+                        Mario.MarioCharacter.GroundPoundTimer = 0;
+                        if (xMarioD >= 0) {
+                            Mario.MarioCharacter.Xa = 18;
+                        }
+                        else {
+                            Mario.MarioCharacter.Xa = -18;
+                        }
+                        Mario.MarioCharacter.Ya = -3;
                     }
                     else {
-                        Mario.MarioCharacter.Xa = -18;
+                        this.Health -= 1;
                     }
-                    Mario.MarioCharacter.Ya = -3;
-                }
-                else {
-                    this.Health -= 1;
                 }
             }
             else {
                 if (!(this.Deadtime > 1) && yMarioD < Mario.MarioCharacter.Height) {
-                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdoging) {
+                    if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdodging) {
                         mariolaunchcheck = false
                         if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
                             Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
@@ -111,7 +114,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
                             Mario.MarioCharacter.percentdamage += 2;
                         }
                     }
-                    else if (yMarioD < 0) {
+                    else if (yMarioD < 0 && !Mario.MarioCharacter.airdodging) {
                         if (this.State != 6) {
                             Mario.MarioCharacter.GetHurt();
                         }
@@ -122,6 +125,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
     }
     if (Mario.MarioCharacter.X >= 49) {
         this.Begin = false;
+        Mario.MarioCharacter.FireballAllowed = true;
     }
 
     if (this.ConsecutiveJumps >= 5 && this.OnGround) {
@@ -131,17 +135,40 @@ Mario.Bowser.prototype.CollideCheck = function () {
     if (Mario.MarioCharacter.OnGround) {
         this.ConsecutiveJumps = 0;
     }
+    if (Mario.MarioCharacter.character_select != "fox") {
+        if (this.X < 50 + this.Width) {
+            this.X = 50 + this.Width;
+        }
+        else if (this.X > 300 - this.Width) {
+            this.X = 300 - this.Width;
+        }
+    }
 
-    if (this.X < 50 + this.Width) {
-        this.X = 50 + this.Width;
+    if (this.State != 4) {
+        if (Mario.MarioCharacter.character_select == "fox") {
+            if (xd > -70 && xd < 70) {
+                if (yd > -this.Height && yd < 8) {
+
+                    this.Health -= 1;
+
+                }
+            }
+        }
+        else {
+            if (xd > -50 && xd < 50) {
+                if (yd > -this.Height && yd < 8) {
+
+                    this.Health -= 1;
+
+                }
+            }
+        }
     }
-    else if (this.X > 300 - this.Width) {
-        this.X = 300 - this.Width;
-    }
+
 };
 
 Mario.Bowser.prototype.Move = function () {
-    if (Mario.MarioCharacter.BowserHealth <= 0) {
+    if (Mario.MarioCharacter.BowserHealth <= 0 && this.Health != 50) {
         this.Health = 0;
     }
 
@@ -156,6 +183,9 @@ Mario.Bowser.prototype.Move = function () {
         this.State = 6;
     }
     Mario.MarioCharacter.BowserHealth = this.Health;
+
+    Mario.MarioCharacter.BossFireballCheckX2 = this.X;
+    Mario.MarioCharacter.BossFireballCheckY2 = this.Y;
 
     if (this.State == 6) {
         this.PicWidth = 84;
@@ -299,7 +329,9 @@ Mario.Bowser.prototype.Move = function () {
     }
 
     if (this.State == 4) {
-        this.PicWidth = 50;
+        if (this.YPic == 4) {
+            this.PicWidth = 50;
+        }
         this.Width = 10;
         this.Height = 50;
         if (this.Xa > 0 && Mario.MarioCharacter.X < this.X) {
@@ -423,7 +455,7 @@ Mario.Bowser.prototype.Move = function () {
 
     if (this.State == 9) {
         this.PicWidth = 67;
-        if (this.X > (312 + 50) / 2) {
+        if (this.X >= (312 + 50) / 2) {
             this.Facing = -1;
         } else {
             this.Facing = 1;
@@ -452,6 +484,14 @@ Mario.Bowser.prototype.Move = function () {
         }
         this.SubMove(0, this.Ya);
     }
+};
+
+Mario.Bowser.prototype.FireballCollideCheck = function (fireball) {
+    if (this.DeadTime !== 0) {
+        return false;
+    }
+
+
 };
 
 Mario.Bowser.prototype.SubMove = function (xa, ya) {

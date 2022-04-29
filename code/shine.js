@@ -1,9 +1,9 @@
 /**
-    Represents a smash bros shield.
+    Represents fox's reflector attack, a.k.a Shine.
     Code by PigsSSBM, 2022
 */
 
-Mario.Shield = function (world, x, y) {
+Mario.Shine = function (world, x, y) {
     this.RunTime = 0;
     this.GroundInertia = 0.89;
     this.AirInertia = 0.1;
@@ -13,7 +13,7 @@ Mario.Shield = function (world, x, y) {
     this.World = world;
     this.X = x;
     this.Y = y;
-    this.Image = Enjine.Resources.Images["Shield"];
+    this.Image = Enjine.Resources.Images["Shine"];
     this.XPicO = 8;
     this.YPicO = 15;
     this.YPic = 0;
@@ -22,22 +22,25 @@ Mario.Shield = function (world, x, y) {
     this.PicWidth = this.PicHeight = 34;
 };
 
-Mario.Shield.prototype = new Mario.NotchSprite();
+Mario.Shine.prototype = new Mario.NotchSprite();
 
-Mario.Shield.prototype.CollideCheck = function () {
+Mario.Shine.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
 
 };
 
-Mario.Shield.prototype.Move = function () {
-    this.XPic = Mario.MarioCharacter.ShieldDamage;
+Mario.Shine.prototype.Move = function () {
+    this.XPic = 0;
 
-    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.D) || Mario.MarioCharacter.Xa != 0 || Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) || Mario.MarioCharacter.Shieldstun > 20) {
+    this.X = Mario.MarioCharacter.X - 8;
+    this.Y = Mario.MarioCharacter.Y - 16;
+
+    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E) || !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) || Mario.MarioCharacter.ShineTime <= 0) {
         this.World.RemoveSprite(this);
     }
 };
 
-Mario.Shield.prototype.SubMove = function (xa, ya) {
+Mario.Shine.prototype.SubMove = function (xa, ya) {
     var collide = false;
 
     while (xa > 8) {
@@ -136,7 +139,7 @@ Mario.Shield.prototype.SubMove = function (xa, ya) {
     }
 };
 
-Mario.Shield.prototype.IsBlocking = function (x, y, xa, ya) {
+Mario.Shine.prototype.IsBlocking = function (x, y, xa, ya) {
     x = (x / 16) | 0;
     y = (y / 16) | 0;
 
@@ -147,7 +150,7 @@ Mario.Shield.prototype.IsBlocking = function (x, y, xa, ya) {
     return this.World.Level.IsBlocking(x, y, xa, ya);
 };
 
-Mario.Shield.prototype.BumpCheck = function (x, y) {
+Mario.Shine.prototype.BumpCheck = function (x, y) {
     if (this.X + this.Width > x * 16 && this.X - this.Width < x * 16 - 16 && y === ((y - 1) / 16) | 0) {
         this.Facing = -Mario.MarioCharacter.Facing;
         this.Ya = -10;

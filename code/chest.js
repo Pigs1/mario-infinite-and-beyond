@@ -78,9 +78,7 @@ Mario.Chest.prototype.Move = function () {
     if (this.Xa < -2) {
         this.Facing = -1;
     }
-    if (Mario.MarioCharacter.character_select == "fox") {
-        return;
-    }
+
     this.Xa = this.Facing * sideWaysSpeed;
 
     this.XFlip = this.Facing === -1;
