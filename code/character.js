@@ -140,10 +140,7 @@ Mario.Character.prototype.Initialize = function (world) {
     if (this.LevelType == Mario.LevelType.Bowser) {
         this.Y = 100;
     }
-    if (this.LevelType == Mario.LevelType.BigCastle) {
-        this.X = 3200;
-        this.Y = 50;
-    }
+
     this.YPic = 0;
     this.PowerUpTime = 0;
     this.character_select = Mario.MarioCharacter.character_select;
@@ -155,7 +152,6 @@ Mario.Character.prototype.Initialize = function (world) {
         this.GroundTraction = 0.83;
         this.Gravity = 3;
         this.JumpVel = -1.9;
-        this.SetLarge(true, true);
     }
     else if (this.character_select == "luigi") {
         this.GroundInertia = 0.89;
