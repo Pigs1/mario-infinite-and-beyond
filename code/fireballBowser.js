@@ -28,12 +28,28 @@ Mario.BowserFireball = function (world, x, y, facing) {
     this.OnGround = false;
     this.Lockon = false;
     this.pictimer = 7;
+
+    this.Reflected = false;
+    this.ReflectedFacing = null;
 };
 
 Mario.BowserFireball.prototype = new Mario.NotchSprite();
 
 Mario.BowserFireball.prototype.Move = function () {
     var i = 0, sideWaysSpeed = 4;
+
+    if (this.Reflected) {
+        this.Facing = this.ReflectedFacing;
+        Mario.MarioCharacter.BossFireballCheckX = this.X
+        Mario.MarioCharacter.BossFireballCheckY = this.Y
+        if (Mario.MarioCharacter.character_select == "fox") {
+            if (this.X - Mario.MarioCharacter.BossFireballCheckX2 > -60 && this.X - Mario.MarioCharacter.BossFireballCheckX2 < 60 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 > -70 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 < 70 && (this.World.LevelType == Mario.LevelType.Bowser)) {
+                this.World.RemoveSprite(this);
+                Mario.MarioCharacter.BossFireballCheckX = null;
+                Mario.MarioCharacter.BossFireballCheckY = null;
+            }
+        }
+    }
 
     if (this.pictimer == 0) {
         if (this.XPic == 2) {
@@ -59,12 +75,13 @@ Mario.BowserFireball.prototype.Move = function () {
     }
 
     this.ExistTime += 1;
-
-    if (this.Xa > 2) {
-        this.Facing = 1;
-    }
-    if (this.Xa < -2) {
-        this.Facing = -1;
+    if (!this.Reflected) {
+        if (this.Xa > 2) {
+            this.Facing = 1;
+        }
+        if (this.Xa < -2) {
+            this.Facing = -1;
+        }
     }
 
     this.Xa = this.Facing * sideWaysSpeed;
@@ -101,19 +118,42 @@ Mario.BowserFireball.prototype.Move = function () {
 
 Mario.BowserFireball.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y, mariolaunchcheck = true;
+
+    if (Mario.MarioCharacter.ShineTime > 0) {
+        if (xMarioD > -this.Width * 3 - 7 && xMarioD < this.Width * 3 + 7) {
+            if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+                if (!this.Reflected) {
+                    this.ReflectedFacing = -this.Facing;
+                }
+                this.Reflected = true;
+            }
+        }
+    }
+
     if (xMarioD < this.Width * 2 + 4 && xMarioD > -this.Width * 2 - 4 && yMarioD < this.Height && yMarioD > -this.Height) {
 
         if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdodging) {
             mariolaunchcheck = false
-            if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
-                Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
-                Mario.MarioCharacter.Xa = 0;
+            if (Mario.MarioCharacter.ShineTime <= 2) {
+                if (!Mario.MarioCharacter.Shielding || Mario.MarioCharacter.Shieldstun > 20) {
+                    if (Mario.MarioCharacter.DashDance && Mario.MarioCharacter.launched > 0 && !Mario.MarioCharacter.collide) {
+                        Mario.MarioCharacter.X -= 5 * Mario.MarioCharacter.Facing;
+                        Mario.MarioCharacter.Xa = 0;
+                    }
+                    if (Mario.MarioCharacter.launched <= 0) {
+                        Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
+                        Mario.MarioCharacter.launchangleX = (5 + (Mario.MarioCharacter.percentdamage * 0.45)) * this.Facing
+                        Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
+                        Mario.MarioCharacter.percentdamage += 2;
+                    }
+                }
+                else if (Mario.MarioCharacter.Shieldstun == 0) {
+                    Mario.MarioCharacter.ShieldDamage += 1;
+                    Mario.MarioCharacter.Shieldstun = 20;
+                }
             }
-            if (Mario.MarioCharacter.launched <= 0) {
-                Mario.MarioCharacter.launched += 2 + (Mario.MarioCharacter.percentdamage * 0.3)
-                Mario.MarioCharacter.launchangleX = (5 + (Mario.MarioCharacter.percentdamage * 0.45)) * this.Facing
-                Mario.MarioCharacter.launchangleY = 3 + (Mario.MarioCharacter.percentdamage * 0.1)
-                Mario.MarioCharacter.percentdamage += 2;
+            else {
+                this.Reflected = true;
             }
         }
         else if (!Mario.MarioCharacter.airdodging) {

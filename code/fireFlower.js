@@ -11,6 +11,9 @@ Mario.FireFlower = function (world, x, y) {
 	this.X = x;
 	this.Y = y;
 	this.Image = Enjine.Resources.Images["items"];
+	if (Mario.MarioCharacter.character_select == "fox") {
+		this.Image = Enjine.Resources.Images["foxitems"];
+	}
 	this.OnGround = false;
 	this.GroundInertia = 0.89;
 	this.AirInertia = 0.89;

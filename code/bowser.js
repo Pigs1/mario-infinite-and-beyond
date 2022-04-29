@@ -72,23 +72,26 @@ Mario.Bowser.prototype.CollideCheck = function () {
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
-            if (yMarioD <= 0 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
-                Mario.MarioCharacter.Stomp(this);
-                this.ConsecutiveJumps += 1;
-                if (Mario.MarioCharacter.GroundPoundTimer > 0) {
-                    this.Health -= 5;
-                    Mario.MarioCharacter.GroundPoundEnabled = false;
-                    Mario.MarioCharacter.GroundPoundTimer = 0;
-                    if (xMarioD >= 0) {
-                        Mario.MarioCharacter.Xa = 18;
+            if (yMarioD <= -50 && Mario.MarioCharacter.Ya > 0 && Mario.MarioCharacter.launched == 0 && this.State != 4 && (!Mario.MarioCharacter.OnGround || !Mario.MarioCharacter.WasOnGround)) {
+                if (!Mario.MarioCharacter.airdodging) {
+                    Mario.MarioCharacter.Stomp(this);
+                    this.ConsecutiveJumps += 1;
+
+                    if (Mario.MarioCharacter.GroundPoundTimer > 0) {
+                        this.Health -= 5;
+                        Mario.MarioCharacter.GroundPoundEnabled = false;
+                        Mario.MarioCharacter.GroundPoundTimer = 0;
+                        if (xMarioD >= 0) {
+                            Mario.MarioCharacter.Xa = 18;
+                        }
+                        else {
+                            Mario.MarioCharacter.Xa = -18;
+                        }
+                        Mario.MarioCharacter.Ya = -3;
                     }
                     else {
-                        Mario.MarioCharacter.Xa = -18;
+                        this.Health -= 1;
                     }
-                    Mario.MarioCharacter.Ya = -3;
-                }
-                else {
-                    this.Health -= 1;
                 }
             }
             else {
@@ -122,6 +125,7 @@ Mario.Bowser.prototype.CollideCheck = function () {
     }
     if (Mario.MarioCharacter.X >= 49) {
         this.Begin = false;
+        Mario.MarioCharacter.FireballAllowed = true;
     }
 
     if (this.ConsecutiveJumps >= 5 && this.OnGround) {
@@ -131,21 +135,36 @@ Mario.Bowser.prototype.CollideCheck = function () {
     if (Mario.MarioCharacter.OnGround) {
         this.ConsecutiveJumps = 0;
     }
-
-    if (this.X < 50 + this.Width) {
-        this.X = 50 + this.Width;
-    }
-    else if (this.X > 300 - this.Width) {
-        this.X = 300 - this.Width;
-    }
-
-    if (xd > -50 && xd < 50) {
-        if (yd > -this.Height && yd < 8) {
-
-            this.Health -= 1;
-
+    if (Mario.MarioCharacter.character_select != "fox") {
+        if (this.X < 50 + this.Width) {
+            this.X = 50 + this.Width;
+        }
+        else if (this.X > 300 - this.Width) {
+            this.X = 300 - this.Width;
         }
     }
+
+    if (this.State != 4) {
+        if (Mario.MarioCharacter.character_select == "fox") {
+            if (xd > -70 && xd < 70) {
+                if (yd > -this.Height && yd < 8) {
+
+                    this.Health -= 1;
+
+                }
+            }
+        }
+        else {
+            if (xd > -50 && xd < 50) {
+                if (yd > -this.Height && yd < 8) {
+
+                    this.Health -= 1;
+
+                }
+            }
+        }
+    }
+
 };
 
 Mario.Bowser.prototype.Move = function () {
@@ -310,7 +329,9 @@ Mario.Bowser.prototype.Move = function () {
     }
 
     if (this.State == 4) {
-        this.PicWidth = 50;
+        if (this.YPic == 4) {
+            this.PicWidth = 50;
+        }
         this.Width = 10;
         this.Height = 50;
         if (this.Xa > 0 && Mario.MarioCharacter.X < this.X) {

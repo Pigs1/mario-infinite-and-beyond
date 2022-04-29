@@ -14,6 +14,9 @@ Mario.Mushroom = function (world, x, y) {
     this.X = x;
     this.Y = y;
     this.Image = Enjine.Resources.Images["items"];
+    if (Mario.MarioCharacter.character_select == "fox") {
+        this.Image = Enjine.Resources.Images["foxitems"];
+    }
     this.XPicO = 8;
     this.YPicO = 15;
     this.YPic = 0;

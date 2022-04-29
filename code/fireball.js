@@ -33,6 +33,22 @@ Mario.Fireball.prototype = new Mario.NotchSprite();
 Mario.Fireball.prototype.Move = function () {
     var i = 0, sideWaysSpeed = 8;
 
+    if (Mario.MarioCharacter.character_select == "fox") {
+        this.PicWidth = 32;
+        this.YPic = 4;
+        this.XPic = 0;
+        this.Width = 8;
+        this.Ya = 0;
+        sideWaysSpeed = 20;
+        if (this.Facing == 1) {
+            this.XPicO = 8;
+        }
+        else {
+            this.XPicO = -16 * this.Facing;
+        }
+        this.Height = 15;
+    }
+
     if (this.DeadTime > 0) {
         for (i = 0; i < 8; i++) {
             this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 8 - 4) | 0) + 4, ((this.Y + Math.random() * 8 - 4) | 0) + 2, Math.random() * 2 - 1 * this.Facing, Math.random() * 2 - 1, 0, 1, 5));
@@ -58,25 +74,34 @@ Mario.Fireball.prototype.Move = function () {
 
     Mario.MarioCharacter.BossFireballCheckX = this.X;
     Mario.MarioCharacter.BossFireballCheckY = this.Y;
-
-    if (this.X - Mario.MarioCharacter.BossFireballCheckX2 > -50 && this.X - Mario.MarioCharacter.BossFireballCheckX2 < 50 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 > -32 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 < this.Height) {
-        this.World.RemoveSprite(this);
-        Mario.MarioCharacter.BossFireballCheckX = null;
-        Mario.MarioCharacter.BossFireballCheckY = null;
+    if (Mario.MarioCharacter.character_select == "fox") {
+        if (this.X - Mario.MarioCharacter.BossFireballCheckX2 > -50 && this.X - Mario.MarioCharacter.BossFireballCheckX2 < 50 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 > -70 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 < 70 && (this.World.LevelType == Mario.LevelType.Bowser)) {
+            this.World.RemoveSprite(this);
+            Mario.MarioCharacter.BossFireballCheckX = null;
+            Mario.MarioCharacter.BossFireballCheckY = null;
+        }
     }
-
-
+    else {
+        if (this.X - Mario.MarioCharacter.BossFireballCheckX2 > -40 && this.X - Mario.MarioCharacter.BossFireballCheckX2 < 40 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 > -71 && this.Y - Mario.MarioCharacter.BossFireballCheckY2 < 8 && (this.World.LevelType == Mario.LevelType.Bowser)) {
+            this.World.RemoveSprite(this);
+            Mario.MarioCharacter.BossFireballCheckX = null;
+            Mario.MarioCharacter.BossFireballCheckY = null;
+        }
+    }
 
 
     this.FlipX = this.Facing === -1;
 
-    this.XPic = this.Anim % 4;
+    if (Mario.MarioCharacter.character_select != "fox") {
+        this.XPic = this.Anim % 4;
+    }
 
     if (!this.SubMove(this.Xa, 0)) {
         this.Die();
     }
 
     this.OnGround = false;
+
     this.SubMove(0, this.Ya);
     if (this.OnGround) {
         this.Ya = -10;
@@ -132,9 +157,15 @@ Mario.Fireball.prototype.SubMove = function (xa, ya) {
             collide = true;
         }
         if (Mario.MarioCharacter.LevelType == Mario.LevelType.Bowser) {
-            if (this.Y >= 165) {
+            if (this.Y >= 165 && !Mario.MarioCharacter.AxeTriggered) {
                 collide = true;
                 this.OnGround = true;
+            }
+            if ((this.X < 50 || this.X > 258) && this.character_select != "fox") {
+                Mario.MarioCharacter.BossFireballCheckX = null;
+                Mario.MarioCharacter.BossFireballCheckY = null;
+                this.Die();
+                this.World.RemoveSprite(this);
             }
         }
     }
