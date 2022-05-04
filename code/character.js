@@ -115,6 +115,11 @@ Mario.Character = function () {
     this.BossFireballCheckY2 = null;
 
     this.FireballAllowed = false;
+
+    this.Spindash = false;
+    this.SpindashCharge = 0;
+    this.SpindashChargeLoop = 0;
+    this.SpindashLoop = 0;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -166,6 +171,14 @@ Mario.Character.prototype.Initialize = function (world) {
         this.AirInertia = 0.89;
         this.GroundTraction = 0.8;
         this.Gravity = 2;
+        this.JumpVel = -1.9;
+    }
+    else if (this.character_select == "sonic") {
+        this.SetLarge(true, false);
+        this.GroundInertia = 0.8;
+        this.AirInertia = 0.89;
+        this.GroundTraction = 0.9;
+        this.Gravity = 3;
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "fox") {
@@ -262,12 +275,14 @@ Mario.Character.prototype.Blink = function (on) {
         else if (this.character_select == "fox") {
             this.Image = Enjine.Resources.Images["Fox"];
         }
+        else if (this.character_select == "sonic") {
+            this.Image = Enjine.Resources.Images["sonic"];
+        }
 
         this.XPicO = 16;
         this.YPicO = 31;
         this.PicWidth = this.PicHeight = 32;
         if (this.character_select == "fox") {
-
             this.PicWidth = 36;
             this.PicHeight = 50;
             this.YPicO = 49;
@@ -284,6 +299,9 @@ Mario.Character.prototype.Blink = function (on) {
         }
         else if (this.character_select == "fox") {
             this.Image = Enjine.Resources.Images["Fox"];
+        }
+        else if (this.character_select == "sonic") {
+            this.Image = Enjine.Resources.Images["sonic"];
         }
 
         this.XPicO = 8;
@@ -302,6 +320,68 @@ Mario.Character.prototype.Move = function () {
         this.Ya = 0;
         return;
     }
+
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && !this.World.Paused) {
+        this.World.Paused = true;
+        this.WasEscapeDown = true;
+        this.EscapePause = true;
+        return;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && this.World.Paused) {
+        this.World.Paused = false;
+        this.WasEscapeDown = true;
+        this.EscapePause = false;
+    }
+
+    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape)) {
+        this.WasEscapeDown = false;
+    }
+
+    if (this.EscapePause) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.X)) {
+            this.Die();
+            this.EscapePause = false;
+        }
+        return;
+    }
+
+    if (this.character_select == "sonic" && this.Ducking && this.OnGround) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.CanShoot) {
+            this.Spindash = true;
+            this.SpindashCharge += 2;
+            this.SpindashStop = 7;
+            this.Xa = 0;
+        }
+        else if (this.character_select == "sonic") {
+            this.SpindashStop -= 1;
+            if (this.SpindashStop == 0) {
+                this.Xa = this.SpindashCharge * 0.5 * this.Facing;
+            }
+        }
+        if (this.SpindashChargeLoop < 3) {
+            this.SpindashChargeLoop += 1;
+        }
+        else {
+            this.SpindashChargeLoop = 1;
+        }
+    }
+    if (this.character_select == "sonic" && this.Spindash && this.Xa != 0) {
+        this.Xa *= 1.05;
+        this.SpindashCharge *= this.GroundTraction;
+        if (this.SpindashChargeLoop < 3) {
+            this.SpindashChargeLoop += 1;
+        }
+        else {
+            this.SpindashChargeLoop = 1;
+        }
+    }
+    if (this.SpindashCharge < 2 || !this.OnGround) {
+        this.Spindash = false;
+        this.SpindashChargeLoop = 0;
+        this.SpindashCharge = 0;
+    }
+
+    //fox stuff
     if (this.Laser > 0 && !this.WasOnGround && this.OnGround) {
         this.Laser = 0;
     }
@@ -390,30 +470,6 @@ Mario.Character.prototype.Move = function () {
     }
     if (this.Shieldstun > 0) {
         this.Shieldstun -= 1;
-        return;
-    }
-
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && !this.World.Paused) {
-        this.World.Paused = true;
-        this.WasEscapeDown = true;
-        this.EscapePause = true;
-        return;
-    }
-    else if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && this.World.Paused) {
-        this.World.Paused = false;
-        this.WasEscapeDown = true;
-        this.EscapePause = false;
-    }
-
-    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape)) {
-        this.WasEscapeDown = false;
-    }
-
-    if (this.EscapePause) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.X)) {
-            this.Die();
-            this.EscapePause = false;
-        }
         return;
     }
 
@@ -829,11 +885,20 @@ Mario.Character.prototype.Move = function () {
             }
         }
         else {
+            if (this.character_select == "sonic" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
+                if (this.GroundInertia <= 1) {
+                    this.GroundInertia += 0.025;
+                }
+            }
+
             this.Xa -= sideWaysSpeed;
         }
         if (this.JumpTime >= 0 && this.illusion == 0 && !this.airdodging) {
             this.Facing = -1;
         }
+    }
+    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+        this.GroundInertia = 0.8;
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && !this.Ducking) {
@@ -848,11 +913,19 @@ Mario.Character.prototype.Move = function () {
             }
         }
         else {
+            if (this.character_select == "sonic" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
+                if (this.GroundInertia <= 1) {
+                    this.GroundInertia += 0.025;
+                }
+            }
             this.Xa += sideWaysSpeed;
         }
         if (this.JumpTime >= 0 && this.illusion == 0 && !this.airdodging) {
             this.Facing = 1;
         }
+    }
+    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+        this.GroundInertia = 0.8;
     }
 
     if ((!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) || this.Ducking || this.Ya < 0 || this.OnGround) {
@@ -1056,6 +1129,16 @@ Mario.Character.prototype.CalcPic = function () {
                     runFrame = 1;
                 }
             }
+            else if (this.character_select == "sonic") {
+                runFrame = 14;
+
+                if (this.SpindashCharge > 0) {
+                    this.YPic = this.SpindashChargeLoop
+                }
+                else {
+                    this.YPic = 0;
+                }
+            }
             else {
                 runFrame = 14;
             }
@@ -1063,6 +1146,17 @@ Mario.Character.prototype.CalcPic = function () {
         this.Height = this.Ducking ? 12 : 24;
     } else {
         this.Height = 12;
+    }
+
+    if (this.Spindash && this.Xa != 0) {
+        runFrame = 6;
+    }
+
+    if (this.SpindashCharge > 0 && this.Spindash) {
+        this.YPic = this.SpindashChargeLoop
+    }
+    else {
+        this.YPic = 0;
     }
 
     if (this.Laser > 0) {

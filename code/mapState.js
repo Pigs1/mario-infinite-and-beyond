@@ -112,6 +112,12 @@ Mario.MapState.prototype.Enter = function () {
         this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
     }
+    else if (this.character_select == "Sonic") {
+        Mario.MarioCharacter.character_select = "sonic"
+        this.character_select = "sonic"
+        this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+    }
     else if (this.character_select == "Fox") {
         Mario.MarioCharacter.character_select = "fox"
         this.character_select = "Fox"
@@ -533,6 +539,13 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = "sonic"
+                this.character_select = "sonic"
+                this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+                this.IsKeyDownLast = 1
+            }
+            else if (this.character_select == "Sonic" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "fox"
                 this.character_select = "Fox"
                 this.SmallMario.Image = Enjine.Resources.Images["FoxworldMap"]
