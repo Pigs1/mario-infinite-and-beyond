@@ -114,7 +114,7 @@ Mario.MapState.prototype.Enter = function () {
     }
     else if (this.character_select == "Sonic") {
         Mario.MarioCharacter.character_select = "sonic"
-        this.character_select = "sonic"
+        this.character_select = "Sonic"
         this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
     }
@@ -540,7 +540,7 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.IsKeyDownLast = 1
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "sonic"
-                this.character_select = "sonic"
+                this.character_select = "Sonic"
                 this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1

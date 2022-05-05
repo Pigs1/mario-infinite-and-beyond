@@ -81,6 +81,17 @@ Mario.Enemy.prototype.CollideCheck = function () {
             }
         }
     }
+    if (Mario.MarioCharacter.character_select == "sonic" && Mario.MarioCharacter.Spindash && Mario.MarioCharacter.XPic != 14) {
+        if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
+            if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
+                this.DeadTime = 10;
+                this.SpriteTemplate.IsDead = true;
+                this.World.RemoveSprite(this);
+                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 16 - 8) | 0) + 4, ((this.Y - Math.random() * 8) | 0) + 4, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
+                return;
+            }
+        }
+    }
 
     if (xMarioD > -this.Width * 2 - 4 && xMarioD < this.Width * 2 + 4) {
         if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
@@ -169,7 +180,12 @@ Mario.Enemy.prototype.CollideCheck = function () {
                             Mario.MarioCharacter.Shieldstun = 20;
                         }
                     }
-                    else if (!Mario.MarioCharacter.airdodging) {
+                    else if (Mario.MarioCharacter.character_select == "sonic") {
+                        if (!(Mario.MarioCharacter.Spindash && Mario.MarioCharacter.XPic == 14)) {
+                            Mario.MarioCharacter.GetHurt();
+                        }
+                    }
+                    else if (Mario.MarioCharacter.character_select != "fox") {
                         Mario.MarioCharacter.GetHurt();
                     }
                 }
