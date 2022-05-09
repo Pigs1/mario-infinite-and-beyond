@@ -169,7 +169,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                             Mario.MarioCharacter.Shieldstun = 20;
                         }
                     }
-                    else if (!Mario.MarioCharacter.airdodging) {
+                    else if (Mario.MarioCharacter.character_select != "fox") {
                         Mario.MarioCharacter.GetHurt();
                     }
                 }
