@@ -181,9 +181,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
                         }
                     }
                     else if (Mario.MarioCharacter.character_select == "sonic") {
-                        if (!(Mario.MarioCharacter.Spindash && Mario.MarioCharacter.XPic == 14)) {
-                            Mario.MarioCharacter.GetHurt();
-                        }
+                        Mario.MarioCharacter.GetHurt();
                     }
                     else if (Mario.MarioCharacter.character_select != "fox") {
                         Mario.MarioCharacter.GetHurt();
