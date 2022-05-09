@@ -115,8 +115,8 @@ Mario.MapState.prototype.Enter = function () {
     else if (this.character_select == "Sonic") {
         Mario.MarioCharacter.character_select = "sonic"
         this.character_select = "Sonic"
-        this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
-        this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+        this.SmallMario.Image = Enjine.Resources.Images["SonicworldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["SonicworldMap"]
     }
     else if (this.character_select == "Fox") {
         Mario.MarioCharacter.character_select = "fox"
@@ -541,8 +541,8 @@ Mario.MapState.prototype.Update = function (delta) {
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "sonic"
                 this.character_select = "Sonic"
-                this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
-                this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
+                this.SmallMario.Image = Enjine.Resources.Images["SonicworldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["SonicworldMap"]
                 this.IsKeyDownLast = 1
             }
             else if (this.character_select == "Sonic" && this.IsKeyDownLast == 0) {
@@ -635,6 +635,11 @@ Mario.MapState.prototype.Update = function (delta) {
         this.LargeMario.Y = this.YMario + ((this.YMarioA * delta) | 0) - 22;
         this.LargeMario.Update(delta);
     }
+    if (this.character_select == "Sonic") {
+        this.LargeMario.X = this.XMario + (this.XMarioA * delta) | 0;
+        this.LargeMario.Y = this.YMario + ((this.YMarioA * delta) | 0) - 22;
+        this.LargeMario.Update(delta);
+    }
 };
 
 Mario.MapState.prototype.TryWalking = function (xd, yd) {
@@ -701,7 +706,7 @@ Mario.MapState.prototype.Draw = function (context) {
         }
     }
 
-    if (!Mario.MarioCharacter.Large || this.character_select == "Fox") {
+    if (!Mario.MarioCharacter.Large && this.character_select != "Sonic" || this.character_select == "Fox") {
         this.SmallMario.Draw(context, this.camera);
     } else {
         this.LargeMario.Draw(context, this.camera);
