@@ -4,3 +4,7 @@
 */
 
 var Mario = {};
+
+if (Mario.MarioCharacter.cointotal != 0 && !(Mario.MarioCharacter.cointotal > 0)) {
+	localStorage.setItem("cointotal", 0);
+}

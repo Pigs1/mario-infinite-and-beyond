@@ -572,25 +572,19 @@ Mario.LevelState.prototype.Bump = function (x, y, canBreakBricks) {
 
         if ((Mario.Tile.Behaviors[block & 0xff] & Mario.Tile.Special) > 0) {
             Enjine.Resources.PlaySound("sprout");
-            if (Mario.MarioCharacter.character_select != "fox") {
-                if (!Mario.MarioCharacter.Large) {
-                    if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
-                        this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 20));
-                    }
-                    else {
-                        this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 8));
-                    }
-                } else {
-                    if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
-                        this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 20));
-                    }
-                    else {
-                        this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 8));
-                    }
-
-                }
+            if (Mario.MarioCharacter.character_select == "sonic") {
+                // if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
+                //     this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 20));
+                // }
+                // else {
+                //     this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 8));
+                // }
+                Mario.MarioCharacter.GetCoin();
+                Mario.MarioCharacter.cointotal = Number(localStorage.getItem("cointotal")) + 1
+                Enjine.Resources.PlaySound("coin");
+                this.AddSprite(new Mario.CoinAnim(this, x, y));
             }
-            else {
+            else if (Mario.MarioCharacter.character_select == "fox") {
                 if (Math.random() > 0.5) {
                     if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
                         this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 20));
@@ -608,8 +602,27 @@ Mario.LevelState.prototype.Bump = function (x, y, canBreakBricks) {
                     }
                 }
             }
+            else {
+                if (!Mario.MarioCharacter.Large) {
+                    if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
+                        this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 20));
+                    }
+                    else {
+                        this.AddSprite(new Mario.Mushroom(this, x * 16 + 8, y * 16 + 8));
+                    }
+                } else {
+                    if (Mario.MarioCharacter.GroundPoundTimer > 0 && Mario.MarioCharacter.Y > y) {
+                        this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 20));
+                    }
+                    else {
+                        this.AddSprite(new Mario.FireFlower(this, x * 16 + 8, y * 16 + 8));
+                    }
+
+                }
+            }
         } else {
             Mario.MarioCharacter.GetCoin();
+            Mario.MarioCharacter.cointotal = Number(localStorage.getItem("cointotal")) + 1
             Enjine.Resources.PlaySound("coin");
             this.AddSprite(new Mario.CoinAnim(this, x, y));
         }
@@ -651,6 +664,7 @@ Mario.LevelState.prototype.BumpInto = function (x, y) {
     var block = this.Level.GetBlock(x, y), i = 0;
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         Mario.MarioCharacter.GetCoin();
+        Mario.MarioCharacter.cointotal = Number(localStorage.getItem("cointotal")) + 1
         Enjine.Resources.PlaySound("coin");
         this.Level.SetBlock(x, y, 0);
         this.AddSprite(new Mario.CoinAnim(x, y + 1));

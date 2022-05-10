@@ -136,7 +136,7 @@ Mario.Shell.prototype.CollideCheck = function () {
                             }
                         }
                         else {
-                            if (!this.Drop) {
+                            if (!this.Drop && !Mario.MarioCharacter.character_select == "fox") {
                                 Mario.MarioCharacter.GetHurt();
                             }
                         }

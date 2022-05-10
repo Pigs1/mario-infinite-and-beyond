@@ -1168,6 +1168,7 @@ Mario.Character.prototype.CalcPic = function () {
         runFrame = 6;
     }
 
+
     if (this.SpindashCharge > 0 && this.Spindash) {
         this.YPic = this.SpindashChargeLoop
     }
@@ -1525,6 +1526,8 @@ Mario.Character.prototype.IsBlocking = function (x, y, xa, ya) {
 
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         this.GetCoin();
+        this.cointotal = Number(localStorage.getItem("cointotal")) + 1;
+        localStorage.setItem("cointotal", this.cointotal);
         Enjine.Resources.PlaySound("coin");
         this.World.Level.SetBlock(x, y, 0);
         for (xx = 0; xx < 2; xx++) {
@@ -1633,6 +1636,7 @@ Mario.Character.prototype.Win = function () {
     this.WinTime = 1;
     if (this.character_select == "fox") {
         this.SetLarge(false, false);
+        this.PicWidth = this.PicHeight = 32;
     }
     Enjine.Resources.PlaySound("exit");
 };
@@ -1644,6 +1648,11 @@ Mario.Character.prototype.Die = function () {
     this.DeathTime = 1;
     Enjine.Resources.PlaySound("death");
     this.SetLarge(false, false);
+    if (this.character_select == "sonic") {
+        this.YPic = 1;
+        this.XPic = 0;
+        this.PicWidth = this.PicHeight = 32;
+    }
 
 };
 
