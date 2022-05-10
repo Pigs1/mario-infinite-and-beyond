@@ -411,7 +411,7 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "X to exit level", 7, 20);
 
         }
-        else if (Mario.MarioCharacter.character_select == "fox") {
+        else if (Mario.MarioCharacter.character_select == "sonic") {
 
             this.DrawStringShadow(context, "Sonic:", 7, 5);
             this.DrawStringShadow(context, "Fastest Hedgehog alive.", 7, 6);
