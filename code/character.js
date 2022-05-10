@@ -115,6 +115,11 @@ Mario.Character = function () {
     this.BossFireballCheckY2 = null;
 
     this.FireballAllowed = false;
+
+    this.Spindash = false;
+    this.SpindashCharge = 0;
+    this.SpindashChargeLoop = 0;
+    this.SpindashLoop = 0;
 };
 
 Mario.Character.prototype = new Mario.NotchSprite(null);
@@ -166,6 +171,14 @@ Mario.Character.prototype.Initialize = function (world) {
         this.AirInertia = 0.89;
         this.GroundTraction = 0.8;
         this.Gravity = 2;
+        this.JumpVel = -1.9;
+    }
+    else if (this.character_select == "sonic") {
+        this.SetLarge(true, false);
+        this.GroundInertia = 0.8;
+        this.AirInertia = 0.89;
+        this.GroundTraction = 0.9;
+        this.Gravity = 3;
         this.JumpVel = -1.9;
     }
     else if (this.character_select == "fox") {
@@ -262,12 +275,14 @@ Mario.Character.prototype.Blink = function (on) {
         else if (this.character_select == "fox") {
             this.Image = Enjine.Resources.Images["Fox"];
         }
+        else if (this.character_select == "sonic") {
+            this.Image = Enjine.Resources.Images["sonic"];
+        }
 
         this.XPicO = 16;
         this.YPicO = 31;
         this.PicWidth = this.PicHeight = 32;
         if (this.character_select == "fox") {
-
             this.PicWidth = 36;
             this.PicHeight = 50;
             this.YPicO = 49;
@@ -284,6 +299,9 @@ Mario.Character.prototype.Blink = function (on) {
         }
         else if (this.character_select == "fox") {
             this.Image = Enjine.Resources.Images["Fox"];
+        }
+        else if (this.character_select == "sonic") {
+            this.Image = Enjine.Resources.Images["sonic"];
         }
 
         this.XPicO = 8;
@@ -302,6 +320,79 @@ Mario.Character.prototype.Move = function () {
         this.Ya = 0;
         return;
     }
+
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && !this.World.Paused) {
+        this.World.Paused = true;
+        this.WasEscapeDown = true;
+        this.EscapePause = true;
+        return;
+    }
+    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && this.World.Paused) {
+        this.World.Paused = false;
+        this.WasEscapeDown = true;
+        this.EscapePause = false;
+    }
+
+    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape)) {
+        this.WasEscapeDown = false;
+    }
+
+    if (this.EscapePause) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.X)) {
+            this.Die();
+            this.EscapePause = false;
+        }
+        return;
+    }
+    if (this.character_select == "sonic") {
+        if (this.Ducking && this.OnGround) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.CanShoot) {
+                this.Spindash = true;
+                if (this.SpindashCharge < 80) {
+                    this.SpindashCharge += 5;
+                }
+                this.SpindashStop = 7;
+                this.Xa = 0;
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 10 * this.Facing) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5, 0));
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 12 * this.Facing) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5, 0));
+            }
+            else {
+                this.SpindashStop -= 1;
+                if (this.SpindashStop == 0) {
+                    this.Xa = this.SpindashCharge * 0.5 * this.Facing;
+                }
+            }
+            if (this.SpindashCharge == 80) {
+                this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 5 - (3 * this.Facing)) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 12, Math.random(), Math.random(), 1, 1, 5, 1));
+            }
+            if (this.SpindashChargeLoop < 3) {
+                this.SpindashChargeLoop += 1;
+            }
+            else {
+                this.SpindashChargeLoop = 1;
+            }
+        }
+        else if (!this.Ducking && this.XPic == 0) {
+            this.SpindashCharge = 0;
+            this.SpindashChargeLoop = 0;
+        }
+        if (this.Spindash && this.Xa != 0) {
+            this.SpindashCharge *= this.GroundTraction;
+            if (this.SpindashChargeLoop < 3) {
+                this.SpindashChargeLoop += 1;
+            }
+            else {
+                this.SpindashChargeLoop = 1;
+            }
+        }
+        if (this.SpindashCharge < 2 || !this.OnGround && this.Xa == 0 || this.collisiontype == "left" || this.collisiontype == "right") {
+            this.Spindash = false;
+            this.SpindashChargeLoop = 0;
+            this.SpindashCharge = 0;
+        }
+    }
+
+    //fox stuff
     if (this.Laser > 0 && !this.WasOnGround && this.OnGround) {
         this.Laser = 0;
     }
@@ -373,7 +464,7 @@ Mario.Character.prototype.Move = function () {
             this.Xa = 0;
             this.Ya = 0;
             this.WasShielding = true;
-            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5, 1));
         }
     }
 
@@ -390,30 +481,6 @@ Mario.Character.prototype.Move = function () {
     }
     if (this.Shieldstun > 0) {
         this.Shieldstun -= 1;
-        return;
-    }
-
-    if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && !this.World.Paused) {
-        this.World.Paused = true;
-        this.WasEscapeDown = true;
-        this.EscapePause = true;
-        return;
-    }
-    else if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && !this.WasEscapeDown && this.World.Paused) {
-        this.World.Paused = false;
-        this.WasEscapeDown = true;
-        this.EscapePause = false;
-    }
-
-    if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape)) {
-        this.WasEscapeDown = false;
-    }
-
-    if (this.EscapePause) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.X)) {
-            this.Die();
-            this.EscapePause = false;
-        }
         return;
     }
 
@@ -564,7 +631,12 @@ Mario.Character.prototype.Move = function () {
         }
     }
     if (this.Xa != 0 && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && this.OnGround && this.character_select == "fox") {
-        this.Xa *= this.GroundTraction;
+        if (this.Spindash && this.character_select == "sonic") {
+            this.Xa *= 0.9
+        }
+        else {
+            this.Xa *= this.GroundTraction;
+        }
     }
 
 
@@ -583,7 +655,7 @@ Mario.Character.prototype.Move = function () {
 
         this.launched -= 1
         if (launchfirsttime) {
-            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 20) | 0) + this.Facing * 8, ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 1, 1, 5, 1));
             this.Xa = 0
             this.Ya = 0
             launchfirsttime = false
@@ -697,7 +769,7 @@ Mario.Character.prototype.Move = function () {
     }
 
     if (!this.CarriedCheck && !this.waslaunched && !this.Ducking) {
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox" && this.GroundPoundEnabled) {
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down) && !this.OnGround && this.character_select != "peach" && this.character_select != "fox" && this.GroundPoundEnabled && this.character_select != "sonic") {
             this.Xa = 0;
             this.Ya = 15;
             this.GroundPoundTimer = 10;
@@ -710,7 +782,7 @@ Mario.Character.prototype.Move = function () {
         this.Ducking = true
         this.GroundPoundTimer -= 1;
         this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 25 - 15) | 0) + this.Facing * 1,
-            ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            ((this.Y + Math.random() * 6) | 0) - 8, Math.random() * 2 - 1, Math.random(), 0, 1, 5, 0));
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && this.JumpTime != 0) {
             this.GroundPoundTimer = 0
             this.Ducking = false
@@ -825,15 +897,24 @@ Mario.Character.prototype.Move = function () {
         if (this.OnGround && this.DashDance && this.character_select == "fox") {
             this.Xa = -7
             if (this.RunTime <= 30) {
-                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5, 0));
             }
         }
         else {
+            if (this.character_select == "sonic" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
+                if (this.GroundInertia <= 1) {
+                    this.GroundInertia += 0.025;
+                }
+            }
+
             this.Xa -= sideWaysSpeed;
         }
         if (this.JumpTime >= 0 && this.illusion == 0 && !this.airdodging) {
             this.Facing = -1;
         }
+    }
+    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && this.character_select == "sonic") {
+        this.GroundInertia = 0.8;
     }
 
     if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right) && !this.Ducking) {
@@ -844,15 +925,23 @@ Mario.Character.prototype.Move = function () {
 
             this.Xa = 7
             if (this.RunTime <= 30) {
-                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5, 0));
             }
         }
         else {
+            if (this.character_select == "sonic" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A)) {
+                if (this.GroundInertia <= 1) {
+                    this.GroundInertia += 0.025;
+                }
+            }
             this.Xa += sideWaysSpeed;
         }
         if (this.JumpTime >= 0 && this.illusion == 0 && !this.airdodging) {
             this.Facing = 1;
         }
+    }
+    else if (!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && this.character_select == "sonic") {
+        this.GroundInertia = 0.8;
     }
 
     if ((!Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left) && !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) || this.Ducking || this.Ya < 0 || this.OnGround) {
@@ -901,7 +990,7 @@ Mario.Character.prototype.Move = function () {
 
     if (this.Sliding) {
         this.World.AddSprite(new Mario.Sparkle(this.World, ((this.X + Math.random() * 4 - 2) | 0) + this.Facing * 8,
-            ((this.Y + Math.random() * 4) | 0) - 24, Math.random() * 2 - 1, Math.random(), 0, 1, 5));
+            ((this.Y + Math.random() * 4) | 0) - 24, Math.random() * 2 - 1, Math.random(), 0, 1, 5, 0));
         this.Ya *= 0.5;
     }
 
@@ -1044,7 +1133,7 @@ Mario.Character.prototype.CalcPic = function () {
 
         if (this.Xa > 3 || this.Xa < -3) {
             for (i = 0; i < 3; i++) {
-                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5));
+                this.World.AddSprite(new Mario.Sparkle(this.World, (this.X + Math.random() * 8 - 4) | 0, (this.Y + Math.random() * 4) | 0, Math.random() * 2 - 1, Math.random() * -1, 0, 1, 5, 0));
             }
         }
     }
@@ -1056,6 +1145,16 @@ Mario.Character.prototype.CalcPic = function () {
                     runFrame = 1;
                 }
             }
+            else if (this.character_select == "sonic") {
+                runFrame = 14;
+
+                if (this.SpindashCharge > 0) {
+                    this.YPic = this.SpindashChargeLoop
+                }
+                else {
+                    this.YPic = 0;
+                }
+            }
             else {
                 runFrame = 14;
             }
@@ -1063,6 +1162,18 @@ Mario.Character.prototype.CalcPic = function () {
         this.Height = this.Ducking ? 12 : 24;
     } else {
         this.Height = 12;
+    }
+
+    if (this.Spindash && this.Xa != 0) {
+        runFrame = 6;
+    }
+
+
+    if (this.SpindashCharge > 0 && this.Spindash) {
+        this.YPic = this.SpindashChargeLoop
+    }
+    else {
+        this.YPic = 0;
     }
 
     if (this.Laser > 0) {
@@ -1082,6 +1193,10 @@ Mario.Character.prototype.CalcPic = function () {
 
     if (this.specialfall && this.illusion == 0 && !this.OnGround && !this.airdodging && this.launched == 0) {
         runFrame = 4;
+    }
+
+    if (runFrame == 0 && this.character_select == "sonic") {
+        this.YPic = 0;
     }
 
     this.XPic = runFrame;
@@ -1411,11 +1526,13 @@ Mario.Character.prototype.IsBlocking = function (x, y, xa, ya) {
 
     if (((Mario.Tile.Behaviors[block & 0xff]) & Mario.Tile.PickUpable) > 0) {
         this.GetCoin();
+        this.cointotal = Number(localStorage.getItem("cointotal")) + 1;
+        localStorage.setItem("cointotal", this.cointotal);
         Enjine.Resources.PlaySound("coin");
         this.World.Level.SetBlock(x, y, 0);
         for (xx = 0; xx < 2; xx++) {
             for (yy = 0; yy < 2; yy++) {
-                this.World.AddSprite(new Mario.Sparkle(this.World, x * 16 + xx * 8 + ((Math.random() * 8) | 0), y * 16 + yy * 8 + ((Math.random() * 8) | 0), 0, 0, 0, 2, 5));
+                this.World.AddSprite(new Mario.Sparkle(this.World, x * 16 + xx * 8 + ((Math.random() * 8) | 0), y * 16 + yy * 8 + ((Math.random() * 8) | 0), 0, 0, 0, 2, 5, 0));
             }
         }
     }
@@ -1483,19 +1600,32 @@ Mario.Character.prototype.GetHurt = function () {
     if (this.InvulnerableTime > 0) {
         return;
     }
-
-    if (this.Large) {
-        this.World.Paused = true;
-        this.PowerUpTime = -18;
-        Enjine.Resources.PlaySound("powerdown");
-        if (this.Fire) {
-            this.SetLarge(true, false);
-        } else {
-            this.SetLarge(false, false);
+    if (this.character_select == "sonic") {
+        if (this.Coins == 0 && this.InvulnerableTime == 0) {
+            this.Die();
         }
-        this.InvulnerableTime = 32;
-    } else {
-        this.Die();
+        else {
+            this.InvulnerableTime = 10;
+            for (let i = 0; i < this.Coins / 2; i += 1) {
+                this.World.AddSprite(new Mario.Rings(this.World, this.X, this.Y - 20, Math.random() * 5, -10));
+            }
+            this.Coins = 0;
+        }
+    }
+    else {
+        if (this.Large) {
+            this.World.Paused = true;
+            this.PowerUpTime = -18;
+            Enjine.Resources.PlaySound("powerdown");
+            if (this.Fire) {
+                this.SetLarge(true, false);
+            } else {
+                this.SetLarge(false, false);
+            }
+            this.InvulnerableTime = 32;
+        } else {
+            this.Die();
+        }
     }
 };
 
@@ -1506,6 +1636,7 @@ Mario.Character.prototype.Win = function () {
     this.WinTime = 1;
     if (this.character_select == "fox") {
         this.SetLarge(false, false);
+        this.PicWidth = this.PicHeight = 32;
     }
     Enjine.Resources.PlaySound("exit");
 };
@@ -1517,6 +1648,11 @@ Mario.Character.prototype.Die = function () {
     this.DeathTime = 1;
     Enjine.Resources.PlaySound("death");
     this.SetLarge(false, false);
+    if (this.character_select == "sonic") {
+        this.YPic = 1;
+        this.XPic = 0;
+        this.PicWidth = this.PicHeight = 32;
+    }
 
 };
 

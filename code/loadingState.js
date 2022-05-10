@@ -16,7 +16,7 @@ Mario.LoadingState.prototype = new Enjine.GameState();
 
 Mario.LoadingState.prototype.Enter = function () {
     var i = 0;
-    for (i = 0; i <= 42; i++) {
+    for (i = 0; i <= 44; i++) {
         this.Images[i] = {};
     }
 
@@ -63,51 +63,55 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[40].name = "Shield";
     this.Images[41].name = "Shine";
     this.Images[42].name = "foxitems";
+    this.Images[43].name = "sonic";
+    this.Images[44].name = "SonicworldMap";
 
 
-    this.Images[0].src = "images/bgsheet.png";
-    this.Images[1].src = "images/endscene.gif";
-    this.Images[2].src = "images/enemysheet.png";
-    this.Images[3].src = "images/firemariosheet.png";
-    this.Images[4].src = "images/font.gif";
-    this.Images[5].src = "images/gameovergost.gif";
-    this.Images[6].src = "images/itemsheet.png";
-    this.Images[7].src = "images/logo.gif";
-    this.Images[8].src = "images/mapsheet.png";
-    this.Images[9].src = "images/mariosheet.png";
-    this.Images[10].src = "images/particlesheet.png";
-    this.Images[11].src = "images/racoonmariosheet.png";
-    this.Images[12].src = "images/smallmariosheet.png";
-    this.Images[13].src = "images/title.gif";
-    this.Images[14].src = "images/worldmap.png";
-    this.Images[15].src = "images/worldmapcopy.png";
-    this.Images[16].src = "images/luigisheet.png";
-    this.Images[17].src = "images/smallluigisheet.png";
-    this.Images[18].src = "images/worldmappeach.png";
-    this.Images[19].src = "images/peachsheet.png";
-    this.Images[20].src = "images/fireluigisheet.png";
-    this.Images[21].src = "images/firepeachsheet.png";
-    this.Images[22].src = "images/smallpeachsheet.png";
+    this.Images[0].src = "images/level/default/bgsheet.png";
+    this.Images[1].src = "images/menu/endscene.gif";
+    this.Images[2].src = "images/enemies/enemysheet.png";
+    this.Images[3].src = "images/character/mario/firemariosheet.png";
+    this.Images[4].src = "images/menu/font.gif";
+    this.Images[5].src = "images/menu/gameovergost.gif";
+    this.Images[6].src = "images/items/itemsheet.png";
+    this.Images[7].src = "images/menu/logo.gif";
+    this.Images[8].src = "images/level/default/mapsheet.png";
+    this.Images[9].src = "images/character/mario/mariosheet.png";
+    this.Images[10].src = "images/particle/particlesheet.png";
+    this.Images[11].src = "images/character/mario/racoonmariosheet.png";
+    this.Images[12].src = "images/character/mario/smallmariosheet.png";
+    this.Images[13].src = "images/menu/title.gif";
+    this.Images[14].src = "images/worldmap/worldmap.png";
+    this.Images[15].src = "images/worldmap/worldmapcopy.png";
+    this.Images[16].src = "images/character/luigi/luigisheet.png";
+    this.Images[17].src = "images/character/luigi/smallluigisheet.png";
+    this.Images[18].src = "images/worldmap/worldmappeach.png";
+    this.Images[19].src = "images/character/peach/peachsheet.png";
+    this.Images[20].src = "images/character/luigi/fireluigisheet.png";
+    this.Images[21].src = "images/character/peach/firepeachsheet.png";
+    this.Images[22].src = "images/character/peach/smallpeachsheet.png";
     this.Images[23].src = "images/mapsheetinverted.png";
-    this.Images[24].src = "images/blastzone.png";
-    this.Images[25].src = "images/blastzonesideways.png";
-    this.Images[26].src = "images/blastzoneleft.png";
-    this.Images[27].src = "images/blastzonetop.png";
-    this.Images[28].src = "images/toadmapsheet.png";
-    this.Images[29].src = "images/toadbgsheet.png";
-    this.Images[30].src = "images/chest.png";
-    this.Images[31].src = "images/toad.png";
-    this.Images[32].src = "images/door.png";
-    this.Images[33].src = "images/bridge.png";
-    this.Images[34].src = "images/Bowser.png";
-    this.Images[35].src = "images/bowserfireball.png";
-    this.Images[36].src = "images/bowserwall.png";
-    this.Images[37].src = "images/Axe.png";
-    this.Images[38].src = "images/fox sheet.png";
-    this.Images[39].src = "images/foxworldmap.png";
-    this.Images[40].src = "images/shieldbubble.png";
-    this.Images[41].src = "images/shine.png";
-    this.Images[42].src = "images/foxitemsheet.png";
+    this.Images[24].src = "images/character/fox/blastzone.png";
+    this.Images[25].src = "images/character/fox/blastzonesideways.png";
+    this.Images[26].src = "images/character/fox/blastzoneleft.png";
+    this.Images[27].src = "images/character/fox/blastzonetop.png";
+    this.Images[28].src = "images/level/toad/toadmapsheet.png";
+    this.Images[29].src = "images/level/toad/toadbgsheet.png";
+    this.Images[30].src = "images/level/toad/chest.png";
+    this.Images[31].src = "images/level/toad/toad.png";
+    this.Images[32].src = "images/level/castle/door.png";
+    this.Images[33].src = "images/level/bowser/bridge.png";
+    this.Images[34].src = "images/enemies/bowser/Bowser.png";
+    this.Images[35].src = "images/enemies/bowser/bowserfireball.png";
+    this.Images[36].src = "images/level/bowser/bowserwall.png";
+    this.Images[37].src = "images/level/bowser/Axe.png";
+    this.Images[38].src = "images/character/fox/fox sheet.png";
+    this.Images[39].src = "images/worldmap/foxworldmap.png";
+    this.Images[40].src = "images/character/fox/shieldbubble.png";
+    this.Images[41].src = "images/character/fox/shine.png";
+    this.Images[42].src = "images/items/fox/foxitemsheet.png";
+    this.Images[43].src = "images/character/sonic/sonicsheet.png";
+    this.Images[44].src = "images/worldmap/worldmapsonic.png";
 
     Enjine.Resources.AddImages(this.Images);
 

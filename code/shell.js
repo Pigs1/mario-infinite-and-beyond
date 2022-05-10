@@ -135,8 +135,8 @@ Mario.Shell.prototype.CollideCheck = function () {
                                 Mario.MarioCharacter.Shieldstun = 20;
                             }
                         }
-                        else if (Mario.MarioCharacter.character_select != "fox") {
-                            if (!this.Drop) {
+                        else {
+                            if (!this.Drop && !Mario.MarioCharacter.character_select == "fox") {
                                 Mario.MarioCharacter.GetHurt();
                             }
                         }

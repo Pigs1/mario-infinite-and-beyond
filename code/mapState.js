@@ -112,6 +112,12 @@ Mario.MapState.prototype.Enter = function () {
         this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
         this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
     }
+    else if (this.character_select == "Sonic") {
+        Mario.MarioCharacter.character_select = "sonic"
+        this.character_select = "Sonic"
+        this.SmallMario.Image = Enjine.Resources.Images["SonicworldMap"]
+        this.LargeMario.Image = Enjine.Resources.Images["SonicworldMap"]
+    }
     else if (this.character_select == "Fox") {
         Mario.MarioCharacter.character_select = "fox"
         this.character_select = "Fox"
@@ -128,7 +134,12 @@ Mario.MapState.prototype.Enter = function () {
     if (!Mario.MarioCharacter.Fire) {
         this.LargeMario.PlaySequence("large", true);
     } else {
-        this.LargeMario.PlaySequence("fire", true);
+        if (Mario.MarioCharacter.character_select == "Sonic") {
+            this.LargeMario.PlaySequence("large", true);
+        }
+        else {
+            this.LargeMario.PlaySequence("fire", true);
+        }
     }
 
     this.EnterLevel = false;
@@ -533,6 +544,13 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
+                Mario.MarioCharacter.character_select = "sonic"
+                this.character_select = "Sonic"
+                this.SmallMario.Image = Enjine.Resources.Images["SonicworldMap"]
+                this.LargeMario.Image = Enjine.Resources.Images["SonicworldMap"]
+                this.IsKeyDownLast = 1
+            }
+            else if (this.character_select == "Sonic" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "fox"
                 this.character_select = "Fox"
                 this.SmallMario.Image = Enjine.Resources.Images["FoxworldMap"]
@@ -622,6 +640,11 @@ Mario.MapState.prototype.Update = function (delta) {
         this.LargeMario.Y = this.YMario + ((this.YMarioA * delta) | 0) - 22;
         this.LargeMario.Update(delta);
     }
+    if (this.character_select == "Sonic") {
+        this.LargeMario.X = this.XMario + (this.XMarioA * delta) | 0;
+        this.LargeMario.Y = this.YMario + ((this.YMarioA * delta) | 0) - 22;
+        this.LargeMario.Update(delta);
+    }
 };
 
 Mario.MapState.prototype.TryWalking = function (xd, yd) {
@@ -688,7 +711,7 @@ Mario.MapState.prototype.Draw = function (context) {
         }
     }
 
-    if (!Mario.MarioCharacter.Large || this.character_select == "Fox") {
+    if (!Mario.MarioCharacter.Large && this.character_select != "Sonic" || this.character_select == "Fox") {
         this.SmallMario.Draw(context, this.camera);
     } else {
         this.LargeMario.Draw(context, this.camera);
@@ -700,6 +723,9 @@ Mario.MapState.prototype.Draw = function (context) {
     this.FontShadow.Strings[1] = { String: "WORLD " + (this.WorldNumber + 1), X: 257, Y: 5 };
     this.Font.Strings[2] = { String: "CHAR " + this.character_select, X: 4, Y: 15 };
     this.FontShadow.Strings[2] = { String: "CHAR " + this.character_select, X: 5, Y: 16 };
+
+    this.Font.Strings[3] = { String: "COIN TOTAL " + localStorage.getItem("cointotal"), X: 4, Y: 230 };
+    this.FontShadow.Strings[3] = { String: "COIN TOTAL " + localStorage.getItem("cointotal"), X: 5, Y: 231 };
 
     this.FontShadow.Draw(context, this.camera);
     this.Font.Draw(context, this.camera);

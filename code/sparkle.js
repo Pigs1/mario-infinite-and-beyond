@@ -3,14 +3,14 @@
     Code by Rob Kleffner, 2011
 */
 
-Mario.Sparkle = function (world, x, y, xa, ya) {
+Mario.Sparkle = function (world, x, y, xa, ya, ypic) {
     this.World = world;
     this.X = x;
     this.Y = y;
     this.Xa = xa;
     this.Ya = ya;
     this.XPic = (Math.random() * 2) | 0;
-    this.YPic = 0;
+    this.YPic = ypic;
 
     this.Life = 10 + ((Math.random() * 5) | 0);
     this.XPicStart = this.XPic;
@@ -29,13 +29,6 @@ Mario.Sparkle.prototype.Move = function () {
         this.XPic = 7;
     } else {
         this.XPic = (this.XPicStart + (10 - this.Life) * 0.4) | 0;
-    }
-
-    if (Mario.MarioCharacter.waslaunched) [
-        this.YPic = 1
-    ]
-    else {
-        this.YPic = 0
     }
 
     if (this.Life-- < 0) {
