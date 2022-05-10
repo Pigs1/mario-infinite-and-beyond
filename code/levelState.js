@@ -411,6 +411,20 @@ Mario.LevelState.prototype.Draw = function (context) {
             this.DrawStringShadow(context, "X to exit level", 7, 20);
 
         }
+        else if (Mario.MarioCharacter.character_select == "sonic") {
+
+            this.DrawStringShadow(context, "Sonic:", 7, 5);
+            this.DrawStringShadow(context, "Fastest Hedgehog alive.", 7, 6);
+
+            this.DrawStringShadow(context, "Controls:", 7, 9);
+            this.DrawStringShadow(context, "S to Jump", 7, 10);
+            this.DrawStringShadow(context, "Hold A to Run", 7, 11);
+            this.DrawStringShadow(context, "Down and mash A to Spindash", 7, 12);
+
+            this.DrawStringShadow(context, "Esc to close", 7, 15);
+            this.DrawStringShadow(context, "X to exit level", 7, 16);
+
+        }
     }
 
     if (this.StartTime > 0) {
