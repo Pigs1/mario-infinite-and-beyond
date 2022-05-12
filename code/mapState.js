@@ -132,6 +132,10 @@ Mario.MapState.prototype.Enter = function () {
         this.character_select = "Luigi"
         this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
         this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
+        if (Mario.MarioCharacter.SkinSelect == 1) {
+            this.SmallMario.Image = Enjine.Resources.Images["MrLmapsheet"]
+            this.LargeMario.Image = Enjine.Resources.Images["MrLmapsheet"]
+        }
     } else if (this.character_select == "Peach") {
         Mario.MarioCharacter.character_select = "peach"
         this.character_select = "Peach"
@@ -564,18 +568,21 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
                 this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
                 this.IsKeyDownLast = 1
+                this.SkinSelect = 0
             } else if (this.character_select == "Luigi" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "peach"
                 this.character_select = "Peach"
                 this.SmallMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["PeachworldMap"]
                 this.IsKeyDownLast = 1
+                this.SkinSelect = 0
             } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "sonic"
                 this.character_select = "Sonic"
                 this.SmallMario.Image = Enjine.Resources.Images["SonicworldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["SonicworldMap"]
                 this.IsKeyDownLast = 1
+                Mario.MarioCharacter.SkinSelect = 0
             }
             else if (this.character_select == "Sonic" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "fox"
@@ -583,6 +590,7 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.SmallMario.Image = Enjine.Resources.Images["FoxworldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["FoxworldMap"]
                 this.IsKeyDownLast = 1
+                Mario.MarioCharacter.SkinSelect = 0
             }
             else if (this.character_select == "Fox" && this.IsKeyDownLast == 0) {
                 Mario.MarioCharacter.character_select = "mario"
@@ -590,6 +598,7 @@ Mario.MapState.prototype.Update = function (delta) {
                 this.SmallMario.Image = Enjine.Resources.Images["worldMap"]
                 this.LargeMario.Image = Enjine.Resources.Images["worldMap"]
                 this.IsKeyDownLast = 1
+                Mario.MarioCharacter.SkinSelect = 0;
             }
         }
 
@@ -607,12 +616,32 @@ Mario.MapState.prototype.Update = function (delta) {
         }
 
 
-        if (!(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E))) {
+        if (!(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E)) && !(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.C))) {
             this.IsKeyDownLast = 0
         }
 
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.C)) {
-            this.World
+            if (this.character_select == "Mario" && this.IsKeyDownLast == 0) {
+
+            } else if (this.character_select == "Luigi" && this.IsKeyDownLast == 0) {
+                if (localStorage.getItem("MrLUnlock") == "true" && Mario.MarioCharacter.SkinSelect == 0) {
+                    Mario.MarioCharacter.SkinSelect = 1;
+                    this.IsKeyDownLast = 1
+                    this.SmallMario.Image = Enjine.Resources.Images["MrLmapsheet"]
+                    this.LargeMario.Image = Enjine.Resources.Images["MrLmapsheet"]
+                }
+                else if (this.IsKeyDownLast == 0) {
+                    Mario.MarioCharacter.SkinSelect = 0;
+                    this.IsKeyDownLast = 1
+                    this.SmallMario.Image = Enjine.Resources.Images["worldMap2"]
+                    this.LargeMario.Image = Enjine.Resources.Images["worldMap2"]
+                }
+            } else if (this.character_select == "Peach" && this.IsKeyDownLast == 0) {
+            }
+            else if (this.character_select == "Sonic" && this.IsKeyDownLast == 0) {
+            }
+            else if (this.character_select == "Fox" && this.IsKeyDownLast == 0) {
+            }
         }
 
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.G) && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.T)) {
@@ -777,8 +806,12 @@ Mario.MapState.prototype.Draw = function (context) {
     this.Font.Strings[2] = { String: "CHAR " + this.character_select, X: 4, Y: 15 };
     this.FontShadow.Strings[2] = { String: "CHAR " + this.character_select, X: 5, Y: 16 };
 
+
     this.Font.Strings[3] = { String: "COIN TOTAL " + localStorage.getItem("cointotal"), X: 4, Y: 230 };
     this.FontShadow.Strings[3] = { String: "COIN TOTAL " + localStorage.getItem("cointotal"), X: 5, Y: 231 };
+
+    this.Font.Strings[4] = { String: "ESC-SHOP", X: 248, Y: 14 };
+    this.FontShadow.Strings[4] = { String: "ESC-SHOP", X: 249, Y: 15 };
 
     this.FontShadow.Draw(context, this.camera);
     this.Font.Draw(context, this.camera);
@@ -792,11 +825,14 @@ Mario.MapState.prototype.Draw = function (context) {
         this.FontShadow.Strings[1] = { String: "", X: 257, Y: 5 };
         this.Font.Strings[2] = { String: "", X: 4, Y: 15 };
         this.FontShadow.Strings[2] = { String: "", X: 5, Y: 16 };
+        this.Font.Strings[4] = { String: "ESC-SHOP", X: 240, Y: 14 };
+        this.FontShadow.Strings[4] = { String: "ESC-SHOP", X: 241, Y: 15 };
 
         if (this.ShopMenuSelection == 0) {
             context.drawImage(this.ShopIcon.Image, 115, 50)
-            this.DrawStringShadow(context, "400 coins", 13, 20);
+            this.DrawStringShadow(context, "400 coins", 14, 20);
             this.DrawStringShadow(context, "S to purchase", 13, 22);
+            this.DrawStringShadow(context, "C on map to swap skins", 0, 1.25);
             if (localStorage.getItem("MrLUnlock") != "true" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && Mario.MarioCharacter.cointotal >= 400) {
                 localStorage.setItem("MrLUnlock", "false");
                 localStorage.setItem("cointotal", Mario.MarioCharacter.cointotal - 400)

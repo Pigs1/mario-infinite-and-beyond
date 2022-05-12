@@ -16,7 +16,7 @@ Mario.LoadingState.prototype = new Enjine.GameState();
 
 Mario.LoadingState.prototype.Enter = function () {
     var i = 0;
-    for (i = 0; i <= 47; i++) {
+    for (i = 0; i <= 50; i++) {
         this.Images[i] = {};
     }
 
@@ -68,6 +68,9 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[45].name = "ShopMenu";
     this.Images[46].name = "MrLicon";
     this.Images[47].name = "MrLsheet";
+    this.Images[48].name = "FireMrLsheet";
+    this.Images[49].name = "smallMrLsheet";
+    this.Images[50].name = "MrLmapsheet";
 
     this.Images[0].src = "images/level/default/bgsheet.png";
     this.Images[1].src = "images/menu/endscene.gif";
@@ -117,6 +120,9 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[45].src = "images/menu/shopmenu.png";
     this.Images[46].src = "images/menu/MrL.png";
     this.Images[47].src = "images/character/luigi/mrLsheet.png";
+    this.Images[48].src = "images/character/luigi/firemrLsheet.png";
+    this.Images[49].src = "images/character/luigi/smallmrLsheet.png";
+    this.Images[50].src = "images/worldmap/mrLworldmap.png";
 
     Enjine.Resources.AddImages(this.Images);
 
