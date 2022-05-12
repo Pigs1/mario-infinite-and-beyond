@@ -16,7 +16,7 @@ Mario.LoadingState.prototype = new Enjine.GameState();
 
 Mario.LoadingState.prototype.Enter = function () {
     var i = 0;
-    for (i = 0; i <= 44; i++) {
+    for (i = 0; i <= 46; i++) {
         this.Images[i] = {};
     }
 
@@ -65,7 +65,8 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[42].name = "foxitems";
     this.Images[43].name = "sonic";
     this.Images[44].name = "SonicworldMap";
-
+    this.Images[45].name = "ShopMenu";
+    this.Images[46].name = "MrLicon";
 
     this.Images[0].src = "images/level/default/bgsheet.png";
     this.Images[1].src = "images/menu/endscene.gif";
@@ -112,6 +113,8 @@ Mario.LoadingState.prototype.Enter = function () {
     this.Images[42].src = "images/items/fox/foxitemsheet.png";
     this.Images[43].src = "images/character/sonic/sonicsheet.png";
     this.Images[44].src = "images/worldmap/worldmapsonic.png";
+    this.Images[45].src = "images/menu/shopmenu.png";
+    this.Images[46].src = "images/menu/MrL.png";
 
     Enjine.Resources.AddImages(this.Images);
 

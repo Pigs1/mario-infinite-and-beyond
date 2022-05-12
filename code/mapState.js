@@ -33,7 +33,12 @@ Mario.MapState = function () {
     this.LevelType = 0;
     this.character_select = "Mario";
     this.IsKeyDownLast = 0;
+
     this.ghost = false;
+
+    this.ShopMenuOpen = false;
+    this.ShopMenuSelection = 0;
+    this.EscDownLast = 0;
 
     this.WorldNumber = -1;
     this.NextWorld();
@@ -42,6 +47,7 @@ Mario.MapState = function () {
 Mario.MapState.prototype = new Enjine.GameState();
 
 Mario.MapState.prototype.Enter = function () {
+
     this.WaterSprite = new Enjine.AnimatedSprite();
     this.WaterSprite.Image = Enjine.Resources.Images["worldMap"];
     this.WaterSprite.SetColumnCount(16);
@@ -64,6 +70,26 @@ Mario.MapState.prototype.Enter = function () {
     this.DecoSprite.PlaySequence("world0", true);
     this.DecoSprite.X = 0;
     this.DecoSprite.Y = 0;
+
+    this.ShopMenu = new Enjine.AnimatedSprite();
+    this.ShopMenu.Image = Enjine.Resources.Images["ShopMenu"];
+    this.ShopMenu.SetColumnCount(1);
+    this.ShopMenu.SetRowCount(1);
+    this.ShopMenu.AddNewSequence("ShopMenu", 10, 0, 10, 3);
+    this.ShopMenu.FramesPerSecond = 1 / 3;
+    this.ShopMenu.PlaySequence("ShopMenu", true);
+    this.ShopMenu.X = 0;
+    this.ShopMenu.Y = 0;
+
+    this.ShopIcon = new Enjine.AnimatedSprite();
+    this.ShopIcon.Image = Enjine.Resources.Images["MrLicon"];
+    this.ShopIcon.SetColumnCount(1);
+    this.ShopIcon.SetRowCount(1);
+    this.ShopIcon.AddNewSequence("ShopIcon", 10, 0, 10, 3);
+    this.ShopIcon.FramesPerSecond = 1 / 3;
+    this.ShopIcon.PlaySequence("ShopIcon", true);
+    this.ShopIcon.X = 0;
+    this.ShopIcon.Y = 0;
 
     this.HelpSprite = new Enjine.AnimatedSprite();
     this.HelpSprite.Image = Enjine.Resources.Images["worldMap"];
@@ -421,6 +447,7 @@ Mario.MapState.prototype.RenderStatic = function () {
         return;
     }
 
+
     //320 / 16 = 20
     for (x = 0; x < 20; x++) {
         //240 / 16 = 15
@@ -566,15 +593,33 @@ Mario.MapState.prototype.Update = function (delta) {
             }
         }
 
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && this.EscDownLast == 0 && !this.ShopMenuOpen) {
+            this.EscDownLast = 1
+            this.ShopMenuOpen = true
+        }
+        else if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape) && this.EscDownLast == 0 && this.ShopMenuOpen) {
+            this.EscDownLast = 1
+            this.ShopMenuOpen = false
+        }
+
+        if (!(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Escape))) {
+            this.EscDownLast = 0
+        }
+
+
         if (!(Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.E))) {
             this.IsKeyDownLast = 0
+        }
+
+        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.C)) {
+            this.World
         }
 
         if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.G) && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.T)) {
             this.ghost = true;
         }
 
-        if (this.CanEnterLevel && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S)) {
+        if (this.CanEnterLevel && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && !this.ShopMenuOpen) {
             if (this.Level[x][y] === Mario.MapTile.Level && this.Data[x][y] !== -11) {
                 if (this.Level[x][y] === Mario.MapTile.Level && this.Data[x][y] !== 0 && this.Data[x][y] > -10) {
                     difficulty = this.WorldNumber + 1;
@@ -613,18 +658,19 @@ Mario.MapState.prototype.Update = function (delta) {
         }
 
         this.CanEnterLevel = !Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S);
-
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
-            this.TryWalking(-1, 0);
-        }
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
-            this.TryWalking(1, 0);
-        }
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
-            this.TryWalking(0, -1);
-        }
-        if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
-            this.TryWalking(0, 1);
+        if (!this.ShopMenuOpen) {
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Left)) {
+                this.TryWalking(-1, 0);
+            }
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Right)) {
+                this.TryWalking(1, 0);
+            }
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Up)) {
+                this.TryWalking(0, -1);
+            }
+            if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.Down)) {
+                this.TryWalking(0, 1);
+            }
         }
     }
 
@@ -682,6 +728,13 @@ Mario.MapState.prototype.CalcDistance = function (x, y, xa, ya) {
     }
 };
 
+Mario.MapState.prototype.DrawStringShadow = function (context, string, x, y) {
+    this.Font.Strings[3] = { String: string, X: x * 8 + 4, Y: y * 8 + 4 };
+    this.FontShadow.Strings[3] = { String: string, X: x * 8 + 5, Y: y * 8 + 5 };
+    this.FontShadow.Draw(context, this.Camera);
+    this.Font.Draw(context, this.Camera);
+};
+
 Mario.MapState.prototype.Draw = function (context) {
     var x = 0, y = 0;
 
@@ -729,6 +782,23 @@ Mario.MapState.prototype.Draw = function (context) {
 
     this.FontShadow.Draw(context, this.camera);
     this.Font.Draw(context, this.camera);
+
+    if (this.ShopMenuOpen) {
+        context.drawImage(this.ShopMenu.Image, 0, 0)
+
+        this.Font.Strings[0] = { String: "", X: 4, Y: 4 };
+        this.FontShadow.Strings[0] = { String: "", X: 5, Y: 5 };
+        this.Font.Strings[1] = { String: "", X: 256, Y: 4 };
+        this.FontShadow.Strings[1] = { String: "", X: 257, Y: 5 };
+        this.Font.Strings[2] = { String: "", X: 4, Y: 15 };
+        this.FontShadow.Strings[2] = { String: "", X: 5, Y: 16 };
+
+        if (this.ShopMenuSelection == 0) {
+            context.drawImage(this.ShopIcon.Image, 115, 50)
+            this.DrawStringShadow(context, "400 coins", 13, 20);
+            this.DrawStringShadow(context, "S to purchase", 13, 22);
+        }
+    }
 };
 
 Mario.MapState.prototype.LevelWon = function () {
