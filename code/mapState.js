@@ -797,6 +797,10 @@ Mario.MapState.prototype.Draw = function (context) {
             context.drawImage(this.ShopIcon.Image, 115, 50)
             this.DrawStringShadow(context, "400 coins", 13, 20);
             this.DrawStringShadow(context, "S to purchase", 13, 22);
+            if (localStorage.getItem("MrLUnlock") != "true" && Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.S) && Mario.MarioCharacter.cointotal >= 400) {
+                localStorage.setItem("MrLUnlock", "false");
+                localStorage.setItem("cointotal", Mario.MarioCharacter.cointotal - 400)
+            }
         }
     }
 };

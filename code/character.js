@@ -265,6 +265,9 @@ Mario.Character.prototype.Blink = function (on) {
         }
         else if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["luigi"];
+            if (localStorage.getItem("MrLUnlock") == "true") {
+                this.Image = Enjine.Resources.Images["MrLsheet"];
+            }
         }
         else if (this.character_select == "peach") {
             this.Image = Enjine.Resources.Images["peach"];
