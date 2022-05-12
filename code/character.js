@@ -252,6 +252,9 @@ Mario.Character.prototype.Blink = function (on) {
         if (this.Fire) {
             if (this.character_select == "luigi") {
                 this.Image = Enjine.Resources.Images["fireLuigi"];
+                if (this.SkinSelect == 1) {
+                    this.Image = Enjine.Resources.Images["FireMrLsheet"];
+                }
             }
             else if (this.character_select == "peach") {
                 this.Image = Enjine.Resources.Images["firePeach"];
@@ -265,6 +268,9 @@ Mario.Character.prototype.Blink = function (on) {
         }
         else if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["luigi"];
+            if (this.SkinSelect == 1) {
+                this.Image = Enjine.Resources.Images["MrLsheet"];
+            }
         }
         else if (this.character_select == "peach") {
             this.Image = Enjine.Resources.Images["peach"];
@@ -290,6 +296,9 @@ Mario.Character.prototype.Blink = function (on) {
     } else {
         if (this.character_select == "luigi") {
             this.Image = Enjine.Resources.Images["smallLuigi"];
+            if (this.SkinSelect == 1) {
+                this.Image = Enjine.Resources.Images["smallMrLsheet"];
+            }
         }
         else if (this.character_select == "peach") {
             this.Image = Enjine.Resources.Images["smallPeach"];
