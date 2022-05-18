@@ -1645,6 +1645,11 @@ Mario.Character.prototype.Win = function () {
     this.WinTime = 1;
     if (this.character_select == "fox") {
         this.SetLarge(false, false);
+        this.PicWidth = 36;
+        this.PicHeight = 50;
+    }
+    if (this.character_select == "sonic") {
+        this.SetLarge(false, false);
         this.PicWidth = this.PicHeight = 32;
     }
     Enjine.Resources.PlaySound("exit");
@@ -1727,7 +1732,7 @@ Mario.Character.prototype.GetMushroom = function () {
             if (i % 2 == 0) {
                 this.GetCoin();
                 Enjine.Resources.PlaySound("coin");
-                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
+                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 2) * (Math.random() * 2))));
             }
         }
     }

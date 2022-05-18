@@ -6,7 +6,7 @@
 Mario.Rings = function (world, x, y, Xa, Ya) {
     this.World = world;
     this.Life = 80;
-    this.Image = Enjine.Resources.Images["map"];
+    this.Image = Enjine.Resources.Images["ringmap"];
     this.PicWidth = this.PicHeight = 16;
     this.X = x;
     this.Y = y;

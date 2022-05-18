@@ -74,7 +74,12 @@ Mario.LevelRenderer.prototype.DrawDynamic = function (context, camera) {
                     yo = (Math.sin((yo - this.Delta) / 4 * Math.PI) * 8) | 0;
                 }
                 frame = this.Background[(((b % 16) / 4) | 0) * 4 + animTime][(b / 16) | 0];
-                context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (x << 4) - camera.X, (y << 4) - camera.Y - yo, frame.Width, frame.Height);
+                if (Mario.MarioCharacter.character_select == "sonic") {
+                    context.drawImage(Enjine.Resources.Images["ringmap"], frame.X, frame.Y, frame.Width, frame.Height, (x << 4) - camera.X, (y << 4) - camera.Y - yo, frame.Width, frame.Height);
+                }
+                else {
+                    context.drawImage(Enjine.Resources.Images["map"], frame.X, frame.Y, frame.Width, frame.Height, (x << 4) - camera.X, (y << 4) - camera.Y - yo, frame.Width, frame.Height);
+                }
             }
         }
     }

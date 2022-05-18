@@ -7,6 +7,9 @@ Mario.CoinAnim = function (world, x, y) {
     this.World = world;
     this.Life = 10;
     this.Image = Enjine.Resources.Images["map"];
+    if (Mario.MarioCharacter.character_select == "sonic") {
+        this.Image = Enjine.Resources.Images["ringmap"];
+    }
     this.PicWidth = this.PicHeight = 16;
     this.X = x * 16;
     this.Y = y * 16 - 16;
