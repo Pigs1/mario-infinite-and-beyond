@@ -279,11 +279,11 @@ Mario.LevelGenerator.prototype = {
         var x = 0, type = 0;
         for (x = x0; x < x1; x++) {
             if (((Math.random() * 40) | 0) < this.Difficulty + 1) {
-                type = (Math.random() * 5) | 0;
+                type = (Math.random() * 6) | 0;
                 if (this.Difficulty < 1) {
                     type = Mario.Enemy.Goomba;
                 } else if (this.Difficulty < 3) {
-                    type = (Math.random() * 4) | 0;
+                    type = (Math.random() * 5) | 0;
                 }
                 level.SetSpriteTemplate(x, y, new Mario.SpriteTemplate(type, ((Math.random() * 40) | 0) < this.Difficulty));
             }

@@ -50,6 +50,16 @@ Mario.Enemy = function (world, x, y, dir, type, winged) {
         this.Width = 7
         this.Height = 22
     }
+    if (this.Type == Mario.Enemy.BuzzBomber) {
+        this.PicWidth = 45
+        this.Width = 11;
+        this.Height = 12;
+        this.Y -= (Math.random() * 25 | 0) + 20;
+        this.Shooting = false;
+        this.ShootingCooldown = 0;
+        this.ShootingTime = 0;
+        this.XPicO = 22;
+    }
 
     this.chucktype = 1;
     this.looktimer = 30;
@@ -205,7 +215,36 @@ Mario.Enemy.prototype.Move = function () {
         }
 
     }
-    if (this.Type == 3 && this.DeadTime == 0) {
+
+    if (this.Type == Mario.Enemy.BuzzBomber) {
+        this.Winged = false;
+        if (Math.abs(Mario.MarioCharacter.X - this.X) < 30 && this.ShootingCooldown == 0) {
+            this.Shooting = true;
+
+            this.World.AddSprite(new Mario.BuzzShot(this.World, this.X + 10 * this.Facing, this.Y + 5))
+
+            this.ShootingCooldown = 100;
+        }
+        if (this.Shooting) {
+            this.Xa = 0;
+            this.Width = 8;
+            this.Height = 24;
+            this.ShootingTime += 1;
+        }
+        else {
+            this.Width = 15;
+            this.Height = 12;
+        }
+        if (this.ShootingTime == 20) {
+            this.ShootingTime = 0
+            this.Shooting = false
+        }
+        if (this.ShootingCooldown > 0) {
+            this.ShootingCooldown -= 1;
+        }
+    }
+
+    if (this.Type == Mario.Enemy.Chuck && this.DeadTime == 0) {
 
         if (this.chucktype == 1) {
             if (this.looktimer > 0) {
@@ -286,20 +325,30 @@ Mario.Enemy.prototype.Move = function () {
     if (this.Xa < -2 && this.ShineLaunched == 0) {
         this.Facing = -1;
     }
-    if (this.Type != 3) {
+    if (this.Type != Mario.Enemy.Chuck) {
         this.Xa = this.Facing * sideWaysSpeed;
+        if (this.Type == Mario.Enemy.BuzzBomber && this.Shooting == true) {
+            this.Xa = 0;
+        }
     }
 
     this.MayJump = this.OnGround;
 
     this.XFlip = this.Facing === -1;
+    if (this.Type == Mario.Enemy.BuzzBomber) {
+        this.XFlip = this.Facing === 1;
+    }
 
     this.RunTime += Math.abs(this.Xa) + 5;
 
     runFrame = ((this.RunTime / 20) | 0) % 2;
 
-    if (!this.OnGround) {
+    if (!this.OnGround && this.Type != Mario.Enemy.BuzzBomber) {
         runFrame = 1;
+    }
+
+    if (this.Type == Mario.Enemy.BuzzBomber && this.Shooting) {
+        runFrame += 2;
     }
 
     if (!this.SubMove(this.Xa, 0)) {
@@ -315,7 +364,7 @@ Mario.Enemy.prototype.Move = function () {
         this.Xa *= this.AirInertia;
     }
 
-    if (!this.OnGround) {
+    if (!this.OnGround && this.Type != Mario.Enemy.BuzzBomber) {
         if (this.Winged) {
             this.Ya += 0.6;
         } else {
@@ -588,6 +637,7 @@ Mario.Enemy.RedKoopa = 0;
 Mario.Enemy.GreenKoopa = 1;
 Mario.Enemy.Goomba = 2;
 Mario.Enemy.Chuck = 3;
-Mario.Enemy.Spiky = 4;
-Mario.Enemy.Wing = 5;
-Mario.Enemy.Flower = 6;
+Mario.Enemy.BuzzBomber = 4;
+Mario.Enemy.Spiky = 5;
+Mario.Enemy.Wing = 6;
+Mario.Enemy.Flower = 7;
