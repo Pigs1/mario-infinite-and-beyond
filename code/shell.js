@@ -109,10 +109,9 @@ Mario.Shell.prototype.CollideCheck = function () {
             }
             else {
                 if (this.Facing !== 0 && !(this.DeadTime > 0)) {
-                    if (this.Drop) {
+                    if (this.Drop && this.KickCooldown <= 0) {
                         Mario.MarioCharacter.Kick(this);
                         this.Facing = Mario.MarioCharacter.Facing;
-
                     }
                     else {
                         if (Mario.MarioCharacter.character_select == "fox" && mariolaunchcheck && !Mario.MarioCharacter.airdodging) {
@@ -135,10 +134,8 @@ Mario.Shell.prototype.CollideCheck = function () {
                                 Mario.MarioCharacter.Shieldstun = 20;
                             }
                         }
-                        else {
-                            if (!this.Drop && !Mario.MarioCharacter.character_select == "fox") {
-                                Mario.MarioCharacter.GetHurt();
-                            }
+                        else if (Mario.MarioCharacter.character_select != "fox" && !this.Drop) {
+                            Mario.MarioCharacter.GetHurt();
                         }
                     }
                 } else {
@@ -153,6 +150,7 @@ Mario.Shell.prototype.CollideCheck = function () {
 Mario.Shell.prototype.Move = function () {
     i = 0;
     if (this.Drop) {
+        this.KickCooldown -= 1;
         if (this.OnGround) {
             this.fallingtime = -1;
             this.fallingtime2 = 5;
@@ -180,7 +178,7 @@ Mario.Shell.prototype.Move = function () {
                 this.sideWaysSpeed = 0;
             }
 
-            this.Ya -= 15;
+            this.Ya = -20;
             this.UpDrop = false;
             this.Xa = this.sideWaysSpeed;
         }
@@ -350,11 +348,12 @@ Mario.Shell.prototype.SubMove = function (xa, ya) {
         if (ya < 0) {
             this.Y = (((this.Y - this.Height) / 16) | 0) * 16 + this.Height;
             this.Ya = 0;
+            this.sideWaysSpeed = 0;
         }
         if (ya > 0) {
             this.Y = (((this.Y - 1) / 16 + 1) | 0) * 16 - 1;
             this.OnGround = true;
-            this.sideWaysSpeed = 0.000001;
+            this.sideWaysSpeed = 0;
         }
         else {
             this.OnGround = false;
@@ -379,7 +378,7 @@ Mario.Shell.prototype.IsBlocking = function (x, y, xa, ya) {
 
     var blocking = this.World.Level.IsBlocking(x, y, xa, ya);
 
-    if (blocking && ya === 0 && xa !== 0) {
+    if (blocking && ya === 0 && xa !== 0 && (!this.Drop || this.Ya < 0)) {
         this.World.Bump(x, y, true);
     }
     return blocking;
@@ -424,6 +423,7 @@ Mario.Shell.prototype.Release = function (mario) {
     this.Carried = false;
     this.Facing = Mario.MarioCharacter.Facing;
     if (this.Drop) {
+        this.KickCooldown = 10;
         if (Mario.MarioCharacter.OnGround && !(Mario.MarioCharacter.collisiontype == "left" || Mario.MarioCharacter.collisiontype == "right")) {
             if (Mario.MarioCharacter.Xa == 0) {
                 this.X += 4 * this.Facing;

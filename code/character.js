@@ -1732,7 +1732,7 @@ Mario.Character.prototype.GetMushroom = function () {
             if (i % 2 == 0) {
                 this.GetCoin();
                 Enjine.Resources.PlaySound("coin");
-                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 2) * (Math.random() * 2))));
+                this.World.AddSprite(new Mario.CoinAnim(this.World, x, y + ((Math.random() * 0.5) * (Math.random() * -1))));
             }
         }
     }
@@ -1751,6 +1751,7 @@ Mario.Character.prototype.Kick = function (shell) {
     } else {
         Enjine.Resources.PlaySound("kick");
         this.InvulnerableTime = 1;
+        shell.Drop = false;
     }
 };
 

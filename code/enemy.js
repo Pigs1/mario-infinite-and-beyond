@@ -517,7 +517,7 @@ Mario.Enemy.prototype.ShellCollideCheck = function (shell) {
 
     var xd = shell.X - this.X, yd = shell.Y - this.Y;
     if (xd > -16 && xd < 16) {
-        if (yd > -this.Height && yd < shell.Height) {
+        if (yd > -this.Height && yd < shell.Height && (!shell.Drop || shell.Ya < 0)) {
             Enjine.Resources.PlaySound("kick");
 
             this.Xa = shell.Facing * 2;
