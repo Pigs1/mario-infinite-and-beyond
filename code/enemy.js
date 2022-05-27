@@ -79,7 +79,7 @@ Mario.Enemy.prototype.CollideCheck = function () {
     var xMarioD = Mario.MarioCharacter.X - this.X, yMarioD = Mario.MarioCharacter.Y - this.Y;
 
     if (Mario.MarioCharacter.ShineTime < 4 && Mario.MarioCharacter.ShineTime > 0) {
-        if (xMarioD > -this.Width * 3 - 4 && xMarioD < this.Width * 3 + 4) {
+        if (xMarioD > -this.Width * 3 - 6 && xMarioD < this.Width * 3 + 6) {
             if (yMarioD > -this.Height && yMarioD < Mario.MarioCharacter.Height) {
                 if (xMarioD >= 0) {
                     this.ShineLaunchedFacing = -1;
