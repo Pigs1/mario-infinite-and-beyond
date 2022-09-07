@@ -142,6 +142,10 @@ Mario.Character.prototype.Initialize = function (world) {
         this.X = 32;
         this.Y = -50;
     }
+    if (this.LevelType == Mario.LevelType.BigCastle) {
+        this.X = 5000;
+        this.Y = 50;
+    }
     if (this.LevelType == Mario.LevelType.Bowser) {
         this.Y = 100;
     }
@@ -353,6 +357,7 @@ Mario.Character.prototype.Move = function () {
         }
         return;
     }
+
     if (this.character_select == "sonic") {
         if (this.Ducking && this.OnGround) {
             if (Enjine.KeyboardInput.IsKeyDown(Enjine.Keys.A) && this.CanShoot) {

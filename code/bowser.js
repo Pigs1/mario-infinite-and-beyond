@@ -9,7 +9,7 @@ Mario.Bowser = function (world, x, y) {
     this.AirInertia = 0.1;
     this.OnGround = false;
     this.Width = 15;
-    this.Height = 71;
+    this.Height = 65;
     this.World = world;
     this.X = 250;
     this.Y = 179;
@@ -333,7 +333,7 @@ Mario.Bowser.prototype.Move = function () {
             this.PicWidth = 50;
         }
         this.Width = 10;
-        this.Height = 50;
+        this.Height = 45;
         if (this.Xa > 0 && Mario.MarioCharacter.X < this.X) {
             if (this.ShellMomentumMult == 0) {
                 this.ShellMomentumMult = 10;
@@ -384,7 +384,7 @@ Mario.Bowser.prototype.Move = function () {
     }
     else {
         this.Width = 15;
-        this.Height = 71;
+        this.Height = 65;
     }
 
     if (this.State == 7) {
@@ -474,6 +474,9 @@ Mario.Bowser.prototype.Move = function () {
             this.State = 1;
         }
         this.RoarFrameTimer -= 1;
+        if (Mario.MarioCharacter.OnGround) {
+            this.RoarFrameTimer == 0;
+        }
     }
 
     this.XFlip = this.Facing === -1;

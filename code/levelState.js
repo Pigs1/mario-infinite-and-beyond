@@ -96,6 +96,7 @@ Mario.LevelState.prototype.Enter = function () {
     if (this.LevelType == Mario.LevelType.Bowser) {
         this.AddSprite(new Mario.Bridge(this, 100, 50));
         this.AddSprite(new Mario.Bowser(this, 100, 50));
+        // this.AddSprite(new Mario.MasterHand(this, 100, 50));
     }
 };
 
